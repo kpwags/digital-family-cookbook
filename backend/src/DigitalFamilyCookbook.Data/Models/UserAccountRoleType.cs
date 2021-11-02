@@ -2,6 +2,8 @@ namespace DigitalFamilyCookbook.Data.Models
 {
     public class UserAccountRoleType
     {
+        public string Id { get; set; } = string.Empty;
+
         public int UserAccountRoleTypeId { get; set; }
 
         public string UserAccountId { get; set; } = string.Empty;
