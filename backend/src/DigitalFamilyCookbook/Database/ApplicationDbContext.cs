@@ -1,351 +1,349 @@
 #nullable disable
 
-using DigitalFamilyCookbook.Data.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace DigitalFamilyCookbook.Database
+namespace DigitalFamilyCookbook.Database;
+
+public class ApplicationDbContext : DbContext
 {
-    public class ApplicationDbContext : DbContext
+    public DbSet<Category> Categories { get; set; }
+
+    public DbSet<Meat> Meats { get; set; }
+
+    public DbSet<Recipe> Recipes { get; set; }
+
+    public DbSet<Ingredient> Ingredients { get; set; }
+
+    public DbSet<Step> Steps { get; set; }
+
+    public DbSet<RoleType> RoleTypes { get; set; }
+
+    public DbSet<UserAccountRoleType> UserAccountRoleTypes { get; set; }
+
+    public DbSet<RecipeCategory> RecipeCategories { get; set; }
+
+    public DbSet<RecipeMeat> RecipeMeats { get; set; }
+
+    public DbSet<RecipeIngredient> RecipeIngredients { get; set; }
+
+    public DbSet<RecipeStep> RecipeSteps { get; set; }
+
+    public DbSet<UserAccount> UserAccounts { get; set; }
+
+    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
     {
-        public DbSet<Category> Categories { get; set; }
 
-        public DbSet<Meat> Meats { get; set; }
+    }
 
-        public DbSet<Recipe> Recipes { get; set; }
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
 
-        public DbSet<Ingredient> Ingredients { get; set; }
+        #region "application.UserAccount"
 
-        public DbSet<Step> Steps { get; set; }
+        modelBuilder.Entity<UserAccount>()
+            .ToTable("UserAccount", schema: "application");
 
-        public DbSet<RoleType> RoleTypes { get; set; }
+        modelBuilder.Entity<UserAccount>()
+            .Property(u => u.Name)
+            .HasMaxLength(255)
+            .IsRequired();
 
-        public DbSet<UserAccountRoleType> UserAccountRoleTypes { get; set; }
+        #endregion
 
-        public DbSet<RecipeCategory> RecipeCategories { get; set; }
+        #region "recipe.Recipe"
 
-        public DbSet<RecipeMeat> RecipeMeats { get; set; }
+        modelBuilder.Entity<Recipe>()
+            .ToTable("Recipe", schema: "recipe");
 
-        public DbSet<RecipeIngredient> RecipeIngredients { get; set; }
+        modelBuilder.Entity<Recipe>()
+            .HasKey(r => r.RecipeId)
+            .HasName("PK_Recipe_Recipe_RecipeId");
 
-        public DbSet<RecipeStep> RecipeSteps { get; set; }
+        modelBuilder.Entity<Recipe>()
+            .Property(r => r.Name)
+            .HasMaxLength(255)
+            .IsRequired();
 
-        public DbSet<UserAccount> UserAccounts { get; set; }
+        modelBuilder.Entity<Recipe>()
+            .Property(r => r.Description)
+            .HasMaxLength(2000);
 
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
-        {
+        modelBuilder.Entity<Recipe>()
+            .Property(r => r.IsPublic)
+            .HasDefaultValue(false);
 
-        }
+        modelBuilder.Entity<Recipe>()
+            .Property(r => r.Notes)
+            .HasMaxLength(2000);
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            base.OnModelCreating(modelBuilder);
+        modelBuilder.Entity<Recipe>()
+            .Property(r => r.Source)
+            .HasMaxLength(255);
 
-            #region "application.UserAccount"
+        modelBuilder.Entity<Recipe>()
+            .Property(r => r.SourceUrl)
+            .HasMaxLength(500);
 
-            modelBuilder.Entity<UserAccount>()
-                .ToTable("UserAccount", schema: "application");
+        modelBuilder.Entity<Recipe>()
+            .Property(r => r.ImageUrl)
+            .HasMaxLength(500);
 
-            modelBuilder.Entity<UserAccount>()
-                .Property(u => u.Name)
-                .HasMaxLength(255)
-                .IsRequired();
+        modelBuilder.Entity<Recipe>()
+            .Property(r => r.ImageUrlLarge)
+            .HasMaxLength(500);
 
-            #endregion
+        modelBuilder.Entity<Recipe>()
+            .Property(r => r.Calories)
+            .HasPrecision(10, 2);
 
-            #region "recipe.Recipe"
+        modelBuilder.Entity<Recipe>()
+            .Property(r => r.Carbohydrates)
+            .HasPrecision(10, 2);
 
-            modelBuilder.Entity<Recipe>()
-                .ToTable("Recipe", schema: "recipe");
+        modelBuilder.Entity<Recipe>()
+            .Property(r => r.Sugar)
+            .HasPrecision(10, 2);
 
-            modelBuilder.Entity<Recipe>()
-                .HasKey(r => r.RecipeId)
-                .HasName("PK_Recipe_Recipe_RecipeId");
+        modelBuilder.Entity<Recipe>()
+            .Property(r => r.Fat)
+            .HasPrecision(10, 2);
 
-            modelBuilder.Entity<Recipe>()
-                .Property(r => r.Name)
-                .HasMaxLength(255)
-                .IsRequired();
+        modelBuilder.Entity<Recipe>()
+            .Property(r => r.Protein)
+            .HasPrecision(10, 2);
 
-            modelBuilder.Entity<Recipe>()
-                .Property(r => r.Description)
-                .HasMaxLength(2000);
+        modelBuilder.Entity<Recipe>()
+            .Property(r => r.Fiber)
+            .HasPrecision(10, 2);
 
-            modelBuilder.Entity<Recipe>()
-                .Property(r => r.IsPublic)
-                .HasDefaultValue(false);
+        modelBuilder.Entity<Recipe>()
+            .Property(r => r.Cholesterol)
+            .HasPrecision(10, 2);
 
-            modelBuilder.Entity<Recipe>()
-                .Property(r => r.Notes)
-                .HasMaxLength(2000);
+        modelBuilder.Entity<Recipe>()
+            .HasOne(r => r.UserAccount)
+            .WithMany(u => u.Recipes);
 
-            modelBuilder.Entity<Recipe>()
-                .Property(r => r.Source)
-                .HasMaxLength(255);
+        #endregion
 
-            modelBuilder.Entity<Recipe>()
-                .Property(r => r.SourceUrl)
-                .HasMaxLength(500);
+        #region "recipe.Ingredient"
 
-            modelBuilder.Entity<Recipe>()
-                .Property(r => r.ImageUrl)
-                .HasMaxLength(500);
+        modelBuilder.Entity<Ingredient>()
+            .ToTable("Ingredient", schema: "recipe");
 
-            modelBuilder.Entity<Recipe>()
-                .Property(r => r.ImageUrlLarge)
-                .HasMaxLength(500);
+        modelBuilder.Entity<Ingredient>()
+            .HasKey(i => i.IngredientId)
+            .HasName("PK_Recipe_Ingredient_IngredientId");
 
-            modelBuilder.Entity<Recipe>()
-                .Property(r => r.Calories)
-                .HasPrecision(10, 2);
+        modelBuilder.Entity<Ingredient>()
+            .Property(i => i.Name)
+            .HasMaxLength(255)
+            .IsRequired();
 
-            modelBuilder.Entity<Recipe>()
-                .Property(r => r.Carbohydrates)
-                .HasPrecision(10, 2);
+        #endregion
 
-            modelBuilder.Entity<Recipe>()
-                .Property(r => r.Sugar)
-                .HasPrecision(10, 2);
+        #region "recipe.RecipeIngredient"
 
-            modelBuilder.Entity<Recipe>()
-                .Property(r => r.Fat)
-                .HasPrecision(10, 2);
+        modelBuilder.Entity<RecipeIngredient>()
+            .ToTable("RecipeIngredient", schema: "recipe");
 
-            modelBuilder.Entity<Recipe>()
-                .Property(r => r.Protein)
-                .HasPrecision(10, 2);
+        modelBuilder.Entity<RecipeIngredient>()
+            .HasKey(ri => ri.RecipeIngredientId)
+            .HasName("PK_Recipe_RecipeIngredient_RecipeIngredientId");
 
-            modelBuilder.Entity<Recipe>()
-                .Property(r => r.Fiber)
-                .HasPrecision(10, 2);
+        modelBuilder.Entity<RecipeIngredient>()
+            .HasIndex(ri => new { ri.RecipeId, ri.IngredientId })
+            .HasDatabaseName("UQ_Recipe_RecipeIngredient_RecipeId_IngredientId")
+            .IsUnique();
 
-            modelBuilder.Entity<Recipe>()
-                .Property(r => r.Cholesterol)
-                .HasPrecision(10, 2);
+        modelBuilder.Entity<RecipeIngredient>()
+            .HasOne(ri => ri.Recipe)
+            .WithMany(r => r.RecipeIngredients)
+            .HasForeignKey(ri => ri.RecipeId)
+            .OnDelete(DeleteBehavior.Restrict);
 
-            modelBuilder.Entity<Recipe>()
-                .HasOne(r => r.UserAccount)
-                .WithMany(u => u.Recipes);
+        modelBuilder.Entity<RecipeIngredient>()
+            .HasOne(ri => ri.Ingredient)
+            .WithMany(i => i.RecipeIngredients)
+            .OnDelete(DeleteBehavior.Restrict);
 
-            #endregion
+        #endregion
 
-            #region "recipe.Ingredient"
+        #region "recipe.Step"
 
-            modelBuilder.Entity<Ingredient>()
-                .ToTable("Ingredient", schema: "recipe");
+        modelBuilder.Entity<Step>()
+            .ToTable("Step", schema: "recipe");
 
-            modelBuilder.Entity<Ingredient>()
-                .HasKey(i => i.IngredientId)
-                .HasName("PK_Recipe_Ingredient_IngredientId");
+        modelBuilder.Entity<Step>()
+            .HasKey(s => s.StepId)
+            .HasName("PK_Recipe_Step_StepId");
 
-            modelBuilder.Entity<Ingredient>()
-                .Property(i => i.Name)
-                .HasMaxLength(255)
-                .IsRequired();
+        modelBuilder.Entity<Step>()
+            .Property(s => s.Direction)
+            .HasColumnType("VARCHAR(MAX)")
+            .IsRequired();
 
-            #endregion
+        #endregion
 
-            #region "recipe.RecipeIngredient"
+        #region "recipe.RecipeStep"
 
-            modelBuilder.Entity<RecipeIngredient>()
-                .ToTable("RecipeIngredient", schema: "recipe");
+        modelBuilder.Entity<RecipeStep>()
+            .ToTable("RecipeStep", schema: "recipe");
 
-            modelBuilder.Entity<RecipeIngredient>()
-                .HasKey(ri => ri.RecipeIngredientId)
-                .HasName("PK_Recipe_RecipeIngredient_RecipeIngredientId");
+        modelBuilder.Entity<RecipeStep>()
+            .HasKey(rs => rs.RecipeStepId)
+            .HasName("PK_Recipe_RecipeStep_RecipeStepId");
 
-            modelBuilder.Entity<RecipeIngredient>()
-                .HasIndex(ri => new { ri.RecipeId, ri.IngredientId })
-                .HasDatabaseName("UQ_Recipe_RecipeIngredient_RecipeId_IngredientId")
-                .IsUnique();
+        modelBuilder.Entity<RecipeStep>()
+            .HasIndex(rs => new { rs.RecipeId, rs.StepId })
+            .HasDatabaseName("UQ_Recipe_RecipeStep_RecipeId_StepId")
+            .IsUnique();
 
-            modelBuilder.Entity<RecipeIngredient>()
-                .HasOne(ri => ri.Recipe)
-                .WithMany(r => r.RecipeIngredients)
-                .HasForeignKey(ri => ri.RecipeId)
-                .OnDelete(DeleteBehavior.Restrict);
+        modelBuilder.Entity<RecipeStep>()
+            .HasOne(rs => rs.Recipe)
+            .WithMany(r => r.RecipeSteps)
+            .HasForeignKey(rs => rs.RecipeId)
+            .OnDelete(DeleteBehavior.Restrict);
 
-            modelBuilder.Entity<RecipeIngredient>()
-                .HasOne(ri => ri.Ingredient)
-                .WithMany(i => i.RecipeIngredients)
-                .OnDelete(DeleteBehavior.Restrict);
+        modelBuilder.Entity<RecipeStep>()
+            .HasOne(rs => rs.Step)
+            .WithMany(s => s.RecipeSteps)
+            .HasForeignKey(rs => rs.StepId)
+            .OnDelete(DeleteBehavior.Restrict);
 
-            #endregion
+        #endregion
 
-            #region "recipe.Step"
+        #region "recipe.Category"
 
-            modelBuilder.Entity<Step>()
-                .ToTable("Step", schema: "recipe");
+        modelBuilder.Entity<Category>()
+            .ToTable("Category", schema: "recipe");
 
-            modelBuilder.Entity<Step>()
-                .HasKey(s => s.StepId)
-                .HasName("PK_Recipe_Step_StepId");
+        modelBuilder.Entity<Category>()
+            .HasKey(c => c.CategoryId)
+            .HasName("PK_Recipe_Category_CategoryId");
 
-            modelBuilder.Entity<Step>()
-                .Property(s => s.Direction)
-                .HasColumnType("VARCHAR(MAX)")
-                .IsRequired();
+        modelBuilder.Entity<Category>()
+            .Property(c => c.Name)
+            .HasMaxLength(50)
+            .IsRequired();
 
-            #endregion
+        #endregion
 
-            #region "recipe.RecipeStep"
+        #region "recipe.RecipeCategory"
 
-            modelBuilder.Entity<RecipeStep>()
-                .ToTable("RecipeStep", schema: "recipe");
+        modelBuilder.Entity<RecipeCategory>()
+            .ToTable("RecipeCategory", schema: "recipe");
 
-            modelBuilder.Entity<RecipeStep>()
-                .HasKey(rs => rs.RecipeStepId)
-                .HasName("PK_Recipe_RecipeStep_RecipeStepId");
+        modelBuilder.Entity<RecipeCategory>()
+            .HasKey(rc => rc.RecipeCategoryId)
+            .HasName("PK_Recipe_RecipeCategory_RecipeCategoryId");
 
-            modelBuilder.Entity<RecipeStep>()
-                .HasIndex(rs => new { rs.RecipeId, rs.StepId })
-                .HasDatabaseName("UQ_Recipe_RecipeStep_RecipeId_StepId")
-                .IsUnique();
+        modelBuilder.Entity<RecipeCategory>()
+            .HasIndex(rc => new { rc.RecipeId, rc.CategoryId })
+            .HasDatabaseName("UQ_Recipe_RecipeCategory_RecipeId_CategoryId")
+            .IsUnique();
 
-            modelBuilder.Entity<RecipeStep>()
-                .HasOne(rs => rs.Recipe)
-                .WithMany(r => r.RecipeSteps)
-                .HasForeignKey(rs => rs.RecipeId)
-                .OnDelete(DeleteBehavior.Restrict);
+        modelBuilder.Entity<RecipeCategory>()
+            .HasOne(rc => rc.Recipe)
+            .WithMany(r => r.RecipeCategories)
+            .HasForeignKey(rc => rc.RecipeId)
+            .OnDelete(DeleteBehavior.Restrict);
 
-            modelBuilder.Entity<RecipeStep>()
-                .HasOne(rs => rs.Step)
-                .WithMany(s => s.RecipeSteps)
-                .HasForeignKey(rs => rs.StepId)
-                .OnDelete(DeleteBehavior.Restrict);
+        modelBuilder.Entity<RecipeCategory>()
+            .HasOne(rc => rc.Category)
+            .WithMany(c => c.RecipeCategories)
+            .HasForeignKey(rc => rc.CategoryId)
+            .OnDelete(DeleteBehavior.Restrict);
 
-            #endregion
+        #endregion
 
-            #region "recipe.Category"
+        #region "recipe.Meat"
 
-            modelBuilder.Entity<Category>()
-                .ToTable("Category", schema: "recipe");
+        modelBuilder.Entity<Meat>()
+            .ToTable("Meat", schema: "recipe");
 
-            modelBuilder.Entity<Category>()
-                .HasKey(c => c.CategoryId)
-                .HasName("PK_Recipe_Category_CategoryId");
+        modelBuilder.Entity<Meat>()
+            .HasKey(m => m.MeatId)
+            .HasName("PK_Recipe_Meat_MeatyId");
 
-            modelBuilder.Entity<Category>()
-                .Property(c => c.Name)
-                .HasMaxLength(50)
-                .IsRequired();
+        modelBuilder.Entity<Meat>()
+            .Property(m => m.Name)
+            .HasMaxLength(50)
+            .IsRequired();
 
-            #endregion
+        #endregion
 
-            #region "recipe.RecipeCategory"
+        #region "recipe.RecipeMeat"
 
-            modelBuilder.Entity<RecipeCategory>()
-                .ToTable("RecipeCategory", schema: "recipe");
+        modelBuilder.Entity<RecipeMeat>()
+            .ToTable("RecipeMeat", schema: "recipe");
 
-            modelBuilder.Entity<RecipeCategory>()
-                .HasKey(rc => rc.RecipeCategoryId)
-                .HasName("PK_Recipe_RecipeCategory_RecipeCategoryId");
+        modelBuilder.Entity<RecipeMeat>()
+            .HasKey(rm => rm.RecipeMeatId)
+            .HasName("PK_Recipe_RecipeMeat_RecipeMeatId");
 
-            modelBuilder.Entity<RecipeCategory>()
-                .HasIndex(rc => new { rc.RecipeId, rc.CategoryId })
-                .HasDatabaseName("UQ_Recipe_RecipeCategory_RecipeId_CategoryId")
-                .IsUnique();
+        modelBuilder.Entity<RecipeMeat>()
+            .HasIndex(rm => new { rm.RecipeId, rm.MeatId })
+            .HasDatabaseName("UQ_Recipe_RecipeMeat_RecipeId_MeatId")
+            .IsUnique();
 
-            modelBuilder.Entity<RecipeCategory>()
-                .HasOne(rc => rc.Recipe)
-                .WithMany(r => r.RecipeCategories)
-                .HasForeignKey(rc => rc.RecipeId)
-                .OnDelete(DeleteBehavior.Restrict);
+        modelBuilder.Entity<RecipeMeat>()
+            .HasOne(rm => rm.Recipe)
+            .WithMany(r => r.RecipeMeats)
+            .HasForeignKey(rm => rm.RecipeId)
+            .OnDelete(DeleteBehavior.Restrict);
 
-            modelBuilder.Entity<RecipeCategory>()
-                .HasOne(rc => rc.Category)
-                .WithMany(c => c.RecipeCategories)
-                .HasForeignKey(rc => rc.CategoryId)
-                .OnDelete(DeleteBehavior.Restrict);
+        modelBuilder.Entity<RecipeMeat>()
+            .HasOne(rm => rm.Meat)
+            .WithMany(m => m.RecipeMeats)
+            .HasForeignKey(rm => rm.MeatId)
+            .OnDelete(DeleteBehavior.Restrict);
 
-            #endregion
+        #endregion
 
-            #region "recipe.Meat"
+        #region "application.RoleType"
 
-            modelBuilder.Entity<Meat>()
-                .ToTable("Meat", schema: "recipe");
+        modelBuilder.Entity<RoleType>()
+            .ToTable("RoleType", schema: "application");
 
-            modelBuilder.Entity<Meat>()
-                .HasKey(m => m.MeatId)
-                .HasName("PK_Recipe_Meat_MeatyId");
+        modelBuilder.Entity<RoleType>()
+            .HasKey(rt => rt.RoleTypeId)
+            .HasName("PK_Application_RoleType_RoleTypeId");
 
-            modelBuilder.Entity<Meat>()
-                .Property(m => m.Name)
-                .HasMaxLength(50)
-                .IsRequired();
+        modelBuilder.Entity<RoleType>()
+            .Property(rt => rt.Name)
+            .HasMaxLength(25)
+            .IsRequired();
 
-            #endregion
+        #endregion
 
-            #region "recipe.RecipeMeat"
+        #region "application.UserAccountRoleType"
 
-            modelBuilder.Entity<RecipeMeat>()
-                .ToTable("RecipeMeat", schema: "recipe");
+        modelBuilder.Entity<UserAccountRoleType>()
+            .ToTable("UserAccountRoleType", schema: "application");
 
-            modelBuilder.Entity<RecipeMeat>()
-                .HasKey(rm => rm.RecipeMeatId)
-                .HasName("PK_Recipe_RecipeMeat_RecipeMeatId");
+        modelBuilder.Entity<UserAccountRoleType>()
+            .HasKey(uart => uart.UserAccountRoleTypeId)
+            .HasName("PK_Application_UserAccountRoleType_UserAccountRoleTypeId");
 
-            modelBuilder.Entity<RecipeMeat>()
-                .HasIndex(rm => new { rm.RecipeId, rm.MeatId })
-                .HasDatabaseName("UQ_Recipe_RecipeMeat_RecipeId_MeatId")
-                .IsUnique();
+        modelBuilder.Entity<UserAccountRoleType>()
+            .HasIndex(uart => new { uart.UserAccountId, uart.RoleTypeId })
+            .HasDatabaseName("UQ_Application_UserAccountRoleType_UserAccountId_RoleTypeId")
+            .IsUnique();
 
-            modelBuilder.Entity<RecipeMeat>()
-                .HasOne(rm => rm.Recipe)
-                .WithMany(r => r.RecipeMeats)
-                .HasForeignKey(rm => rm.RecipeId)
-                .OnDelete(DeleteBehavior.Restrict);
+        modelBuilder.Entity<UserAccountRoleType>()
+            .HasOne(uart => uart.UserAccount)
+            .WithMany(u => u.UserAccountRoleTypes)
+            .HasForeignKey(uart => uart.UserAccountId)
+            .OnDelete(DeleteBehavior.Restrict);
 
-            modelBuilder.Entity<RecipeMeat>()
-                .HasOne(rm => rm.Meat)
-                .WithMany(m => m.RecipeMeats)
-                .HasForeignKey(rm => rm.MeatId)
-                .OnDelete(DeleteBehavior.Restrict);
+        modelBuilder.Entity<UserAccountRoleType>()
+            .HasOne(uart => uart.RoleType)
+            .WithMany(rt => rt.UserAccountRoleTypes)
+            .HasForeignKey(uart => uart.RoleTypeId)
+            .OnDelete(DeleteBehavior.Restrict);
 
-            #endregion
-
-            #region "application.RoleType"
-
-            modelBuilder.Entity<RoleType>()
-                .ToTable("RoleType", schema: "application");
-
-            modelBuilder.Entity<RoleType>()
-                .HasKey(rt => rt.RoleTypeId)
-                .HasName("PK_Application_RoleType_RoleTypeId");
-
-            modelBuilder.Entity<RoleType>()
-                .Property(rt => rt.Name)
-                .HasMaxLength(25)
-                .IsRequired();
-
-            #endregion
-
-            #region "application.UserAccountRoleType"
-
-            modelBuilder.Entity<UserAccountRoleType>()
-                .ToTable("UserAccountRoleType", schema: "application");
-
-            modelBuilder.Entity<UserAccountRoleType>()
-                .HasKey(uart => uart.UserAccountRoleTypeId)
-                .HasName("PK_Application_UserAccountRoleType_UserAccountRoleTypeId");
-
-            modelBuilder.Entity<UserAccountRoleType>()
-                .HasIndex(uart => new { uart.UserAccountId, uart.RoleTypeId })
-                .HasDatabaseName("UQ_Application_UserAccountRoleType_UserAccountId_RoleTypeId")
-                .IsUnique();
-
-            modelBuilder.Entity<UserAccountRoleType>()
-                .HasOne(uart => uart.UserAccount)
-                .WithMany(u => u.UserAccountRoleTypes)
-                .HasForeignKey(uart => uart.UserAccountId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<UserAccountRoleType>()
-                .HasOne(uart => uart.RoleType)
-                .WithMany(rt => rt.UserAccountRoleTypes)
-                .HasForeignKey(uart => uart.RoleTypeId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            #endregion
-        }
+        #endregion
     }
 }
