@@ -1,16 +1,17 @@
 using DigitalFamilyCookbook.Data.Models;
 using DigitalFamilyCookbook.Database;
+using GraphiQl;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Identity.Web;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using System.Text.Json;
-using Microsoft.EntityFrameworkCore;
 
 namespace DigitalFamilyCookbook
 {
@@ -62,6 +63,8 @@ namespace DigitalFamilyCookbook
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseGraphiQl("/graphql");
 
             app.UseAuthentication();
             app.UseAuthorization();

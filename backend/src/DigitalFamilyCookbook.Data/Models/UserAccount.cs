@@ -7,6 +7,9 @@ namespace DigitalFamilyCookbook.Data.Models
     public class UserAccount : IdentityUser
     {
         [PersonalData]
+        public string UserId { get; set; } = string.Empty;
+
+        [PersonalData]
         public string Name { get; set; } = string.Empty;
 
         [PersonalData]

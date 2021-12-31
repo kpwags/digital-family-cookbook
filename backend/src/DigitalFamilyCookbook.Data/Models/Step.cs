@@ -5,6 +5,8 @@ namespace DigitalFamilyCookbook.Data.Models
 {
     public class Step
     {
+        public string Id { get; set; } = string.Empty;
+
         public int StepId { get; set; }
 
         public string Direction { get; set; } = string.Empty;

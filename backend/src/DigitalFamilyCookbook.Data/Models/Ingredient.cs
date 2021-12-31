@@ -5,6 +5,8 @@ namespace DigitalFamilyCookbook.Data.Models
 {
     public class Ingredient
     {
+        public string Id { get; set; } = string.Empty;
+
         public int IngredientId { get; set; }
 
         public string Name { get; set; } = string.Empty;

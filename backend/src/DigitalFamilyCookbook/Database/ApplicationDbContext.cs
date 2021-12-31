@@ -29,6 +29,8 @@ namespace DigitalFamilyCookbook.Database
 
         public DbSet<RecipeStep> RecipeSteps { get; set; }
 
+        public DbSet<UserAccount> UserAccounts { get; set; }
+
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
 
