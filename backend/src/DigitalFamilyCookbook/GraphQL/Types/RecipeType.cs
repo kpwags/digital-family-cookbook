@@ -1,7 +1,7 @@
 using DigitalFamilyCookbook.Data.Models;
 using GraphQL.Types;
 
-namespace DigitalFamilyCookbook.GraphQL
+namespace DigitalFamilyCookbook.GraphQL.Types
 {
     public class RecipeType : ObjectGraphType<Recipe>
     {
