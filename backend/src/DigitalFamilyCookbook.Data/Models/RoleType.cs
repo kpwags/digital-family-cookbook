@@ -1,20 +1,16 @@
-using System.Collections.Generic;
-using System.Linq;
+namespace DigitalFamilyCookbook.Data.Models;
 
-namespace DigitalFamilyCookbook.Data.Models
+public class RoleType
 {
-    public class RoleType
-    {
-        public string Id { get; set; } = string.Empty;
+    public string Id { get; set; } = string.Empty;
 
-        public int RoleTypeId { get; set; }
+    public int RoleTypeId { get; set; }
 
-        public string Name { get; set; } = string.Empty;
+    public string Name { get; set; } = string.Empty;
 
-        public IEnumerable<UserAccountRoleType> UserAccountRoleTypes { get; set; } = Enumerable.Empty<UserAccountRoleType>();
+    public IEnumerable<UserAccountRoleType> UserAccountRoleTypes { get; set; } = Enumerable.Empty<UserAccountRoleType>();
 
-        public UserAccount UserAccount { get; set; } = UserAccount.None();
+    public UserAccount UserAccount { get; set; } = UserAccount.None();
 
-        public static RoleType None() => new RoleType();
-    }
+    public static RoleType None() => new RoleType();
 }
