@@ -1,4 +1,7 @@
+using DigitalFamilyCookbook.Configuration;
+using DigitalFamilyCookbook.Services;
 using GraphiQl;
+using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -15,16 +18,21 @@ namespace DigitalFamilyCookbook;
 
 public class Startup
 {
+    public IConfiguration Configuration { get; }
+
+    private DigitalFamilyCookbookConfiguration _configuration = new DigitalFamilyCookbookConfiguration();
+
     public Startup(IConfiguration configuration)
     {
         Configuration = configuration;
-    }
 
-    public IConfiguration Configuration { get; }
+        configuration.Bind(_configuration);
+    }
 
     // This method gets called by the runtime. Use this method to add services to the container.
     public void ConfigureServices(IServiceCollection services)
     {
+        services.AddSingleton(_configuration);
 
         services.AddDbContext<ApplicationDbContext>(options =>
             options
@@ -41,6 +49,12 @@ public class Startup
             {
                 options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
             });
+
+        services.AddMvc();
+
+        services.AddMediatR(typeof(Startup));
+
+        services.AddServices();
 
         services.AddSwaggerGen(c =>
         {

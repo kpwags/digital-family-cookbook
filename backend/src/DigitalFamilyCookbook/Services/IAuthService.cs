@@ -1,8 +1,10 @@
+using DigitalFamilyCookbook.Models;
+
 namespace DigitalFamilyCookbook.Services;
 
 public interface IAuthService
 {
-    Task<bool> SignInUser();
+    AuthToken GetAuthToken(string userId);
 
-    Task<bool> SignOutUser();
+    Task<(bool IsValid, string UserId)> VerifyCredentials(string email, string password);
 }

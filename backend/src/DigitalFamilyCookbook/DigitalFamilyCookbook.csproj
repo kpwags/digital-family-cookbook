@@ -11,6 +11,8 @@
     <PackageReference Include="graphiql" Version="2.0.0" />
     <PackageReference Include="GraphQL" Version="4.7.0" />
     <PackageReference Include="GraphQL.SystemTextJson" Version="4.7.0" />
+    <PackageReference Include="mediatr" Version="9.0.0" />
+    <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="9.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="5.0.7" />
     <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
@@ -25,6 +27,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\DigitalFamilyCookbook.Core\DigitalFamilyCookbook.Core.csproj" />
     <ProjectReference Include="..\DigitalFamilyCookbook.Data\DigitalFamilyCookbook.Data.csproj" />
   </ItemGroup>
 </Project>

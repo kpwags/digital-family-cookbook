@@ -14,4 +14,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="5.0.10" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\DigitalFamilyCookbook.Core\DigitalFamilyCookbook.Core.csproj" />
+  </ItemGroup>
 </Project>
