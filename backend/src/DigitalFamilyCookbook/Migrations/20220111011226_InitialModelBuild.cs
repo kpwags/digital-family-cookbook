@@ -1,6 +1,8 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
+#nullable disable
+
 namespace DigitalFamilyCookbook.Migrations
 {
     public partial class InitialModelBuild : Migration
@@ -19,6 +21,7 @@ namespace DigitalFamilyCookbook.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -47,6 +50,7 @@ namespace DigitalFamilyCookbook.Migrations
                 {
                     RecipeId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Name = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
                     Description = table.Column<string>(type: "nvarchar(2000)", maxLength: 2000, nullable: true),
                     IsPublic = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
@@ -79,14 +83,66 @@ namespace DigitalFamilyCookbook.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "RefreshToken",
+                schema: "application",
+                columns: table => new
+                {
+                    RefreshTokenId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UserAccountId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Token = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
+                    JwtId = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
+                    IsUsed = table.Column<bool>(type: "bit", nullable: false),
+                    IsRevoked = table.Column<bool>(type: "bit", nullable: false),
+                    AddedDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2022, 1, 10, 20, 12, 26, 446, DateTimeKind.Local).AddTicks(6990)),
+                    ExpirationDate = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Application_RefreshToken_RefreshTokenId", x => x.RefreshTokenId);
+                    table.ForeignKey(
+                        name: "FK_RefreshToken_UserAccount_UserAccountId",
+                        column: x => x.UserAccountId,
+                        principalSchema: "application",
+                        principalTable: "UserAccount",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "RoleType",
+                schema: "application",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    RoleTypeId = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UserAccountId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    Name = table.Column<string>(type: "nvarchar(25)", maxLength: 25, nullable: false),
+                    NormalizedName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RoleType", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_RoleType_UserAccount_UserAccountId",
+                        column: x => x.UserAccountId,
+                        principalSchema: "application",
+                        principalTable: "UserAccount",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Category",
                 schema: "recipe",
                 columns: table => new
                 {
                     CategoryId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    RecipeId = table.Column<int>(type: "int", nullable: false)
+                    RecipeId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -96,8 +152,7 @@ namespace DigitalFamilyCookbook.Migrations
                         column: x => x.RecipeId,
                         principalSchema: "recipe",
                         principalTable: "Recipe",
-                        principalColumn: "RecipeId",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "RecipeId");
                 });
 
             migrationBuilder.CreateTable(
@@ -107,9 +162,10 @@ namespace DigitalFamilyCookbook.Migrations
                 {
                     IngredientId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Name = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
                     SortOrder = table.Column<int>(type: "int", nullable: true),
-                    RecipeId = table.Column<int>(type: "int", nullable: false)
+                    RecipeId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -119,8 +175,7 @@ namespace DigitalFamilyCookbook.Migrations
                         column: x => x.RecipeId,
                         principalSchema: "recipe",
                         principalTable: "Recipe",
-                        principalColumn: "RecipeId",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "RecipeId");
                 });
 
             migrationBuilder.CreateTable(
@@ -130,8 +185,9 @@ namespace DigitalFamilyCookbook.Migrations
                 {
                     MeatId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    RecipeId = table.Column<int>(type: "int", nullable: false)
+                    RecipeId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -141,38 +197,7 @@ namespace DigitalFamilyCookbook.Migrations
                         column: x => x.RecipeId,
                         principalSchema: "recipe",
                         principalTable: "Recipe",
-                        principalColumn: "RecipeId",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "RoleType",
-                schema: "application",
-                columns: table => new
-                {
-                    RoleTypeId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(25)", maxLength: 25, nullable: false),
-                    RecipeId = table.Column<int>(type: "int", nullable: true),
-                    UserAccountId = table.Column<string>(type: "nvarchar(450)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Application_RoleType_RoleTypeId", x => x.RoleTypeId);
-                    table.ForeignKey(
-                        name: "FK_RoleType_Recipe_RecipeId",
-                        column: x => x.RecipeId,
-                        principalSchema: "recipe",
-                        principalTable: "Recipe",
-                        principalColumn: "RecipeId",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_RoleType_UserAccount_UserAccountId",
-                        column: x => x.UserAccountId,
-                        principalSchema: "application",
-                        principalTable: "UserAccount",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        principalColumn: "RecipeId");
                 });
 
             migrationBuilder.CreateTable(
@@ -182,6 +207,7 @@ namespace DigitalFamilyCookbook.Migrations
                 {
                     StepId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Direction = table.Column<string>(type: "VARCHAR(MAX)", nullable: false),
                     SortOrder = table.Column<int>(type: "int", nullable: false),
                     RecipeId = table.Column<int>(type: "int", nullable: false)
@@ -205,6 +231,7 @@ namespace DigitalFamilyCookbook.Migrations
                 {
                     RecipeCategoryId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     RecipeId = table.Column<int>(type: "int", nullable: false),
                     CategoryId = table.Column<int>(type: "int", nullable: false)
                 },
@@ -234,6 +261,7 @@ namespace DigitalFamilyCookbook.Migrations
                 {
                     RecipeIngredientId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     RecipeId = table.Column<int>(type: "int", nullable: false),
                     IngredientId = table.Column<int>(type: "int", nullable: false)
                 },
@@ -263,6 +291,7 @@ namespace DigitalFamilyCookbook.Migrations
                 {
                     RecipeMeatId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     RecipeId = table.Column<int>(type: "int", nullable: false),
                     MeatId = table.Column<int>(type: "int", nullable: false)
                 },
@@ -286,41 +315,13 @@ namespace DigitalFamilyCookbook.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "UserAccountRoleType",
-                schema: "application",
-                columns: table => new
-                {
-                    UserAccountRoleTypeId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    UserAccountId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    RoleTypeId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Application_UserAccountRoleType_UserAccountRoleTypeId", x => x.UserAccountRoleTypeId);
-                    table.ForeignKey(
-                        name: "FK_UserAccountRoleType_RoleType_RoleTypeId",
-                        column: x => x.RoleTypeId,
-                        principalSchema: "application",
-                        principalTable: "RoleType",
-                        principalColumn: "RoleTypeId",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_UserAccountRoleType_UserAccount_UserAccountId",
-                        column: x => x.UserAccountId,
-                        principalSchema: "application",
-                        principalTable: "UserAccount",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "RecipeStep",
                 schema: "recipe",
                 columns: table => new
                 {
                     RecipeStepId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     RecipeId = table.Column<int>(type: "int", nullable: false),
                     StepId = table.Column<int>(type: "int", nullable: false)
                 },
@@ -420,10 +421,10 @@ namespace DigitalFamilyCookbook.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_RoleType_RecipeId",
+                name: "IX_RefreshToken_UserAccountId",
                 schema: "application",
-                table: "RoleType",
-                column: "RecipeId");
+                table: "RefreshToken",
+                column: "UserAccountId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_RoleType_UserAccountId",
@@ -436,19 +437,6 @@ namespace DigitalFamilyCookbook.Migrations
                 schema: "recipe",
                 table: "Step",
                 column: "RecipeId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_UserAccountRoleType_RoleTypeId",
-                schema: "application",
-                table: "UserAccountRoleType",
-                column: "RoleTypeId");
-
-            migrationBuilder.CreateIndex(
-                name: "UQ_Application_UserAccountRoleType_UserAccountId_RoleTypeId",
-                schema: "application",
-                table: "UserAccountRoleType",
-                columns: new[] { "UserAccountId", "RoleTypeId" },
-                unique: true);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -470,7 +458,11 @@ namespace DigitalFamilyCookbook.Migrations
                 schema: "recipe");
 
             migrationBuilder.DropTable(
-                name: "UserAccountRoleType",
+                name: "RefreshToken",
+                schema: "application");
+
+            migrationBuilder.DropTable(
+                name: "RoleType",
                 schema: "application");
 
             migrationBuilder.DropTable(
@@ -488,10 +480,6 @@ namespace DigitalFamilyCookbook.Migrations
             migrationBuilder.DropTable(
                 name: "Step",
                 schema: "recipe");
-
-            migrationBuilder.DropTable(
-                name: "RoleType",
-                schema: "application");
 
             migrationBuilder.DropTable(
                 name: "Recipe",

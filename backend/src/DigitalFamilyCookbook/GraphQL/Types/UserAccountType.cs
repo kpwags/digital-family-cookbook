@@ -11,6 +11,5 @@ public class UserAccountType : ObjectGraphType<UserAccount>
         Field(ua => ua.Name, type: typeof(StringGraphType)).Description("The name of the user");
         Field(ua => ua.Recipes, type: typeof(ListGraphType<RecipeType>)).Description("The recipes the user has created");
         Field(ua => ua.RoleTypes, type: typeof(ListGraphType<RoleTypeType>)).Description("The roles assigned to the user");
-        Field(ua => ua.UserAccountRoleTypes, type: typeof(ListGraphType<UserAccountRoleTypeType>)).Description("The collection of UserAccountRoleTypes");
     }
 }

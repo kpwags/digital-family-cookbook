@@ -1,7 +1,8 @@
+using DigitalFamilyCookbook.Data.Database;
 using GraphQL.SystemTextJson;
 using Microsoft.AspNetCore.Mvc;
 
-namespace DigitalFamilyCookbook.Controllers;
+namespace DigitalFamilyCookbook.Controllers.GQL;
 
 [Route("gql/user")]
 [ApiController]

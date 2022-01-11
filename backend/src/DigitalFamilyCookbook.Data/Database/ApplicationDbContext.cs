@@ -1,8 +1,9 @@
 #nullable disable
 
+using DigitalFamilyCookbook.Data.Dtos;
 using Microsoft.EntityFrameworkCore;
 
-namespace DigitalFamilyCookbook.Database;
+namespace DigitalFamilyCookbook.Data.Database;
 
 public class ApplicationDbContext : DbContext
 {
@@ -18,8 +19,6 @@ public class ApplicationDbContext : DbContext
 
     public DbSet<RoleType> RoleTypes { get; set; }
 
-    public DbSet<UserAccountRoleType> UserAccountRoleTypes { get; set; }
-
     public DbSet<RecipeCategory> RecipeCategories { get; set; }
 
     public DbSet<RecipeMeat> RecipeMeats { get; set; }
@@ -27,6 +26,8 @@ public class ApplicationDbContext : DbContext
     public DbSet<RecipeIngredient> RecipeIngredients { get; set; }
 
     public DbSet<RecipeStep> RecipeSteps { get; set; }
+
+    public DbSet<RefreshToken> RefreshTokens { get; set; }
 
     public DbSet<UserAccount> UserAccounts { get; set; }
 
@@ -48,6 +49,45 @@ public class ApplicationDbContext : DbContext
             .Property(u => u.Name)
             .HasMaxLength(255)
             .IsRequired();
+
+        #endregion
+
+        #region "application.RefreshToken"
+
+        modelBuilder.Entity<RefreshToken>()
+            .ToTable("RefreshToken", schema: "application");
+
+        modelBuilder.Entity<RefreshToken>()
+            .HasKey(rt => rt.RefreshTokenId)
+            .HasName("PK_Application_RefreshToken_RefreshTokenId");
+
+        modelBuilder.Entity<RefreshToken>()
+            .Property(rt => rt.Token)
+            .HasMaxLength(500)
+            .IsRequired();
+
+        modelBuilder.Entity<RefreshToken>()
+            .Property(rt => rt.JwtId)
+            .HasMaxLength(255)
+            .IsRequired();
+
+        modelBuilder.Entity<RefreshToken>()
+            .Property(rt => rt.IsUsed)
+            .IsRequired();
+
+        modelBuilder.Entity<RefreshToken>()
+            .Property(rt => rt.IsRevoked)
+            .IsRequired();
+
+        modelBuilder.Entity<RefreshToken>()
+            .Property(rt => rt.AddedDate)
+            .IsRequired()
+            .HasDefaultValue(DateTime.Now);
+
+        modelBuilder.Entity<RefreshToken>()
+            .HasOne(rt => rt.UserAccount)
+            .WithMany(u => u.RefreshTokens)
+            .HasForeignKey(rt => rt.UserAccountId);
 
         #endregion
 
@@ -308,41 +348,9 @@ public class ApplicationDbContext : DbContext
             .ToTable("RoleType", schema: "application");
 
         modelBuilder.Entity<RoleType>()
-            .HasKey(rt => rt.RoleTypeId)
-            .HasName("PK_Application_RoleType_RoleTypeId");
-
-        modelBuilder.Entity<RoleType>()
             .Property(rt => rt.Name)
             .HasMaxLength(25)
             .IsRequired();
-
-        #endregion
-
-        #region "application.UserAccountRoleType"
-
-        modelBuilder.Entity<UserAccountRoleType>()
-            .ToTable("UserAccountRoleType", schema: "application");
-
-        modelBuilder.Entity<UserAccountRoleType>()
-            .HasKey(uart => uart.UserAccountRoleTypeId)
-            .HasName("PK_Application_UserAccountRoleType_UserAccountRoleTypeId");
-
-        modelBuilder.Entity<UserAccountRoleType>()
-            .HasIndex(uart => new { uart.UserAccountId, uart.RoleTypeId })
-            .HasDatabaseName("UQ_Application_UserAccountRoleType_UserAccountId_RoleTypeId")
-            .IsUnique();
-
-        modelBuilder.Entity<UserAccountRoleType>()
-            .HasOne(uart => uart.UserAccount)
-            .WithMany(u => u.UserAccountRoleTypes)
-            .HasForeignKey(uart => uart.UserAccountId)
-            .OnDelete(DeleteBehavior.Restrict);
-
-        modelBuilder.Entity<UserAccountRoleType>()
-            .HasOne(uart => uart.RoleType)
-            .WithMany(rt => rt.UserAccountRoleTypes)
-            .HasForeignKey(uart => uart.RoleTypeId)
-            .OnDelete(DeleteBehavior.Restrict);
 
         #endregion
     }

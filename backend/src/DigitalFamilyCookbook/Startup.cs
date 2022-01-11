@@ -1,8 +1,9 @@
+using DigitalFamilyCookbook.Configuration;
+using DigitalFamilyCookbook.Core.Configuration;
+using DigitalFamilyCookbook.Data.Database;
 using GraphiQl;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.Identity.Web;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -15,32 +16,47 @@ namespace DigitalFamilyCookbook;
 
 public class Startup
 {
+    public IConfiguration Configuration { get; }
+
+    private DigitalFamilyCookbookConfiguration _configuration = new DigitalFamilyCookbookConfiguration();
+
     public Startup(IConfiguration configuration)
     {
         Configuration = configuration;
-    }
 
-    public IConfiguration Configuration { get; }
+        configuration.Bind(_configuration);
+    }
 
     // This method gets called by the runtime. Use this method to add services to the container.
     public void ConfigureServices(IServiceCollection services)
     {
+        services.AddSingleton(_configuration);
 
         services.AddDbContext<ApplicationDbContext>(options =>
-            options
-                .UseSqlServer(Configuration.GetConnectionString("Main")));
+        {
+            options.UseSqlServer(
+                Configuration.GetConnectionString("Main"),
+                dbOptions => dbOptions.MigrationsAssembly("DigitalFamilyCookbook")
+            );
+        });
 
-        services.AddIdentity<UserAccount, IdentityRole>()
+        services.AddTokenAuthentication(_configuration.Auth.JwtSecret);
+
+        services.AddIdentity<UserAccount, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
             .AddEntityFrameworkStores<ApplicationDbContext>();
-
-        services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-            .AddMicrosoftIdentityWebApi(Configuration.GetSection("AzureAdB2C"));
 
         services.AddControllers()
             .AddJsonOptions(options =>
             {
                 options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
             });
+
+        services.AddMvc();
+
+        services.AddMediatR(typeof(Startup));
+
+        services.AddRepositories();
+        services.AddServices();
 
         services.AddSwaggerGen(c =>
         {
