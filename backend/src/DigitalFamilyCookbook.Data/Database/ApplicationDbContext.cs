@@ -19,8 +19,6 @@ public class ApplicationDbContext : DbContext
 
     public DbSet<RoleType> RoleTypes { get; set; }
 
-    public DbSet<UserAccountRoleType> UserAccountRoleTypes { get; set; }
-
     public DbSet<RecipeCategory> RecipeCategories { get; set; }
 
     public DbSet<RecipeMeat> RecipeMeats { get; set; }
@@ -350,41 +348,9 @@ public class ApplicationDbContext : DbContext
             .ToTable("RoleType", schema: "application");
 
         modelBuilder.Entity<RoleType>()
-            .HasKey(rt => rt.RoleTypeId)
-            .HasName("PK_Application_RoleType_RoleTypeId");
-
-        modelBuilder.Entity<RoleType>()
             .Property(rt => rt.Name)
             .HasMaxLength(25)
             .IsRequired();
-
-        #endregion
-
-        #region "application.UserAccountRoleType"
-
-        modelBuilder.Entity<UserAccountRoleType>()
-            .ToTable("UserAccountRoleType", schema: "application");
-
-        modelBuilder.Entity<UserAccountRoleType>()
-            .HasKey(uart => uart.UserAccountRoleTypeId)
-            .HasName("PK_Application_UserAccountRoleType_UserAccountRoleTypeId");
-
-        modelBuilder.Entity<UserAccountRoleType>()
-            .HasIndex(uart => new { uart.UserAccountId, uart.RoleTypeId })
-            .HasDatabaseName("UQ_Application_UserAccountRoleType_UserAccountId_RoleTypeId")
-            .IsUnique();
-
-        modelBuilder.Entity<UserAccountRoleType>()
-            .HasOne(uart => uart.UserAccount)
-            .WithMany(u => u.UserAccountRoleTypes)
-            .HasForeignKey(uart => uart.UserAccountId)
-            .OnDelete(DeleteBehavior.Restrict);
-
-        modelBuilder.Entity<UserAccountRoleType>()
-            .HasOne(uart => uart.RoleType)
-            .WithMany(rt => rt.UserAccountRoleTypes)
-            .HasForeignKey(uart => uart.RoleTypeId)
-            .OnDelete(DeleteBehavior.Restrict);
 
         #endregion
     }

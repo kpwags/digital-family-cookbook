@@ -324,7 +324,7 @@ namespace DigitalFamilyCookbook.Migrations
                     b.Property<DateTime>("AddedDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2022, 1, 9, 10, 15, 55, 940, DateTimeKind.Local).AddTicks(5690));
+                        .HasDefaultValue(new DateTime(2022, 1, 10, 20, 12, 26, 446, DateTimeKind.Local).AddTicks(6990));
 
                     b.Property<DateTime>("ExpirationDate")
                         .HasColumnType("datetime2");
@@ -362,13 +362,10 @@ namespace DigitalFamilyCookbook.Migrations
 
             modelBuilder.Entity("DigitalFamilyCookbook.Data.Dtos.RoleType", b =>
                 {
-                    b.Property<int>("RoleTypeId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RoleTypeId"), 1L, 1);
-
                     b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ConcurrencyStamp")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
@@ -376,11 +373,17 @@ namespace DigitalFamilyCookbook.Migrations
                         .HasMaxLength(25)
                         .HasColumnType("nvarchar(25)");
 
+                    b.Property<string>("NormalizedName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RoleTypeId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("UserAccountId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.HasKey("RoleTypeId")
-                        .HasName("PK_Application_RoleType_RoleTypeId");
+                    b.HasKey("Id");
 
                     b.HasIndex("UserAccountId");
 
@@ -475,36 +478,6 @@ namespace DigitalFamilyCookbook.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("UserAccount", "application");
-                });
-
-            modelBuilder.Entity("DigitalFamilyCookbook.Data.Dtos.UserAccountRoleType", b =>
-                {
-                    b.Property<int>("UserAccountRoleTypeId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserAccountRoleTypeId"), 1L, 1);
-
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("RoleTypeId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UserAccountId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("UserAccountRoleTypeId")
-                        .HasName("PK_Application_UserAccountRoleType_UserAccountRoleTypeId");
-
-                    b.HasIndex("RoleTypeId");
-
-                    b.HasIndex("UserAccountId", "RoleTypeId")
-                        .IsUnique()
-                        .HasDatabaseName("UQ_Application_UserAccountRoleType_UserAccountId_RoleTypeId");
-
-                    b.ToTable("UserAccountRoleType", "application");
                 });
 
             modelBuilder.Entity("DigitalFamilyCookbook.Data.Dtos.Category", b =>
@@ -652,25 +625,6 @@ namespace DigitalFamilyCookbook.Migrations
                     b.Navigation("Recipe");
                 });
 
-            modelBuilder.Entity("DigitalFamilyCookbook.Data.Dtos.UserAccountRoleType", b =>
-                {
-                    b.HasOne("DigitalFamilyCookbook.Data.Dtos.RoleType", "RoleType")
-                        .WithMany("UserAccountRoleTypes")
-                        .HasForeignKey("RoleTypeId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("DigitalFamilyCookbook.Data.Dtos.UserAccount", "UserAccount")
-                        .WithMany("UserAccountRoleTypes")
-                        .HasForeignKey("UserAccountId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("RoleType");
-
-                    b.Navigation("UserAccount");
-                });
-
             modelBuilder.Entity("DigitalFamilyCookbook.Data.Dtos.Category", b =>
                 {
                     b.Navigation("RecipeCategories");
@@ -705,11 +659,6 @@ namespace DigitalFamilyCookbook.Migrations
                     b.Navigation("Steps");
                 });
 
-            modelBuilder.Entity("DigitalFamilyCookbook.Data.Dtos.RoleType", b =>
-                {
-                    b.Navigation("UserAccountRoleTypes");
-                });
-
             modelBuilder.Entity("DigitalFamilyCookbook.Data.Dtos.Step", b =>
                 {
                     b.Navigation("RecipeSteps");
@@ -722,8 +671,6 @@ namespace DigitalFamilyCookbook.Migrations
                     b.Navigation("RefreshTokens");
 
                     b.Navigation("RoleTypes");
-
-                    b.Navigation("UserAccountRoleTypes");
                 });
 #pragma warning restore 612, 618
         }

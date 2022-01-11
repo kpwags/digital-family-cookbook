@@ -14,13 +14,13 @@ public class AuthService : IAuthService
     private readonly TokenValidationParameters _tokenValidationParameters;
     private readonly UserManager<UserAccount> _userManager;
     private readonly SignInManager<UserAccount> _signInManager;
-    private readonly RoleManager<IdentityRole> _roleManager;
+    private readonly RoleManager<RoleType> _roleManager;
     private readonly IRefreshTokenRepository _refreshTokenRepository;
 
     public AuthService(DigitalFamilyCookbookConfiguration configuration,
         UserManager<UserAccount> userManager,
         SignInManager<UserAccount> signInManager,
-        RoleManager<IdentityRole> roleManager,
+        RoleManager<RoleType> roleManager,
         TokenValidationParameters tokenValidationParameters,
         IRefreshTokenRepository refreshTokenRepository)
     {

@@ -33,8 +33,12 @@ public class Startup
         services.AddSingleton(_configuration);
 
         services.AddDbContext<ApplicationDbContext>(options =>
-            options
-                .UseSqlServer(Configuration.GetConnectionString("Main")));
+        {
+            options.UseSqlServer(
+                Configuration.GetConnectionString("Main"),
+                dbOptions => dbOptions.MigrationsAssembly("DigitalFamilyCookbook")
+            );
+        });
 
         services.AddTokenAuthentication(_configuration.Auth.JwtSecret);
 

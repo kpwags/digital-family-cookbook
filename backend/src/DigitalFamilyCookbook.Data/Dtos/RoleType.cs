@@ -1,14 +1,10 @@
+using Microsoft.AspNetCore.Identity;
+
 namespace DigitalFamilyCookbook.Data.Dtos;
 
-public class RoleType
+public class RoleType : IdentityRole
 {
-    public string Id { get; set; } = string.Empty;
-
-    public int RoleTypeId { get; set; }
-
-    public string Name { get; set; } = string.Empty;
-
-    public IEnumerable<UserAccountRoleType> UserAccountRoleTypes { get; set; } = Enumerable.Empty<UserAccountRoleType>();
+    public string RoleTypeId { get; set; } = string.Empty;
 
     public UserAccount UserAccount { get; set; } = UserAccount.None();
 

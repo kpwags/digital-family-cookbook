@@ -17,9 +17,6 @@ public class UserAccount : IdentityUser
     public IEnumerable<RoleType> RoleTypes { get; set; } = Enumerable.Empty<RoleType>();
 
     [PersonalData]
-    public IEnumerable<UserAccountRoleType> UserAccountRoleTypes { get; set; } = Enumerable.Empty<UserAccountRoleType>();
-
-    [PersonalData]
     public IEnumerable<RefreshToken> RefreshTokens { get; set; } = Enumerable.Empty<RefreshToken>();
 
     public static UserAccount None() => new UserAccount();
