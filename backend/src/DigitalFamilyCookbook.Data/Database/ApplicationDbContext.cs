@@ -1,10 +1,11 @@
 #nullable disable
 
+using DigitalFamilyCookbook.Data.Dtos;
 using Microsoft.EntityFrameworkCore;
 
-namespace DigitalFamilyCookbook.Database;
+namespace DigitalFamilyCookbook.Data.Database;
 
-public class ApplicationDbContextOld : DbContext
+public class ApplicationDbContext : DbContext
 {
     public DbSet<Category> Categories { get; set; }
 
@@ -32,7 +33,7 @@ public class ApplicationDbContextOld : DbContext
 
     public DbSet<UserAccount> UserAccounts { get; set; }
 
-    public ApplicationDbContextOld(DbContextOptions<ApplicationDbContextOld> options) : base(options)
+    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
     {
 
     }

@@ -1,4 +1,4 @@
-namespace DigitalFamilyCookbook.Configuration;
+namespace DigitalFamilyCookbook.Core.Configuration;
 
 public class AuthConfiguration
 {

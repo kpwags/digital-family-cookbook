@@ -1,11 +1,9 @@
 using DigitalFamilyCookbook.Configuration;
-using DigitalFamilyCookbook.Services;
+using DigitalFamilyCookbook.Core.Configuration;
+using DigitalFamilyCookbook.Data.Database;
 using GraphiQl;
-using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.Identity.Web;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -38,11 +36,10 @@ public class Startup
             options
                 .UseSqlServer(Configuration.GetConnectionString("Main")));
 
-        services.AddIdentity<UserAccount, IdentityRole>()
-            .AddEntityFrameworkStores<ApplicationDbContext>();
+        services.AddTokenAuthentication(_configuration.Auth.JwtSecret);
 
-        services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-            .AddMicrosoftIdentityWebApi(Configuration.GetSection("AzureAdB2C"));
+        services.AddIdentity<UserAccount, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
+            .AddEntityFrameworkStores<ApplicationDbContext>();
 
         services.AddControllers()
             .AddJsonOptions(options =>
@@ -54,6 +51,7 @@ public class Startup
 
         services.AddMediatR(typeof(Startup));
 
+        services.AddRepositories();
         services.AddServices();
 
         services.AddSwaggerGen(c =>

@@ -1,3 +1,4 @@
+using DigitalFamilyCookbook.Data.Database;
 using Microsoft.EntityFrameworkCore;
 
 namespace DigitalFamilyCookbook.GraphQL.Queries;

@@ -1,4 +1,4 @@
-using DigitalFamilyCookbook.Services;
+using DigitalFamilyCookbook.Core.Services;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace DigitalFamilyCookbook.Configuration

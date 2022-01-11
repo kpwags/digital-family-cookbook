@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 
-namespace DigitalFamilyCookbook.Data.Models;
+namespace DigitalFamilyCookbook.Data.Dtos;
 
 public class UserAccount : IdentityUser
 {
@@ -18,6 +18,9 @@ public class UserAccount : IdentityUser
 
     [PersonalData]
     public IEnumerable<UserAccountRoleType> UserAccountRoleTypes { get; set; } = Enumerable.Empty<UserAccountRoleType>();
+
+    [PersonalData]
+    public IEnumerable<RefreshToken> RefreshTokens { get; set; } = Enumerable.Empty<RefreshToken>();
 
     public static UserAccount None() => new UserAccount();
 }

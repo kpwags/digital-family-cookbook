@@ -1,4 +1,4 @@
-namespace DigitalFamilyCookbook.Data.Models;
+namespace DigitalFamilyCookbook.Data.Dtos;
 
 public class RecipeIngredient
 {

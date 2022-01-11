@@ -6,7 +6,7 @@ using System.Threading;
 
 namespace DigitalFamilyCookbook.Handlers.Commands.Auth;
 
-public class Login
+public class Register
 {
     public class Handler : IRequestHandler<Command, OperationResult<AuthToken>>
     {
@@ -19,7 +19,12 @@ public class Login
 
         public async Task<OperationResult<AuthToken>> Handle(Command cmd, CancellationToken cancellationToken)
         {
-            var result = await _authService.LoginUser(cmd.Email, cmd.Password);
+            if (cmd.Password != cmd.ConfirmPassword)
+            {
+                return new OperationResult<AuthToken>("Passwords do not match");
+            }
+
+            var result = await _authService.RegisterUser(cmd.Email, cmd.Password, cmd.Name);
 
             if (result.IsSuccessful)
             {
@@ -32,8 +37,12 @@ public class Login
 
     public class Command : IRequest<OperationResult<AuthToken>>
     {
+        public string Name { get; set; } = string.Empty;
+
         public string Email { get; set; } = string.Empty;
 
         public string Password { get; set; } = string.Empty;
+
+        public string ConfirmPassword { get; set; } = string.Empty;
     }
 }

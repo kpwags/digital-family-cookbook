@@ -1,4 +1,4 @@
-namespace DigitalFamilyCookbook.Core.Models;
+namespace DigitalFamilyCookbook.Data.Models;
 
 public class OperationResult<T> where T : class
 {
