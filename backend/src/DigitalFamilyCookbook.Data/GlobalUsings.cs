@@ -1,3 +1,4 @@
+global using DigitalFamilyCookbook.Data.Database;
 global using DigitalFamilyCookbook.Data.Dtos;
 global using System;
 global using System.Collections.Generic;
