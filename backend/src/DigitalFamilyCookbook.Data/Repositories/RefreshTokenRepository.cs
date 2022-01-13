@@ -1,5 +1,3 @@
-using DigitalFamilyCookbook.Data.Database;
-
 namespace DigitalFamilyCookbook.Data.Repositories;
 
 public class RefreshTokenRepository : IRefreshTokenRepository

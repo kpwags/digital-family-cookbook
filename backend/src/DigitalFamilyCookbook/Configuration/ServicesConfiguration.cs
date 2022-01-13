@@ -8,6 +8,7 @@ namespace DigitalFamilyCookbook.Configuration
         public static void AddServices(this IServiceCollection services)
         {
             services.AddScoped<IAuthService, AuthService>();
+            services.AddScoped<IRoleService, RoleService>();
         }
     }
 }

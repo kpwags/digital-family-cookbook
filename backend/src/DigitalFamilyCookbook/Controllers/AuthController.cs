@@ -9,7 +9,7 @@ namespace DigitalFamilyCookbook.Controllers;
 [ApiController]
 public class AuthController : Controller
 {
-    private IMediator _mediatr;
+    private readonly IMediator _mediatr;
 
     public AuthController(IMediator mediatr)
     {
