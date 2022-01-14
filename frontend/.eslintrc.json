@@ -1,0 +1,72 @@
+{
+    "env": {
+        "browser": true,
+        "commonjs": true,
+        "es2020": true,
+        "jest": true
+    },
+    "extends": ["plugin:react/recommended", "airbnb", "plugin:@typescript-eslint/recommended"],
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+        "ecmaFeatures": {
+            "jsx": true
+        },
+        "ecmaVersion": 11
+    },
+    "plugins": ["react", "@typescript-eslint"],
+    "rules": {
+        "react/jsx-filename-extension": [2, { "extensions": [".js", ".jsx", ".ts", ".tsx"] }],
+        "import/no-unresolved": 2,
+        "import/extensions": [
+            "error",
+            "always",
+            {
+                "js": "never",
+                "jsx": "never",
+                "ts": "never",
+                "tsx": "never"
+            }
+        ],
+        "max-len": ["error", { "code": 180, "ignoreComments": true }],
+        "react/react-in-jsx-scope": "off",
+        "import/prefer-default-export": 0,
+        // Indent with 4 spaces
+        "indent": ["error", 4, { "SwitchCase": 1 }],
+
+        // Indent JSX with 4 spaces
+        "react/jsx-indent": ["error", 4],
+
+        // Indent props with 4 spaces
+        "react/jsx-indent-props": ["error", 4],
+
+        "react/prop-types": 0,
+
+        "import/no-extraneous-dependencies": [
+            "error",
+            { "devDependencies": ["**/*.test.js", "**/*.test.jsx", "**/*.test.ts", "**/*.test.tsx", "**/*.d.ts", "**/test/*.js"] }
+        ],
+        "@typescript-eslint/no-unused-vars": "off",
+        "no-unused-vars": "off",
+        "react/require-default-props": "off",
+        "react/jsx-one-expression-per-line": "off",
+        "react/jsx-props-no-spreading": "off",
+        "react/function-component-definition": "off"
+    },
+    "settings": {
+        "import/resolver": {
+            "node": {
+                "extensions": [".js", ".jsx", ".ts", ".tsx"]
+            },
+            "alias": {
+                "extensions": [".js", ".jsx", ".ts", ".tsx"],
+                "map": [
+                    ["@components", "./src/components"],
+                    ["@contexts", "./src/contexts"],
+                    ["@lib", "./src/lib"],
+                    ["@models", "./src/models"],
+                    ["@test", "./src/test"]
+                ]
+            }
+        }
+    }
+}
