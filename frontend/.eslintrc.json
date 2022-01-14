@@ -46,11 +46,11 @@
             { "devDependencies": ["**/*.test.js", "**/*.test.jsx", "**/*.test.ts", "**/*.test.tsx", "**/*.d.ts", "**/test/*.js"] }
         ],
         "@typescript-eslint/no-unused-vars": "off",
-        "no-unused-vars": "off",
         "react/require-default-props": "off",
         "react/jsx-one-expression-per-line": "off",
         "react/jsx-props-no-spreading": "off",
-        "react/function-component-definition": "off"
+        "react/function-component-definition": "off",
+        "no-unused-vars": ["error", { "vars": "all", "args": "after-used", "ignoreRestSiblings": false }]
     },
     "settings": {
         "import/resolver": {
