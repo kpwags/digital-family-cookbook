@@ -9,7 +9,7 @@ type NavBarProps = {
 }
 
 const NavBar = ({
-    selectedItem,
+    selectedItem = '',
 }: NavBarProps): JSX.Element => {
     const isUserLoggedIn = false;
 
