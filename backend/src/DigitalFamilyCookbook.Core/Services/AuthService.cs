@@ -12,15 +12,15 @@ public class AuthService : IAuthService
 {
     private readonly DigitalFamilyCookbookConfiguration _configuration;
     private readonly TokenValidationParameters _tokenValidationParameters;
-    private readonly UserManager<UserAccount> _userManager;
-    private readonly SignInManager<UserAccount> _signInManager;
-    private readonly RoleManager<RoleType> _roleManager;
+    private readonly UserManager<UserAccountDto> _userManager;
+    private readonly SignInManager<UserAccountDto> _signInManager;
+    private readonly RoleManager<RoleTypeDto> _roleManager;
     private readonly IRefreshTokenRepository _refreshTokenRepository;
 
     public AuthService(DigitalFamilyCookbookConfiguration configuration,
-        UserManager<UserAccount> userManager,
-        SignInManager<UserAccount> signInManager,
-        RoleManager<RoleType> roleManager,
+        UserManager<UserAccountDto> userManager,
+        SignInManager<UserAccountDto> signInManager,
+        RoleManager<RoleTypeDto> roleManager,
         TokenValidationParameters tokenValidationParameters,
         IRefreshTokenRepository refreshTokenRepository)
     {
@@ -66,7 +66,7 @@ public class AuthService : IAuthService
             };
         }
 
-        var newUser = new UserAccount
+        var newUser = new UserAccountDto
         {
             Email = email,
             Name = name,
@@ -86,7 +86,7 @@ public class AuthService : IAuthService
         };
     }
 
-    private async Task<AuthResult> GenerateToken(UserAccount user)
+    private async Task<AuthResult> GenerateToken(UserAccountDto user)
     {
         var jwtTokenHandler = new JwtSecurityTokenHandler();
 
@@ -102,7 +102,7 @@ public class AuthService : IAuthService
         var token = jwtTokenHandler.CreateToken(tokenDescriptor);
         var jwtToken = jwtTokenHandler.WriteToken(token);
 
-        var refreshToken = new RefreshToken()
+        var refreshToken = new RefreshTokenDto()
         {
             JwtId = token.Id,
             IsUsed = false,
@@ -123,7 +123,7 @@ public class AuthService : IAuthService
         };
     }
 
-    private async Task<List<Claim>> GetUserClaims(UserAccount user)
+    private async Task<List<Claim>> GetUserClaims(UserAccountDto user)
     {
         var claims = new List<Claim>
             {

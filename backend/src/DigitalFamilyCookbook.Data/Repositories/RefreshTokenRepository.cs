@@ -9,7 +9,7 @@ public class RefreshTokenRepository : IRefreshTokenRepository
         _db = db;
     }
 
-    public async Task<RefreshToken> Add(RefreshToken refreshToken)
+    public async Task<RefreshTokenDto> Add(RefreshTokenDto refreshToken)
     {
         var token = await _db.RefreshTokens.AddAsync(refreshToken);
         await _db.SaveChangesAsync();

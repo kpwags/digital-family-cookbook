@@ -1,6 +1,6 @@
 namespace DigitalFamilyCookbook.Data.Dtos;
 
-public class Step
+public class StepDto
 {
     public string Id { get; set; } = string.Empty;
 
@@ -10,9 +10,9 @@ public class Step
 
     public int SortOrder { get; set; }
 
-    public IEnumerable<RecipeStep> RecipeSteps { get; set; } = Enumerable.Empty<RecipeStep>();
+    public IEnumerable<RecipeStepDto> RecipeSteps { get; set; } = Enumerable.Empty<RecipeStepDto>();
 
-    public Recipe Recipe { get; set; } = Recipe.None();
+    public RecipeDto Recipe { get; set; } = RecipeDto.None();
 
-    public static Step None() => new Step();
+    public static StepDto None() => new StepDto();
 }

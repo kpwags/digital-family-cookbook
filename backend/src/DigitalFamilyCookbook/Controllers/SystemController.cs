@@ -33,7 +33,7 @@ public class SystemController : Controller
     }
 
     [HttpGet("getroles")]
-    public async Task<IReadOnlyCollection<RoleType>> GetRoles(GetRoleTypes.Query query, CancellationToken cancellationToken)
+    public async Task<IReadOnlyCollection<RoleTypeDto>> GetRoles(GetRoleTypes.Query query, CancellationToken cancellationToken)
     {
         var roles = await _mediatr.Send(query, cancellationToken);
 
@@ -46,5 +46,23 @@ public class SystemController : Controller
         var role = await _mediatr.Send(command, cancellationToken);
 
         return Ok();
+    }
+
+    [HttpGet("getsitesettings")]
+    public async Task<ActionResult<SiteSettingsApiModel>> GetSiteSettings(CancellationToken cancellationToken)
+    {
+        var settings = await _mediatr.Send(new GetSiteSettings.Query(), cancellationToken);
+
+        if (!settings.IsSuccessful)
+        {
+            return BadRequest(settings.ErrorMessage);
+        }
+
+        if (settings.Value == null)
+        {
+            return BadRequest("Unable to load system settings");
+        }
+
+        return settings.Value;
     }
 }

@@ -1,5 +1,7 @@
+import { useContext } from 'react';
 import { Layout, Menu } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
+import { AppContext } from '@contexts/AppContext';
 import './NavBar.css';
 
 const { Header } = Layout;
@@ -11,11 +13,13 @@ type NavBarProps = {
 const NavBar = ({
     selectedItem = '',
 }: NavBarProps): JSX.Element => {
+    const { siteSettings } = useContext(AppContext);
+
     const isUserLoggedIn = false;
 
     return (
         <Header className="nav">
-            <div className="logo">Digital Family Cookbook</div>
+            <div className="logo">{siteSettings.title}</div>
             <Menu theme="dark" mode="horizontal" selectedKeys={[selectedItem]} className="nav-bar-menu">
                 <Menu.Item key="categories">Categories</Menu.Item>
                 <Menu.Item key="meats">Meats</Menu.Item>

@@ -1,6 +1,6 @@
 namespace DigitalFamilyCookbook.Data.Dtos;
 
-public class RefreshToken
+public class RefreshTokenDto
 {
     public string Id { get; set; } = string.Empty;
 
@@ -20,5 +20,5 @@ public class RefreshToken
 
     public DateTime ExpirationDate { get; set; }
 
-    public UserAccount UserAccount { get; set; } = new UserAccount();
+    public UserAccountDto UserAccount { get; set; } = new UserAccountDto();
 }

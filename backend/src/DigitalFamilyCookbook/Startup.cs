@@ -32,6 +32,16 @@ public class Startup
     {
         services.AddSingleton(_configuration);
 
+        services.AddCors(options =>
+        {
+            options.AddPolicy(name: "Development", builder =>
+            {
+                builder.WithOrigins(_configuration.CorsAllowedOrigins.ToArray())
+                    .AllowAnyHeader()
+                    .AllowAnyMethod();
+            });
+        });
+
         services.AddDbContext<ApplicationDbContext>(options =>
         {
             options.UseSqlServer(
@@ -42,7 +52,7 @@ public class Startup
 
         services.AddTokenAuthentication(_configuration.Auth.JwtSecret);
 
-        services.AddIdentity<UserAccount, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
+        services.AddIdentity<UserAccountDto, RoleTypeDto>(options => options.SignIn.RequireConfirmedAccount = true)
             .AddEntityFrameworkStores<ApplicationDbContext>();
 
         services.AddControllers()
@@ -57,11 +67,6 @@ public class Startup
 
         services.AddRepositories();
         services.AddServices();
-
-        services.AddSwaggerGen(c =>
-        {
-            c.SwaggerDoc("v1", new OpenApiInfo { Title = "DigitalFamilyCookbook", Version = "v1" });
-        });
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -70,13 +75,13 @@ public class Startup
         if (env.IsDevelopment())
         {
             app.UseDeveloperExceptionPage();
-            app.UseSwagger();
-            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "DigitalFamilyCookbook v1"));
         }
 
         app.UseHttpsRedirection();
 
         app.UseRouting();
+
+        app.UseCors("Development");
 
         app.UseGraphiQl("/graphql");
 
