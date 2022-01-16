@@ -7,29 +7,31 @@ namespace DigitalFamilyCookbook.Data.Database;
 
 public class ApplicationDbContext : DbContext
 {
-    public DbSet<Category> Categories { get; set; }
+    public DbSet<CategoryDto> Categories { get; set; }
 
-    public DbSet<Meat> Meats { get; set; }
+    public DbSet<MeatDto> Meats { get; set; }
 
-    public DbSet<Recipe> Recipes { get; set; }
+    public DbSet<RecipeDto> Recipes { get; set; }
 
-    public DbSet<Ingredient> Ingredients { get; set; }
+    public DbSet<IngredientDto> Ingredients { get; set; }
 
-    public DbSet<Step> Steps { get; set; }
+    public DbSet<StepDto> Steps { get; set; }
 
-    public DbSet<RoleType> RoleTypes { get; set; }
+    public DbSet<RoleTypeDto> RoleTypes { get; set; }
 
-    public DbSet<RecipeCategory> RecipeCategories { get; set; }
+    public DbSet<RecipeCategoryDto> RecipeCategories { get; set; }
 
-    public DbSet<RecipeMeat> RecipeMeats { get; set; }
+    public DbSet<RecipeMeatDto> RecipeMeats { get; set; }
 
-    public DbSet<RecipeIngredient> RecipeIngredients { get; set; }
+    public DbSet<RecipeIngredientDto> RecipeIngredients { get; set; }
 
-    public DbSet<RecipeStep> RecipeSteps { get; set; }
+    public DbSet<RecipeStepDto> RecipeSteps { get; set; }
 
-    public DbSet<RefreshToken> RefreshTokens { get; set; }
+    public DbSet<RefreshTokenDto> RefreshTokens { get; set; }
 
-    public DbSet<UserAccount> UserAccounts { get; set; }
+    public DbSet<SiteSettingsDto> SiteSettings { get; set; }
+
+    public DbSet<UserAccountDto> UserAccounts { get; set; }
 
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
     {
@@ -42,10 +44,10 @@ public class ApplicationDbContext : DbContext
 
         #region "application.UserAccount"
 
-        modelBuilder.Entity<UserAccount>()
+        modelBuilder.Entity<UserAccountDto>()
             .ToTable("UserAccount", schema: "application");
 
-        modelBuilder.Entity<UserAccount>()
+        modelBuilder.Entity<UserAccountDto>()
             .Property(u => u.Name)
             .HasMaxLength(255)
             .IsRequired();
@@ -54,37 +56,37 @@ public class ApplicationDbContext : DbContext
 
         #region "application.RefreshToken"
 
-        modelBuilder.Entity<RefreshToken>()
+        modelBuilder.Entity<RefreshTokenDto>()
             .ToTable("RefreshToken", schema: "application");
 
-        modelBuilder.Entity<RefreshToken>()
+        modelBuilder.Entity<RefreshTokenDto>()
             .HasKey(rt => rt.RefreshTokenId)
             .HasName("PK_Application_RefreshToken_RefreshTokenId");
 
-        modelBuilder.Entity<RefreshToken>()
+        modelBuilder.Entity<RefreshTokenDto>()
             .Property(rt => rt.Token)
             .HasMaxLength(500)
             .IsRequired();
 
-        modelBuilder.Entity<RefreshToken>()
+        modelBuilder.Entity<RefreshTokenDto>()
             .Property(rt => rt.JwtId)
             .HasMaxLength(255)
             .IsRequired();
 
-        modelBuilder.Entity<RefreshToken>()
+        modelBuilder.Entity<RefreshTokenDto>()
             .Property(rt => rt.IsUsed)
             .IsRequired();
 
-        modelBuilder.Entity<RefreshToken>()
+        modelBuilder.Entity<RefreshTokenDto>()
             .Property(rt => rt.IsRevoked)
             .IsRequired();
 
-        modelBuilder.Entity<RefreshToken>()
+        modelBuilder.Entity<RefreshTokenDto>()
             .Property(rt => rt.AddedDate)
             .IsRequired()
             .HasDefaultValue(DateTime.Now);
 
-        modelBuilder.Entity<RefreshToken>()
+        modelBuilder.Entity<RefreshTokenDto>()
             .HasOne(rt => rt.UserAccount)
             .WithMany(u => u.RefreshTokens)
             .HasForeignKey(rt => rt.UserAccountId);
@@ -93,75 +95,75 @@ public class ApplicationDbContext : DbContext
 
         #region "recipe.Recipe"
 
-        modelBuilder.Entity<Recipe>()
+        modelBuilder.Entity<RecipeDto>()
             .ToTable("Recipe", schema: "recipe");
 
-        modelBuilder.Entity<Recipe>()
+        modelBuilder.Entity<RecipeDto>()
             .HasKey(r => r.RecipeId)
             .HasName("PK_Recipe_Recipe_RecipeId");
 
-        modelBuilder.Entity<Recipe>()
+        modelBuilder.Entity<RecipeDto>()
             .Property(r => r.Name)
             .HasMaxLength(255)
             .IsRequired();
 
-        modelBuilder.Entity<Recipe>()
+        modelBuilder.Entity<RecipeDto>()
             .Property(r => r.Description)
             .HasMaxLength(2000);
 
-        modelBuilder.Entity<Recipe>()
+        modelBuilder.Entity<RecipeDto>()
             .Property(r => r.IsPublic)
             .HasDefaultValue(false);
 
-        modelBuilder.Entity<Recipe>()
+        modelBuilder.Entity<RecipeDto>()
             .Property(r => r.Notes)
             .HasMaxLength(2000);
 
-        modelBuilder.Entity<Recipe>()
+        modelBuilder.Entity<RecipeDto>()
             .Property(r => r.Source)
             .HasMaxLength(255);
 
-        modelBuilder.Entity<Recipe>()
+        modelBuilder.Entity<RecipeDto>()
             .Property(r => r.SourceUrl)
             .HasMaxLength(500);
 
-        modelBuilder.Entity<Recipe>()
+        modelBuilder.Entity<RecipeDto>()
             .Property(r => r.ImageUrl)
             .HasMaxLength(500);
 
-        modelBuilder.Entity<Recipe>()
+        modelBuilder.Entity<RecipeDto>()
             .Property(r => r.ImageUrlLarge)
             .HasMaxLength(500);
 
-        modelBuilder.Entity<Recipe>()
+        modelBuilder.Entity<RecipeDto>()
             .Property(r => r.Calories)
             .HasPrecision(10, 2);
 
-        modelBuilder.Entity<Recipe>()
+        modelBuilder.Entity<RecipeDto>()
             .Property(r => r.Carbohydrates)
             .HasPrecision(10, 2);
 
-        modelBuilder.Entity<Recipe>()
+        modelBuilder.Entity<RecipeDto>()
             .Property(r => r.Sugar)
             .HasPrecision(10, 2);
 
-        modelBuilder.Entity<Recipe>()
+        modelBuilder.Entity<RecipeDto>()
             .Property(r => r.Fat)
             .HasPrecision(10, 2);
 
-        modelBuilder.Entity<Recipe>()
+        modelBuilder.Entity<RecipeDto>()
             .Property(r => r.Protein)
             .HasPrecision(10, 2);
 
-        modelBuilder.Entity<Recipe>()
+        modelBuilder.Entity<RecipeDto>()
             .Property(r => r.Fiber)
             .HasPrecision(10, 2);
 
-        modelBuilder.Entity<Recipe>()
+        modelBuilder.Entity<RecipeDto>()
             .Property(r => r.Cholesterol)
             .HasPrecision(10, 2);
 
-        modelBuilder.Entity<Recipe>()
+        modelBuilder.Entity<RecipeDto>()
             .HasOne(r => r.UserAccount)
             .WithMany(u => u.Recipes);
 
@@ -169,14 +171,14 @@ public class ApplicationDbContext : DbContext
 
         #region "recipe.Ingredient"
 
-        modelBuilder.Entity<Ingredient>()
+        modelBuilder.Entity<IngredientDto>()
             .ToTable("Ingredient", schema: "recipe");
 
-        modelBuilder.Entity<Ingredient>()
+        modelBuilder.Entity<IngredientDto>()
             .HasKey(i => i.IngredientId)
             .HasName("PK_Recipe_Ingredient_IngredientId");
 
-        modelBuilder.Entity<Ingredient>()
+        modelBuilder.Entity<IngredientDto>()
             .Property(i => i.Name)
             .HasMaxLength(255)
             .IsRequired();
@@ -185,25 +187,25 @@ public class ApplicationDbContext : DbContext
 
         #region "recipe.RecipeIngredient"
 
-        modelBuilder.Entity<RecipeIngredient>()
+        modelBuilder.Entity<RecipeIngredientDto>()
             .ToTable("RecipeIngredient", schema: "recipe");
 
-        modelBuilder.Entity<RecipeIngredient>()
+        modelBuilder.Entity<RecipeIngredientDto>()
             .HasKey(ri => ri.RecipeIngredientId)
             .HasName("PK_Recipe_RecipeIngredient_RecipeIngredientId");
 
-        modelBuilder.Entity<RecipeIngredient>()
+        modelBuilder.Entity<RecipeIngredientDto>()
             .HasIndex(ri => new { ri.RecipeId, ri.IngredientId })
             .HasDatabaseName("UQ_Recipe_RecipeIngredient_RecipeId_IngredientId")
             .IsUnique();
 
-        modelBuilder.Entity<RecipeIngredient>()
+        modelBuilder.Entity<RecipeIngredientDto>()
             .HasOne(ri => ri.Recipe)
             .WithMany(r => r.RecipeIngredients)
             .HasForeignKey(ri => ri.RecipeId)
             .OnDelete(DeleteBehavior.Restrict);
 
-        modelBuilder.Entity<RecipeIngredient>()
+        modelBuilder.Entity<RecipeIngredientDto>()
             .HasOne(ri => ri.Ingredient)
             .WithMany(i => i.RecipeIngredients)
             .OnDelete(DeleteBehavior.Restrict);
@@ -212,14 +214,14 @@ public class ApplicationDbContext : DbContext
 
         #region "recipe.Step"
 
-        modelBuilder.Entity<Step>()
+        modelBuilder.Entity<StepDto>()
             .ToTable("Step", schema: "recipe");
 
-        modelBuilder.Entity<Step>()
+        modelBuilder.Entity<StepDto>()
             .HasKey(s => s.StepId)
             .HasName("PK_Recipe_Step_StepId");
 
-        modelBuilder.Entity<Step>()
+        modelBuilder.Entity<StepDto>()
             .Property(s => s.Direction)
             .HasColumnType("VARCHAR(MAX)")
             .IsRequired();
@@ -228,25 +230,25 @@ public class ApplicationDbContext : DbContext
 
         #region "recipe.RecipeStep"
 
-        modelBuilder.Entity<RecipeStep>()
+        modelBuilder.Entity<RecipeStepDto>()
             .ToTable("RecipeStep", schema: "recipe");
 
-        modelBuilder.Entity<RecipeStep>()
+        modelBuilder.Entity<RecipeStepDto>()
             .HasKey(rs => rs.RecipeStepId)
             .HasName("PK_Recipe_RecipeStep_RecipeStepId");
 
-        modelBuilder.Entity<RecipeStep>()
+        modelBuilder.Entity<RecipeStepDto>()
             .HasIndex(rs => new { rs.RecipeId, rs.StepId })
             .HasDatabaseName("UQ_Recipe_RecipeStep_RecipeId_StepId")
             .IsUnique();
 
-        modelBuilder.Entity<RecipeStep>()
+        modelBuilder.Entity<RecipeStepDto>()
             .HasOne(rs => rs.Recipe)
             .WithMany(r => r.RecipeSteps)
             .HasForeignKey(rs => rs.RecipeId)
             .OnDelete(DeleteBehavior.Restrict);
 
-        modelBuilder.Entity<RecipeStep>()
+        modelBuilder.Entity<RecipeStepDto>()
             .HasOne(rs => rs.Step)
             .WithMany(s => s.RecipeSteps)
             .HasForeignKey(rs => rs.StepId)
@@ -256,14 +258,14 @@ public class ApplicationDbContext : DbContext
 
         #region "recipe.Category"
 
-        modelBuilder.Entity<Category>()
+        modelBuilder.Entity<CategoryDto>()
             .ToTable("Category", schema: "recipe");
 
-        modelBuilder.Entity<Category>()
+        modelBuilder.Entity<CategoryDto>()
             .HasKey(c => c.CategoryId)
             .HasName("PK_Recipe_Category_CategoryId");
 
-        modelBuilder.Entity<Category>()
+        modelBuilder.Entity<CategoryDto>()
             .Property(c => c.Name)
             .HasMaxLength(50)
             .IsRequired();
@@ -272,25 +274,25 @@ public class ApplicationDbContext : DbContext
 
         #region "recipe.RecipeCategory"
 
-        modelBuilder.Entity<RecipeCategory>()
+        modelBuilder.Entity<RecipeCategoryDto>()
             .ToTable("RecipeCategory", schema: "recipe");
 
-        modelBuilder.Entity<RecipeCategory>()
+        modelBuilder.Entity<RecipeCategoryDto>()
             .HasKey(rc => rc.RecipeCategoryId)
             .HasName("PK_Recipe_RecipeCategory_RecipeCategoryId");
 
-        modelBuilder.Entity<RecipeCategory>()
+        modelBuilder.Entity<RecipeCategoryDto>()
             .HasIndex(rc => new { rc.RecipeId, rc.CategoryId })
             .HasDatabaseName("UQ_Recipe_RecipeCategory_RecipeId_CategoryId")
             .IsUnique();
 
-        modelBuilder.Entity<RecipeCategory>()
+        modelBuilder.Entity<RecipeCategoryDto>()
             .HasOne(rc => rc.Recipe)
             .WithMany(r => r.RecipeCategories)
             .HasForeignKey(rc => rc.RecipeId)
             .OnDelete(DeleteBehavior.Restrict);
 
-        modelBuilder.Entity<RecipeCategory>()
+        modelBuilder.Entity<RecipeCategoryDto>()
             .HasOne(rc => rc.Category)
             .WithMany(c => c.RecipeCategories)
             .HasForeignKey(rc => rc.CategoryId)
@@ -300,14 +302,14 @@ public class ApplicationDbContext : DbContext
 
         #region "recipe.Meat"
 
-        modelBuilder.Entity<Meat>()
+        modelBuilder.Entity<MeatDto>()
             .ToTable("Meat", schema: "recipe");
 
-        modelBuilder.Entity<Meat>()
+        modelBuilder.Entity<MeatDto>()
             .HasKey(m => m.MeatId)
             .HasName("PK_Recipe_Meat_MeatyId");
 
-        modelBuilder.Entity<Meat>()
+        modelBuilder.Entity<MeatDto>()
             .Property(m => m.Name)
             .HasMaxLength(50)
             .IsRequired();
@@ -316,25 +318,25 @@ public class ApplicationDbContext : DbContext
 
         #region "recipe.RecipeMeat"
 
-        modelBuilder.Entity<RecipeMeat>()
+        modelBuilder.Entity<RecipeMeatDto>()
             .ToTable("RecipeMeat", schema: "recipe");
 
-        modelBuilder.Entity<RecipeMeat>()
+        modelBuilder.Entity<RecipeMeatDto>()
             .HasKey(rm => rm.RecipeMeatId)
             .HasName("PK_Recipe_RecipeMeat_RecipeMeatId");
 
-        modelBuilder.Entity<RecipeMeat>()
+        modelBuilder.Entity<RecipeMeatDto>()
             .HasIndex(rm => new { rm.RecipeId, rm.MeatId })
             .HasDatabaseName("UQ_Recipe_RecipeMeat_RecipeId_MeatId")
             .IsUnique();
 
-        modelBuilder.Entity<RecipeMeat>()
+        modelBuilder.Entity<RecipeMeatDto>()
             .HasOne(rm => rm.Recipe)
             .WithMany(r => r.RecipeMeats)
             .HasForeignKey(rm => rm.RecipeId)
             .OnDelete(DeleteBehavior.Restrict);
 
-        modelBuilder.Entity<RecipeMeat>()
+        modelBuilder.Entity<RecipeMeatDto>()
             .HasOne(rm => rm.Meat)
             .WithMany(m => m.RecipeMeats)
             .HasForeignKey(rm => rm.MeatId)
@@ -344,13 +346,34 @@ public class ApplicationDbContext : DbContext
 
         #region "application.RoleType"
 
-        modelBuilder.Entity<RoleType>()
+        modelBuilder.Entity<RoleTypeDto>()
             .ToTable("RoleType", schema: "application");
 
-        modelBuilder.Entity<RoleType>()
+        modelBuilder.Entity<RoleTypeDto>()
             .Property(rt => rt.Name)
             .HasMaxLength(25)
             .IsRequired();
+
+        #endregion
+
+        #region "application.SiteSettings"
+
+        modelBuilder.Entity<SiteSettingsDto>()
+            .ToTable("SiteSettings", schema: "application");
+
+        modelBuilder.Entity<SiteSettingsDto>()
+            .HasKey(s => s.SiteSettingsId)
+            .HasName("PK_Application_SiteSettings_SiteSettingsId");
+
+        modelBuilder.Entity<SiteSettingsDto>()
+            .Property(s => s.Title)
+            .HasMaxLength(255)
+            .IsRequired();
+
+        modelBuilder.Entity<SiteSettingsDto>()
+            .Property(s => s.IsPublic)
+            .IsRequired()
+            .HasDefaultValue(false);
 
         #endregion
     }

@@ -5,16 +5,16 @@ namespace DigitalFamilyCookbook.Core.Services;
 
 public class RoleService : IRoleService
 {
-    private readonly RoleManager<RoleType> _roleManager;
+    private readonly RoleManager<RoleTypeDto> _roleManager;
     private readonly ILogger<RoleService> _logger;
 
-    public RoleService(RoleManager<RoleType> roleManager, ILogger<RoleService> logger)
+    public RoleService(RoleManager<RoleTypeDto> roleManager, ILogger<RoleService> logger)
     {
         _roleManager = roleManager;
         _logger = logger;
     }
 
-    public IEnumerable<RoleType> GetAllRoles()
+    public IEnumerable<RoleTypeDto> GetAllRoles()
     {
         return _roleManager.Roles.OrderBy(r => r.Name).AsEnumerable();
     }
@@ -29,7 +29,7 @@ public class RoleService : IRoleService
             return "Role already exists";
         }
 
-        var result = await _roleManager.CreateAsync(new RoleType { Name = name });
+        var result = await _roleManager.CreateAsync(new RoleTypeDto { Name = name });
 
         if (!result.Succeeded)
         {

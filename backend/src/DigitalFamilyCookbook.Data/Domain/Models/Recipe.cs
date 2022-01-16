@@ -1,4 +1,4 @@
-namespace DigitalFamilyCookbook.Data.Dtos;
+namespace DigitalFamilyCookbook.Data.Domain.Models;
 
 public class Recipe
 {
@@ -59,4 +59,12 @@ public class Recipe
     public UserAccount UserAccount { get; set; } = UserAccount.None();
 
     public static Recipe None() => new Recipe();
+
+    public static Recipe FromDto(RecipeDto dto)
+    {
+        return new Recipe
+        {
+
+        };
+    }
 }

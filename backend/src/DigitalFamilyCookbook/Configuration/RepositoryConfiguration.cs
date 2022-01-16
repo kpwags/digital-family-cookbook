@@ -8,6 +8,7 @@ namespace DigitalFamilyCookbook.Configuration
         public static void AddRepositories(this IServiceCollection services)
         {
             services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
+            services.AddScoped<ISystemRepository, SystemRepository>();
         }
     }
 }

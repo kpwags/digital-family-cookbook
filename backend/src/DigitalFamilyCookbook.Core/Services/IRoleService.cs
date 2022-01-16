@@ -2,7 +2,7 @@ namespace DigitalFamilyCookbook.Core.Services;
 
 public interface IRoleService
 {
-    IEnumerable<RoleType> GetAllRoles();
+    IEnumerable<RoleTypeDto> GetAllRoles();
 
     Task<string> AddRole(string name);
 
