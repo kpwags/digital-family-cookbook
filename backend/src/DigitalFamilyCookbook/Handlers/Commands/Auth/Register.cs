@@ -19,6 +19,16 @@ public class Register
 
         public async Task<OperationResult<AuthToken>> Handle(Command cmd, CancellationToken cancellationToken)
         {
+            if (cmd.Name.Trim() == string.Empty)
+            {
+                return new OperationResult<AuthToken>("Name is required");
+            }
+
+            if (!Core.Helpers.Validation.IsValidEmailAddress(cmd.Email.Trim()))
+            {
+                return new OperationResult<AuthToken>("Valid email is required");
+            }
+
             if (cmd.Password != cmd.ConfirmPassword)
             {
                 return new OperationResult<AuthToken>("Passwords do not match");

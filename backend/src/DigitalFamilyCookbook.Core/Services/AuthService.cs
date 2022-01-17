@@ -70,6 +70,8 @@ public class AuthService : IAuthService
         {
             Email = email,
             Name = name,
+            UserName = email,
+            UserId = Guid.NewGuid().ToString(),
         };
 
         var isCreated = await _userManager.CreateAsync(newUser, password);

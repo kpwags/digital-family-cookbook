@@ -7,6 +7,7 @@ import {
 import { AppContext } from '@contexts/AppContext';
 import { Api } from '@lib/api';
 import { PageState } from '@lib/enums';
+import { useCookies } from 'react-cookie';
 
 const MainApp = ({ children }: { children: ReactNode }): JSX.Element => {
     const [siteSettingsLoaded, setSiteSettingsLoaded] = useState<boolean>(false);
@@ -18,6 +19,7 @@ const MainApp = ({ children }: { children: ReactNode }): JSX.Element => {
     });
     const [pageError, setPageError] = useState<string>('');
     const [pageState, setPageState] = useState<PageState>(PageState.Loading);
+    const [cookies] = useCookies(['dfcuser']);
 
     const loadSiteSettings = async () => {
         setSiteSettingsLoaded(true);
@@ -52,6 +54,7 @@ const MainApp = ({ children }: { children: ReactNode }): JSX.Element => {
             // eslint-disable-next-line react/jsx-no-constructed-context-values
             value={{
                 siteSettings,
+                token: cookies.dfcuser,
             }}
         >
             {children}

@@ -3,6 +3,7 @@ import { SiteSettings } from '@models/SiteSettings';
 
 type AppContextProps = {
     siteSettings: SiteSettings
+    token: string | undefined
 }
 
 const AppContext = createContext<AppContextProps>({
@@ -12,6 +13,7 @@ const AppContext = createContext<AppContextProps>({
         title: 'Digital Family Cookbook',
         isPublic: false,
     },
+    token: undefined,
 });
 
 export { AppContext };

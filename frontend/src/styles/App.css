@@ -2,6 +2,7 @@
   --black: rgb(51, 51, 51);
   --white: rgb(255, 255, 255);
   --green: rgb(0, 100, 0);
+  --green-hover: rgb(0, 155, 0);
 }
 
 /* --- CSS Reset --- */
@@ -40,6 +41,76 @@ p, h1, h2, h3, h4, h5, h6 {
 }
 /* --- End Reset --- */
 
+html, body {
+  font-size: 100%;
+}
+
+/* --- ANT Overrides --- */
+section.ant-layout {
+  background: #fefefe
+}
+
+section.ant-layout h1.ant-typography {
+  color: var(--green);
+}
+
+section.ant-layout div.ant-typography,
+section.ant-layout .ant-typogrpahy p {
+  font-size: 1.1rem;
+}
+
+section.ant-layout .ant-form-item-label label {
+  font-size: 1.1rem;
+}
+
+section.ant-layout input.ant-input[type="text"],
+section.ant-layout input.ant-input[type="email"],
+section.ant-layout input.ant-input[type="password"] {
+  padding: 5px 8px;
+  font-size: 1.1rem;
+}
+
+section.ant-layout .ant-form-item {
+  margin-bottom: 36px;
+}
+
+section.ant-layout .ant-form-item-has-error .ant-form-item-label {
+  align-items: flex-start;
+}
+
+section.ant-layout .ant-form-item-label {
+  display: inline-flex;
+  align-items: center;
+}
+
+section.ant-layout .ant-form-item-label > label {
+  justify-content: flex-end;
+}
+
+section.ant-layout .ant-input:hover {
+  border-color: var(--green);
+}
+
+section.ant-layout .ant-input:focus,
+section.ant-layout .ant-input-focused {
+  border-color: var(--green);
+  box-shadow: 0 0 0 2px rgb(0, 100, 0, 0.2);
+}
+
+button.ant-btn-primary {
+  background-color: var(--green);
+  border-color: var(--green);
+  height: auto;
+  padding: 8px 25px;
+  font-size: 1.1rem;
+}
+
+button.ant-btn-primary:hover {
+  background-color: var(--green-hover);
+  border-color: var(--green-hover);
+}
+/* --- End ANT Overrides --- */
+
 ul {
   margin-block-start: 0px;
     margin-block-end: 0px;
@@ -53,3 +124,4 @@ ul {
   padding: 20px;
   border-top: 3px solid var(--green);
 }
+
