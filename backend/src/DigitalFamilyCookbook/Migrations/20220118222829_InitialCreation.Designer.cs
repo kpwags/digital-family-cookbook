@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DigitalFamilyCookbook.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220115013409_AddSystemSettings")]
-    partial class AddSystemSettings
+    [Migration("20220118222829_InitialCreation")]
+    partial class InitialCreation
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -24,7 +24,7 @@ namespace DigitalFamilyCookbook.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-            modelBuilder.Entity("DigitalFamilyCookbook.Data.Dtos.Category", b =>
+            modelBuilder.Entity("DigitalFamilyCookbook.Data.Dtos.CategoryDto", b =>
                 {
                     b.Property<int>("CategoryId")
                         .ValueGeneratedOnAdd()
@@ -51,7 +51,7 @@ namespace DigitalFamilyCookbook.Migrations
                     b.ToTable("Category", "recipe");
                 });
 
-            modelBuilder.Entity("DigitalFamilyCookbook.Data.Dtos.Ingredient", b =>
+            modelBuilder.Entity("DigitalFamilyCookbook.Data.Dtos.IngredientDto", b =>
                 {
                     b.Property<int>("IngredientId")
                         .ValueGeneratedOnAdd()
@@ -81,7 +81,7 @@ namespace DigitalFamilyCookbook.Migrations
                     b.ToTable("Ingredient", "recipe");
                 });
 
-            modelBuilder.Entity("DigitalFamilyCookbook.Data.Dtos.Meat", b =>
+            modelBuilder.Entity("DigitalFamilyCookbook.Data.Dtos.MeatDto", b =>
                 {
                     b.Property<int>("MeatId")
                         .ValueGeneratedOnAdd()
@@ -108,7 +108,36 @@ namespace DigitalFamilyCookbook.Migrations
                     b.ToTable("Meat", "recipe");
                 });
 
-            modelBuilder.Entity("DigitalFamilyCookbook.Data.Dtos.Recipe", b =>
+            modelBuilder.Entity("DigitalFamilyCookbook.Data.Dtos.RecipeCategoryDto", b =>
+                {
+                    b.Property<int>("RecipeCategoryId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RecipeCategoryId"), 1L, 1);
+
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("RecipeId")
+                        .HasColumnType("int");
+
+                    b.HasKey("RecipeCategoryId")
+                        .HasName("PK_Recipe_RecipeCategory_RecipeCategoryId");
+
+                    b.HasIndex("CategoryId");
+
+                    b.HasIndex("RecipeId", "CategoryId")
+                        .IsUnique()
+                        .HasDatabaseName("UQ_Recipe_RecipeCategory_RecipeId_CategoryId");
+
+                    b.ToTable("RecipeCategory", "recipe");
+                });
+
+            modelBuilder.Entity("DigitalFamilyCookbook.Data.Dtos.RecipeDto", b =>
                 {
                     b.Property<int>("RecipeId")
                         .ValueGeneratedOnAdd()
@@ -199,36 +228,7 @@ namespace DigitalFamilyCookbook.Migrations
                     b.ToTable("Recipe", "recipe");
                 });
 
-            modelBuilder.Entity("DigitalFamilyCookbook.Data.Dtos.RecipeCategory", b =>
-                {
-                    b.Property<int>("RecipeCategoryId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RecipeCategoryId"), 1L, 1);
-
-                    b.Property<int>("CategoryId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("RecipeId")
-                        .HasColumnType("int");
-
-                    b.HasKey("RecipeCategoryId")
-                        .HasName("PK_Recipe_RecipeCategory_RecipeCategoryId");
-
-                    b.HasIndex("CategoryId");
-
-                    b.HasIndex("RecipeId", "CategoryId")
-                        .IsUnique()
-                        .HasDatabaseName("UQ_Recipe_RecipeCategory_RecipeId_CategoryId");
-
-                    b.ToTable("RecipeCategory", "recipe");
-                });
-
-            modelBuilder.Entity("DigitalFamilyCookbook.Data.Dtos.RecipeIngredient", b =>
+            modelBuilder.Entity("DigitalFamilyCookbook.Data.Dtos.RecipeIngredientDto", b =>
                 {
                     b.Property<int>("RecipeIngredientId")
                         .ValueGeneratedOnAdd()
@@ -257,7 +257,7 @@ namespace DigitalFamilyCookbook.Migrations
                     b.ToTable("RecipeIngredient", "recipe");
                 });
 
-            modelBuilder.Entity("DigitalFamilyCookbook.Data.Dtos.RecipeMeat", b =>
+            modelBuilder.Entity("DigitalFamilyCookbook.Data.Dtos.RecipeMeatDto", b =>
                 {
                     b.Property<int>("RecipeMeatId")
                         .ValueGeneratedOnAdd()
@@ -286,7 +286,7 @@ namespace DigitalFamilyCookbook.Migrations
                     b.ToTable("RecipeMeat", "recipe");
                 });
 
-            modelBuilder.Entity("DigitalFamilyCookbook.Data.Dtos.RecipeStep", b =>
+            modelBuilder.Entity("DigitalFamilyCookbook.Data.Dtos.RecipeStepDto", b =>
                 {
                     b.Property<int>("RecipeStepId")
                         .ValueGeneratedOnAdd()
@@ -315,7 +315,7 @@ namespace DigitalFamilyCookbook.Migrations
                     b.ToTable("RecipeStep", "recipe");
                 });
 
-            modelBuilder.Entity("DigitalFamilyCookbook.Data.Dtos.RefreshToken", b =>
+            modelBuilder.Entity("DigitalFamilyCookbook.Data.Dtos.RefreshTokenDto", b =>
                 {
                     b.Property<int>("RefreshTokenId")
                         .ValueGeneratedOnAdd()
@@ -326,7 +326,7 @@ namespace DigitalFamilyCookbook.Migrations
                     b.Property<DateTime>("AddedDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2022, 1, 14, 20, 34, 9, 33, DateTimeKind.Local).AddTicks(4570));
+                        .HasDefaultValue(new DateTime(2022, 1, 18, 17, 28, 29, 197, DateTimeKind.Local).AddTicks(7870));
 
                     b.Property<DateTime>("ExpirationDate")
                         .HasColumnType("datetime2");
@@ -362,37 +362,67 @@ namespace DigitalFamilyCookbook.Migrations
                     b.ToTable("RefreshToken", "application");
                 });
 
-            modelBuilder.Entity("DigitalFamilyCookbook.Data.Dtos.RoleType", b =>
+            modelBuilder.Entity("DigitalFamilyCookbook.Data.Dtos.RoleTypeClaimDto", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("ClaimType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ClaimValue")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RoleClaimId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RoleId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("RoleTypeClaim", "application");
+                });
+
+            modelBuilder.Entity("DigitalFamilyCookbook.Data.Dtos.RoleTypeDto", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(25)
-                        .HasColumnType("nvarchar(25)");
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
                     b.Property<string>("NormalizedName")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
                     b.Property<string>("RoleTypeId")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("UserAccountId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("UserAccountId");
+                    b.HasIndex("NormalizedName")
+                        .IsUnique()
+                        .HasDatabaseName("RoleNameIndex")
+                        .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("RoleType", "application");
                 });
 
-            modelBuilder.Entity("DigitalFamilyCookbook.Data.Dtos.SiteSettings", b =>
+            modelBuilder.Entity("DigitalFamilyCookbook.Data.Dtos.SiteSettingsDto", b =>
                 {
                     b.Property<int>("SiteSettingsId")
                         .ValueGeneratedOnAdd()
@@ -419,7 +449,7 @@ namespace DigitalFamilyCookbook.Migrations
                     b.ToTable("SiteSettings", "application");
                 });
 
-            modelBuilder.Entity("DigitalFamilyCookbook.Data.Dtos.Step", b =>
+            modelBuilder.Entity("DigitalFamilyCookbook.Data.Dtos.StepDto", b =>
                 {
                     b.Property<int>("StepId")
                         .ValueGeneratedOnAdd()
@@ -448,7 +478,36 @@ namespace DigitalFamilyCookbook.Migrations
                     b.ToTable("Step", "recipe");
                 });
 
-            modelBuilder.Entity("DigitalFamilyCookbook.Data.Dtos.UserAccount", b =>
+            modelBuilder.Entity("DigitalFamilyCookbook.Data.Dtos.UserAccountClaimDto", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("ClaimType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ClaimValue")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserAccountClaimId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserAccountClaim", "application");
+                });
+
+            modelBuilder.Entity("DigitalFamilyCookbook.Data.Dtos.UserAccountDto", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -457,10 +516,12 @@ namespace DigitalFamilyCookbook.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
@@ -477,10 +538,12 @@ namespace DigitalFamilyCookbook.Migrations
                         .HasColumnType("nvarchar(255)");
 
                     b.Property<string>("NormalizedEmail")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
                     b.Property<string>("NormalizedUserName")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
                     b.Property<string>("PasswordHash")
                         .HasColumnType("nvarchar(max)");
@@ -502,60 +565,126 @@ namespace DigitalFamilyCookbook.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserName")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("NormalizedEmail")
+                        .HasDatabaseName("EmailIndex");
+
+                    b.HasIndex("NormalizedUserName")
+                        .IsUnique()
+                        .HasDatabaseName("UserNameIndex")
+                        .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("UserAccount", "application");
                 });
 
-            modelBuilder.Entity("DigitalFamilyCookbook.Data.Dtos.Category", b =>
+            modelBuilder.Entity("DigitalFamilyCookbook.Data.Dtos.UserAccountLoginDto", b =>
                 {
-                    b.HasOne("DigitalFamilyCookbook.Data.Dtos.Recipe", "Recipe")
+                    b.Property<string>("LoginProvider")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ProviderKey")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ProviderDisplayName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserAccountLoginId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("LoginProvider", "ProviderKey");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserAccountLogin", "application");
+                });
+
+            modelBuilder.Entity("DigitalFamilyCookbook.Data.Dtos.UserAccountRoleTypeDto", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("RoleId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("UserAccountRoleTypeId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("UserId", "RoleId");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("UserAccountRoleType", "application");
+                });
+
+            modelBuilder.Entity("DigitalFamilyCookbook.Data.Dtos.UserAccountTokenDto", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("LoginProvider")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("UserAccountTokenId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Value")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("UserId", "LoginProvider", "Name");
+
+                    b.ToTable("UserAccountToken", "application");
+                });
+
+            modelBuilder.Entity("DigitalFamilyCookbook.Data.Dtos.CategoryDto", b =>
+                {
+                    b.HasOne("DigitalFamilyCookbook.Data.Dtos.RecipeDto", "Recipe")
                         .WithMany("Categories")
                         .HasForeignKey("RecipeId");
 
                     b.Navigation("Recipe");
                 });
 
-            modelBuilder.Entity("DigitalFamilyCookbook.Data.Dtos.Ingredient", b =>
+            modelBuilder.Entity("DigitalFamilyCookbook.Data.Dtos.IngredientDto", b =>
                 {
-                    b.HasOne("DigitalFamilyCookbook.Data.Dtos.Recipe", "Recipe")
+                    b.HasOne("DigitalFamilyCookbook.Data.Dtos.RecipeDto", "Recipe")
                         .WithMany("Ingredients")
                         .HasForeignKey("RecipeId");
 
                     b.Navigation("Recipe");
                 });
 
-            modelBuilder.Entity("DigitalFamilyCookbook.Data.Dtos.Meat", b =>
+            modelBuilder.Entity("DigitalFamilyCookbook.Data.Dtos.MeatDto", b =>
                 {
-                    b.HasOne("DigitalFamilyCookbook.Data.Dtos.Recipe", "Recipe")
+                    b.HasOne("DigitalFamilyCookbook.Data.Dtos.RecipeDto", "Recipe")
                         .WithMany("Meats")
                         .HasForeignKey("RecipeId");
 
                     b.Navigation("Recipe");
                 });
 
-            modelBuilder.Entity("DigitalFamilyCookbook.Data.Dtos.Recipe", b =>
+            modelBuilder.Entity("DigitalFamilyCookbook.Data.Dtos.RecipeCategoryDto", b =>
                 {
-                    b.HasOne("DigitalFamilyCookbook.Data.Dtos.UserAccount", "UserAccount")
-                        .WithMany("Recipes")
-                        .HasForeignKey("UserAccountId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("UserAccount");
-                });
-
-            modelBuilder.Entity("DigitalFamilyCookbook.Data.Dtos.RecipeCategory", b =>
-                {
-                    b.HasOne("DigitalFamilyCookbook.Data.Dtos.Category", "Category")
+                    b.HasOne("DigitalFamilyCookbook.Data.Dtos.CategoryDto", "Category")
                         .WithMany("RecipeCategories")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("DigitalFamilyCookbook.Data.Dtos.Recipe", "Recipe")
+                    b.HasOne("DigitalFamilyCookbook.Data.Dtos.RecipeDto", "Recipe")
                         .WithMany("RecipeCategories")
                         .HasForeignKey("RecipeId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -566,15 +695,26 @@ namespace DigitalFamilyCookbook.Migrations
                     b.Navigation("Recipe");
                 });
 
-            modelBuilder.Entity("DigitalFamilyCookbook.Data.Dtos.RecipeIngredient", b =>
+            modelBuilder.Entity("DigitalFamilyCookbook.Data.Dtos.RecipeDto", b =>
                 {
-                    b.HasOne("DigitalFamilyCookbook.Data.Dtos.Ingredient", "Ingredient")
+                    b.HasOne("DigitalFamilyCookbook.Data.Dtos.UserAccountDto", "UserAccount")
+                        .WithMany("Recipes")
+                        .HasForeignKey("UserAccountId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("UserAccount");
+                });
+
+            modelBuilder.Entity("DigitalFamilyCookbook.Data.Dtos.RecipeIngredientDto", b =>
+                {
+                    b.HasOne("DigitalFamilyCookbook.Data.Dtos.IngredientDto", "Ingredient")
                         .WithMany("RecipeIngredients")
                         .HasForeignKey("IngredientId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("DigitalFamilyCookbook.Data.Dtos.Recipe", "Recipe")
+                    b.HasOne("DigitalFamilyCookbook.Data.Dtos.RecipeDto", "Recipe")
                         .WithMany("RecipeIngredients")
                         .HasForeignKey("RecipeId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -585,15 +725,15 @@ namespace DigitalFamilyCookbook.Migrations
                     b.Navigation("Recipe");
                 });
 
-            modelBuilder.Entity("DigitalFamilyCookbook.Data.Dtos.RecipeMeat", b =>
+            modelBuilder.Entity("DigitalFamilyCookbook.Data.Dtos.RecipeMeatDto", b =>
                 {
-                    b.HasOne("DigitalFamilyCookbook.Data.Dtos.Meat", "Meat")
+                    b.HasOne("DigitalFamilyCookbook.Data.Dtos.MeatDto", "Meat")
                         .WithMany("RecipeMeats")
                         .HasForeignKey("MeatId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("DigitalFamilyCookbook.Data.Dtos.Recipe", "Recipe")
+                    b.HasOne("DigitalFamilyCookbook.Data.Dtos.RecipeDto", "Recipe")
                         .WithMany("RecipeMeats")
                         .HasForeignKey("RecipeId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -604,15 +744,15 @@ namespace DigitalFamilyCookbook.Migrations
                     b.Navigation("Recipe");
                 });
 
-            modelBuilder.Entity("DigitalFamilyCookbook.Data.Dtos.RecipeStep", b =>
+            modelBuilder.Entity("DigitalFamilyCookbook.Data.Dtos.RecipeStepDto", b =>
                 {
-                    b.HasOne("DigitalFamilyCookbook.Data.Dtos.Recipe", "Recipe")
+                    b.HasOne("DigitalFamilyCookbook.Data.Dtos.RecipeDto", "Recipe")
                         .WithMany("RecipeSteps")
                         .HasForeignKey("RecipeId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("DigitalFamilyCookbook.Data.Dtos.Step", "Step")
+                    b.HasOne("DigitalFamilyCookbook.Data.Dtos.StepDto", "Step")
                         .WithMany("RecipeSteps")
                         .HasForeignKey("StepId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -623,9 +763,9 @@ namespace DigitalFamilyCookbook.Migrations
                     b.Navigation("Step");
                 });
 
-            modelBuilder.Entity("DigitalFamilyCookbook.Data.Dtos.RefreshToken", b =>
+            modelBuilder.Entity("DigitalFamilyCookbook.Data.Dtos.RefreshTokenDto", b =>
                 {
-                    b.HasOne("DigitalFamilyCookbook.Data.Dtos.UserAccount", "UserAccount")
+                    b.HasOne("DigitalFamilyCookbook.Data.Dtos.UserAccountDto", "UserAccount")
                         .WithMany("RefreshTokens")
                         .HasForeignKey("UserAccountId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -634,18 +774,18 @@ namespace DigitalFamilyCookbook.Migrations
                     b.Navigation("UserAccount");
                 });
 
-            modelBuilder.Entity("DigitalFamilyCookbook.Data.Dtos.RoleType", b =>
+            modelBuilder.Entity("DigitalFamilyCookbook.Data.Dtos.RoleTypeClaimDto", b =>
                 {
-                    b.HasOne("DigitalFamilyCookbook.Data.Dtos.UserAccount", "UserAccount")
-                        .WithMany("RoleTypes")
-                        .HasForeignKey("UserAccountId");
-
-                    b.Navigation("UserAccount");
+                    b.HasOne("DigitalFamilyCookbook.Data.Dtos.RoleTypeDto", null)
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
-            modelBuilder.Entity("DigitalFamilyCookbook.Data.Dtos.Step", b =>
+            modelBuilder.Entity("DigitalFamilyCookbook.Data.Dtos.StepDto", b =>
                 {
-                    b.HasOne("DigitalFamilyCookbook.Data.Dtos.Recipe", "Recipe")
+                    b.HasOne("DigitalFamilyCookbook.Data.Dtos.RecipeDto", "Recipe")
                         .WithMany("Steps")
                         .HasForeignKey("RecipeId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -654,22 +794,64 @@ namespace DigitalFamilyCookbook.Migrations
                     b.Navigation("Recipe");
                 });
 
-            modelBuilder.Entity("DigitalFamilyCookbook.Data.Dtos.Category", b =>
+            modelBuilder.Entity("DigitalFamilyCookbook.Data.Dtos.UserAccountClaimDto", b =>
+                {
+                    b.HasOne("DigitalFamilyCookbook.Data.Dtos.UserAccountDto", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("DigitalFamilyCookbook.Data.Dtos.UserAccountLoginDto", b =>
+                {
+                    b.HasOne("DigitalFamilyCookbook.Data.Dtos.UserAccountDto", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("DigitalFamilyCookbook.Data.Dtos.UserAccountRoleTypeDto", b =>
+                {
+                    b.HasOne("DigitalFamilyCookbook.Data.Dtos.RoleTypeDto", null)
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DigitalFamilyCookbook.Data.Dtos.UserAccountDto", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("DigitalFamilyCookbook.Data.Dtos.UserAccountTokenDto", b =>
+                {
+                    b.HasOne("DigitalFamilyCookbook.Data.Dtos.UserAccountDto", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("DigitalFamilyCookbook.Data.Dtos.CategoryDto", b =>
                 {
                     b.Navigation("RecipeCategories");
                 });
 
-            modelBuilder.Entity("DigitalFamilyCookbook.Data.Dtos.Ingredient", b =>
+            modelBuilder.Entity("DigitalFamilyCookbook.Data.Dtos.IngredientDto", b =>
                 {
                     b.Navigation("RecipeIngredients");
                 });
 
-            modelBuilder.Entity("DigitalFamilyCookbook.Data.Dtos.Meat", b =>
+            modelBuilder.Entity("DigitalFamilyCookbook.Data.Dtos.MeatDto", b =>
                 {
                     b.Navigation("RecipeMeats");
                 });
 
-            modelBuilder.Entity("DigitalFamilyCookbook.Data.Dtos.Recipe", b =>
+            modelBuilder.Entity("DigitalFamilyCookbook.Data.Dtos.RecipeDto", b =>
                 {
                     b.Navigation("Categories");
 
@@ -688,18 +870,16 @@ namespace DigitalFamilyCookbook.Migrations
                     b.Navigation("Steps");
                 });
 
-            modelBuilder.Entity("DigitalFamilyCookbook.Data.Dtos.Step", b =>
+            modelBuilder.Entity("DigitalFamilyCookbook.Data.Dtos.StepDto", b =>
                 {
                     b.Navigation("RecipeSteps");
                 });
 
-            modelBuilder.Entity("DigitalFamilyCookbook.Data.Dtos.UserAccount", b =>
+            modelBuilder.Entity("DigitalFamilyCookbook.Data.Dtos.UserAccountDto", b =>
                 {
                     b.Navigation("Recipes");
 
                     b.Navigation("RefreshTokens");
-
-                    b.Navigation("RoleTypes");
                 });
 #pragma warning restore 612, 618
         }

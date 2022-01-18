@@ -67,6 +67,8 @@ public class Startup
 
         services.AddRepositories();
         services.AddServices();
+
+        services.AddHttpContextAccessor();
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -84,6 +86,8 @@ public class Startup
         app.UseCors("Development");
 
         app.UseGraphiQl("/graphql");
+
+        // app.UseMiddleware<DigitalFamilyCookbook.Helpers.JwtMiddleware>();
 
         app.UseAuthentication();
         app.UseAuthorization();

@@ -1,9 +1,11 @@
 import { createContext } from 'react';
 import { SiteSettings } from '@models/SiteSettings';
+import { UserAccount } from '@models/UserAccount';
 
 type AppContextProps = {
     siteSettings: SiteSettings
     token: string | undefined
+    user: UserAccount | null
 }
 
 const AppContext = createContext<AppContextProps>({
@@ -14,6 +16,7 @@ const AppContext = createContext<AppContextProps>({
         isPublic: false,
     },
     token: undefined,
+    user: null,
 });
 
 export { AppContext };

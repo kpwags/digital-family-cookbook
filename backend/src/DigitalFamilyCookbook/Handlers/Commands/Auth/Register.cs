@@ -8,7 +8,7 @@ namespace DigitalFamilyCookbook.Handlers.Commands.Auth;
 
 public class Register
 {
-    public class Handler : IRequestHandler<Command, OperationResult<AuthToken>>
+    public class Handler : IRequestHandler<Command, OperationResult<AuthResult>>
     {
         private readonly IAuthService _authService;
 
@@ -17,35 +17,35 @@ public class Register
             _authService = authService;
         }
 
-        public async Task<OperationResult<AuthToken>> Handle(Command cmd, CancellationToken cancellationToken)
+        public async Task<OperationResult<AuthResult>> Handle(Command cmd, CancellationToken cancellationToken)
         {
             if (cmd.Name.Trim() == string.Empty)
             {
-                return new OperationResult<AuthToken>("Name is required");
+                return new OperationResult<AuthResult>("Name is required");
             }
 
             if (!Core.Helpers.Validation.IsValidEmailAddress(cmd.Email.Trim()))
             {
-                return new OperationResult<AuthToken>("Valid email is required");
+                return new OperationResult<AuthResult>("Valid email is required");
             }
 
             if (cmd.Password != cmd.ConfirmPassword)
             {
-                return new OperationResult<AuthToken>("Passwords do not match");
+                return new OperationResult<AuthResult>("Passwords do not match");
             }
 
             var result = await _authService.RegisterUser(cmd.Email, cmd.Password, cmd.Name);
 
             if (result.IsSuccessful)
             {
-                return new OperationResult<AuthToken>(result.Token);
+                return new OperationResult<AuthResult>(result);
             }
 
-            return new OperationResult<AuthToken>("Unable to verify username or password");
+            return new OperationResult<AuthResult>(result.Error);
         }
     }
 
-    public class Command : IRequest<OperationResult<AuthToken>>
+    public class Command : IRequest<OperationResult<AuthResult>>
     {
         public string Name { get; set; } = string.Empty;
 

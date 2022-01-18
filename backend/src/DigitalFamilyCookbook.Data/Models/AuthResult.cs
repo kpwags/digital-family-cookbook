@@ -8,5 +8,5 @@ public class AuthResult
 
     public bool IsSuccessful { get; set; }
 
-    public IReadOnlyCollection<string> Errors { get; set; } = Array.Empty<string>();
+    public string Error { get; set; } = string.Empty;
 }

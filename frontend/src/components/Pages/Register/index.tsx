@@ -9,10 +9,11 @@ import {
     Spin,
     Alert,
 } from 'antd';
-
-import './Register.css';
 import { Api } from '@lib/api';
 import { useCookies } from 'react-cookie';
+
+import './Register.css';
+import { AuthResult } from '@models/AuthResult';
 
 type FormValues = {
     name: string
@@ -33,21 +34,22 @@ const Register = (): JSX.Element => {
     const submitForm = async (values: FormValues) => {
         setLoadingMessage('Saving...');
 
-        const [token, error] = await Api.Post<string>('auth/register', {
+        const [data, error] = await Api.Post<AuthResult>('auth/register', {
             data: {
                 email: values.email,
                 name: values.name,
                 password: values.password1,
+                confirmPassword: values.password2,
             },
         });
 
-        if (error) {
-            setErrorMessage(error);
+        if (error || data === null) {
+            setErrorMessage(error || 'Error registerring user');
             setLoadingMessage('');
             return;
         }
 
-        setCookie('dfcuser', token, { path: '/' });
+        setCookie('dfcuser', data.token, { path: '/' });
 
         setLoadingMessage('');
     };

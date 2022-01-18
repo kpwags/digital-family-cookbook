@@ -9,6 +9,7 @@ const apiUrl = process.env.REACT_APP_API_URL;
 
 async function client(endpoint: string, {
     data = null,
+    token = undefined,
     contentType = 'application/json',
     fileUpload = false,
     ...customConfig
@@ -18,9 +19,9 @@ async function client(endpoint: string, {
 
     const headers: Record<string, string> = {};
 
-    // if (token) {
-    //     headers.Authorization = `Bearer ${token}`;
-    // }
+    if (token) {
+        headers.Authorization = `Bearer ${token}`;
+    }
 
     if (contentType !== null) {
         headers['Content-Type'] = contentType;

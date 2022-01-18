@@ -10,10 +10,6 @@ public class UserAccount : IdentityUser
 
     public IEnumerable<Recipe> Recipes { get; set; } = Enumerable.Empty<Recipe>();
 
-    public IEnumerable<RoleType> RoleTypes { get; set; } = Enumerable.Empty<RoleType>();
-
-    public IEnumerable<RefreshToken> RefreshTokens { get; set; } = Enumerable.Empty<RefreshToken>();
-
     public static UserAccount None() => new UserAccount();
 
     public static UserAccount FromDto(UserAccountDto dto)
@@ -27,8 +23,6 @@ public class UserAccount : IdentityUser
             Email = dto.Email,
             EmailConfirmed = dto.EmailConfirmed,
             Recipes = dto.Recipes.Select(r => Recipe.FromDto(r)),
-            RoleTypes = dto.RoleTypes.Select(rt => RoleType.FromDto(rt)),
-            RefreshTokens = dto.RefreshTokens.Select(rt => RefreshToken.FromDto(rt)),
         };
     }
 }

@@ -13,7 +13,9 @@ type NavBarProps = {
 const NavBar = ({
     selectedItem = '',
 }: NavBarProps): JSX.Element => {
-    const { siteSettings } = useContext(AppContext);
+    const { siteSettings, token } = useContext(AppContext);
+
+    console.log({ token });
 
     const isUserLoggedIn = false;
 

@@ -10,16 +10,20 @@ class Api {
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    static Get<T>(endpoint: string, params: any = {}) : Promise<[T | null, string | null]> {
+    static Get<T>(endpoint: string, config: ApiArguments = { params: {} }) : Promise<[T | null, string | null]> {
+        console.log({ endpoint, config });
+
         let url = `${endpoint}?`;
 
-        Object.keys(params).forEach((key) => {
-            url += `${key}=${params[key]}&`;
-        });
+        if (config.params) {
+            Object.keys(config.params).forEach((key) => {
+                url += `${key}=${config.params[key]}&`;
+            });
+        }
 
-        url = url.substr(0, url.length - 1);
+        url = url.substring(0, url.length - 1);
 
-        return client(url).then(
+        return client(url, { token: config.token }).then(
             (data) => [data, null],
             (error) => [null, handleApiError(error)],
         );
