@@ -4,20 +4,34 @@ namespace DigitalFamilyCookbook.Extensions;
 
 public static class HttpContextExtensions
 {
-    public static UserAccountApiModel CurrentUser(this HttpContext context)
+    public static UserAccountApiModel CurrentUser(this HttpContext context, bool throwError = true)
     {
         if (context.Items.ContainsKey("User"))
         {
+            Console.WriteLine("USER EXISTS");
             if (context.Items["User"] != null)
             {
-                UserAccountApiModel? user = null;
+                var user = context.Items["User"] as UserAccountApiModel;
 
-                user = (UserAccountApiModel?)context.Items["User"];
+                if (user is null)
+                {
+                    if (throwError)
+                    {
+                        throw new System.Exception("Unable to authenticate user");
+                    }
 
-                return user ?? throw new System.Exception("Unable to authenticate user");
+                    return UserAccountApiModel.None();
+                }
+
+                return user;
             }
         }
 
-        throw new System.Exception("Unable to authenticate user");
+        if (throwError)
+        {
+            throw new System.Exception("Unable to authenticate user");
+        }
+
+        return UserAccountApiModel.None();
     }
 }

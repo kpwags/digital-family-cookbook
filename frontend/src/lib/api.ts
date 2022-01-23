@@ -9,10 +9,7 @@ class Api {
         );
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     static Get<T>(endpoint: string, config: ApiArguments = { params: {} }) : Promise<[T | null, string | null]> {
-        console.log({ endpoint, config });
-
         let url = `${endpoint}?`;
 
         if (config.params) {

@@ -1,0 +1,17 @@
+.register-container {
+    margin: 25px 0;
+}
+
+.login-form {
+    margin: 25px 0;
+}
+
+.login-form label {
+    width: 150px;
+    font-weight: bold;
+    padding-right: 15px;
+}
+
+.login-form .action-area {
+    margin-left: 150px;
+}

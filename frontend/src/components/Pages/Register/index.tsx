@@ -11,9 +11,9 @@ import {
 } from 'antd';
 import { Api } from '@lib/api';
 import { useCookies } from 'react-cookie';
+import { AuthResult } from '@models/AuthResult';
 
 import './Register.css';
-import { AuthResult } from '@models/AuthResult';
 
 type FormValues = {
     name: string
@@ -29,7 +29,7 @@ const Register = (): JSX.Element => {
     const [errorMessage, setErrorMessage] = useState<string>('');
     const [, setCookie] = useCookies(['dfcuser']);
 
-    const [form] = Form.useForm();
+    const [form] = Form.useForm<FormValues>();
 
     const submitForm = async (values: FormValues) => {
         setLoadingMessage('Saving...');

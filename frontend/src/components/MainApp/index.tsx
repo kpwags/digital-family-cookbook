@@ -24,7 +24,7 @@ const MainApp = ({ children }: { children: ReactNode }): JSX.Element => {
     const [cookies] = useCookies(['dfcuser']);
 
     const loadUser = async () => {
-        const [data, error] = await Api.Get<UserAccount>('system/getuser', { token: cookies.dfcuser });
+        const [data, error] = await Api.Get<UserAccount>('auth/getuser', { token: cookies.dfcuser });
 
         if (error || data === null) {
             setPageError(error || 'Unable to load site settings');

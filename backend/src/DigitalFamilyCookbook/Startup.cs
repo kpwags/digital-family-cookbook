@@ -50,10 +50,11 @@ public class Startup
             );
         });
 
-        services.AddTokenAuthentication(_configuration.Auth.JwtSecret);
-
         services.AddIdentity<UserAccountDto, RoleTypeDto>(options => options.SignIn.RequireConfirmedAccount = true)
-            .AddEntityFrameworkStores<ApplicationDbContext>();
+            .AddEntityFrameworkStores<ApplicationDbContext>()
+            .AddDefaultTokenProviders();
+
+        services.AddTokenAuthentication(_configuration.Auth.JwtSecret);
 
         services.AddControllers()
             .AddJsonOptions(options =>
@@ -87,7 +88,7 @@ public class Startup
 
         app.UseGraphiQl("/graphql");
 
-        // app.UseMiddleware<DigitalFamilyCookbook.Helpers.JwtMiddleware>();
+        app.UseMiddleware<DigitalFamilyCookbook.Helpers.JwtMiddleware>();
 
         app.UseAuthentication();
         app.UseAuthorization();

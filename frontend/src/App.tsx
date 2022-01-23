@@ -10,6 +10,7 @@ import './styles/App.css';
 import 'antd/dist/antd.css';
 import { Register } from '@components/Pages/Register';
 import { CookiesProvider } from 'react-cookie';
+import { Login } from '@components/Pages/Login';
 
 const Home = () => (
     <>
@@ -27,6 +28,7 @@ function App(): JSX.Element {
                         <Routes>
                             <Route path="/" element={<Home />} />
                             <Route path="/register" element={<Register />} />
+                            <Route path="/login" element={<Login />} />
                         </Routes>
                     </BaseLayout>
                 </MainApp>

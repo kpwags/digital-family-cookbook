@@ -1,13 +1,13 @@
 using DigitalFamilyCookbook.Handlers.Commands.System;
 using DigitalFamilyCookbook.Handlers.Queries.System;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Identity;
 using System.Threading;
 
 namespace DigitalFamilyCookbook.Controllers;
 
 [Route("system")]
 [ApiController]
+[Authorize]
 public class SystemController : Controller
 {
     private readonly IMediator _mediatr;
@@ -50,6 +50,7 @@ public class SystemController : Controller
     }
 
     [HttpGet("getsitesettings")]
+    [AllowAnonymous]
     public async Task<ActionResult<SiteSettingsApiModel>> GetSiteSettings(CancellationToken cancellationToken)
     {
         var settings = await _mediatr.Send(new GetSiteSettings.Query(), cancellationToken);
@@ -65,19 +66,5 @@ public class SystemController : Controller
         }
 
         return settings.Value;
-    }
-
-    [HttpGet("getuser")]
-    [Authorize]
-    public ActionResult<UserAccountApiModel> GetUser()
-    {
-        var user = HttpContext.CurrentUser();
-
-        if (user is null)
-        {
-            return BadRequest("Unable to get current user");
-        }
-
-        return user;
     }
 }

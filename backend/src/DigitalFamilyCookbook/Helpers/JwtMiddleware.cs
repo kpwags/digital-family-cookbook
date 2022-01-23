@@ -10,46 +10,37 @@ public class JwtMiddleware
 {
     private readonly DigitalFamilyCookbookConfiguration _configuration;
     private readonly RequestDelegate _next;
-    private readonly IUserAccountRepository _userAccountRepository;
 
-    public JwtMiddleware(RequestDelegate next, IUserAccountRepository userAccountRepository, DigitalFamilyCookbookConfiguration configuration)
+    public JwtMiddleware(RequestDelegate next, DigitalFamilyCookbookConfiguration configuration)
     {
         _next = next;
-        _userAccountRepository = userAccountRepository;
         _configuration = configuration;
     }
 
-    public async Task Invoke(HttpContext context, IUserAccountRepository userAccountRepository)
+    public async Task Invoke(HttpContext context, IUserAccountRepository userAccountRepository, TokenValidationParameters tokenValidationParameters)
     {
         var token = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
 
         if (token != null)
         {
-            await AttachUserToContext(context, userAccountRepository, token);
+            await AttachUserToContext(context, userAccountRepository, tokenValidationParameters, token);
         }
 
         await _next(context);
     }
 
-    private async Task AttachUserToContext(HttpContext context, IUserAccountRepository userAccountRepository, string token)
+    private async Task AttachUserToContext(HttpContext context, IUserAccountRepository userAccountRepository, TokenValidationParameters tokenValidationParameters, string token)
     {
         try
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = System.Text.Encoding.ASCII.GetBytes(_configuration.Auth.JwtSecret);
 
-            tokenHandler.ValidateToken(token, new TokenValidationParameters
-            {
-                ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(key),
-                ValidateIssuer = false,
-                ValidateAudience = false,
-                // set clockskew to zero so tokens expire exactly at token expiration time (instead of 5 minutes later)
-                ClockSkew = TimeSpan.Zero
-            }, out SecurityToken validatedToken);
+            tokenHandler.ValidateToken(token, tokenValidationParameters, out SecurityToken validatedToken);
 
             var jwtToken = (JwtSecurityToken)validatedToken;
-            var userId = jwtToken.Claims.First(x => x.Type == "id").Value;
+
+            var userId = jwtToken.Claims.First(x => x.Type == "Id").Value;
 
             var user = await userAccountRepository.GetUserAccountById(userId);
 

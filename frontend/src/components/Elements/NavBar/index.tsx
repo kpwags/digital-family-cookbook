@@ -13,11 +13,7 @@ type NavBarProps = {
 const NavBar = ({
     selectedItem = '',
 }: NavBarProps): JSX.Element => {
-    const { siteSettings, token } = useContext(AppContext);
-
-    console.log({ token });
-
-    const isUserLoggedIn = false;
+    const { siteSettings, user } = useContext(AppContext);
 
     return (
         <Header className="nav">
@@ -25,9 +21,9 @@ const NavBar = ({
             <Menu theme="dark" mode="horizontal" selectedKeys={[selectedItem]} className="nav-bar-menu">
                 <Menu.Item key="categories">Categories</Menu.Item>
                 <Menu.Item key="meats">Meats</Menu.Item>
-                {isUserLoggedIn ? (
+                {user && user.id !== '' ? (
                     <Menu.Item key="1" icon={<UserOutlined />} className="user-menu">
-                        User
+                        {user.name}
                     </Menu.Item>
                 ) : (
                     <>

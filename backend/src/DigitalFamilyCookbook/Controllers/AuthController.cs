@@ -51,4 +51,10 @@ public class AuthController : Controller
 
         return Ok(result.Value);
     }
+
+    [HttpGet("getuser")]
+    public ActionResult<UserAccountApiModel> GetUser()
+    {
+        return HttpContext.CurrentUser(false);
+    }
 }

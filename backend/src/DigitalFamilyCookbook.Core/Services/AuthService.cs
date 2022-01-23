@@ -94,29 +94,17 @@ public class AuthService : IAuthService
         var tokenDescriptor = new SecurityTokenDescriptor
         {
             Subject = new ClaimsIdentity(claims),
-            Expires = DateTime.UtcNow.AddSeconds(30),
+            Expires = DateTime.UtcNow.AddDays(_configuration.Auth.JwtLifespan),
             SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_configuration.Auth.JwtSecret)), SecurityAlgorithms.HmacSha256Signature)
         };
 
         var token = jwtTokenHandler.CreateToken(tokenDescriptor);
         var jwtToken = jwtTokenHandler.WriteToken(token);
 
-        var refreshToken = new RefreshToken
-        {
-            JwtId = token.Id,
-            IsUsed = false,
-            IsRevoked = false,
-            UserAccountId = user.Id,
-            AddedDate = DateTime.UtcNow,
-            ExpirationDate = DateTime.UtcNow.AddMonths(6),
-            Token = RandomString(35) + Guid.NewGuid()
-        };
-
         return new AuthResult
         {
             Token = jwtToken,
             IsSuccessful = true,
-            RefreshToken = refreshToken.Token,
         };
     }
 
