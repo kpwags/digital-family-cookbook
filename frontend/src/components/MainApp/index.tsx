@@ -21,10 +21,10 @@ const MainApp = ({ children }: { children: ReactNode }): JSX.Element => {
     const [user, setUser] = useState<UserAccount | null>(null);
     const [pageError, setPageError] = useState<string>('');
     const [pageState, setPageState] = useState<PageState>(PageState.Loading);
-    const [cookies] = useCookies(['dfcuser']);
+    const [cookies, setCookie, removeCookie] = useCookies(['dfcuser']);
 
-    const loadUser = async () => {
-        const [data, error] = await Api.Get<UserAccount>('auth/getuser', { token: cookies.dfcuser });
+    const loadUser = async (token: string | undefined = undefined) => {
+        const [data, error] = await Api.Get<UserAccount>('auth/getuser', { token: token || cookies.dfcuser });
 
         if (error || data === null) {
             setPageError(error || 'Unable to load site settings');
@@ -34,6 +34,11 @@ const MainApp = ({ children }: { children: ReactNode }): JSX.Element => {
 
         setUser(data);
         setPageState(PageState.Ready);
+    };
+
+    const logout = () => {
+        removeCookie('dfcuser');
+        document.location.reload();
     };
 
     const loadSiteSettings = async () => {
@@ -60,6 +65,17 @@ const MainApp = ({ children }: { children: ReactNode }): JSX.Element => {
         }
     }, []);
 
+    const refreshUser = () => {
+        if (cookies.dfcuser) {
+            loadUser();
+        }
+    };
+
+    const loginUser = (token: string) => {
+        setCookie('dfcuser', token, { path: '/' });
+        loadUser(token);
+    };
+
     if (pageState === PageState.Loading) {
         return <></>;
     }
@@ -75,6 +91,9 @@ const MainApp = ({ children }: { children: ReactNode }): JSX.Element => {
                 siteSettings,
                 token: cookies.dfcuser,
                 user,
+                logout,
+                refreshUser,
+                loginUser,
             }}
         >
             {children}

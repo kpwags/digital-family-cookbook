@@ -7,7 +7,6 @@ import {
     Alert,
 } from 'antd';
 import { Api } from '@lib/api';
-import { useCookies } from 'react-cookie';
 import { AuthResult } from '@models/AuthResult';
 
 import './LoginForm.css';
@@ -18,7 +17,7 @@ type FormValues = {
 }
 
 type LoginFormProps = {
-    onLoginCompleted: () => void
+    onLoginCompleted: (token: string) => void
 }
 
 const LoginForm = ({
@@ -28,12 +27,11 @@ const LoginForm = ({
 
     const [loadingMessage, setLoadingMessage] = useState<string>('');
     const [errorMessage, setErrorMessage] = useState<string>('');
-    const [, setCookie] = useCookies(['dfcuser']);
 
     const submitForm = async (values: FormValues) => {
-        setLoadingMessage('Saving...');
+        setLoadingMessage('Logging In...');
 
-        const [data, error] = await Api.Post<AuthResult>('auth/register', {
+        const [data, error] = await Api.Post<AuthResult>('auth/login', {
             data: {
                 email: values.email,
                 password: values.password,
@@ -41,15 +39,13 @@ const LoginForm = ({
         });
 
         if (error || data === null) {
-            setErrorMessage(error || 'Error registerring user');
+            setErrorMessage(error || 'Error logging in');
             setLoadingMessage('');
             return;
         }
 
-        setCookie('dfcuser', data.token, { path: '/' });
-
         setLoadingMessage('');
-        onLoginCompleted();
+        onLoginCompleted(data.token);
     };
 
     return (
@@ -89,7 +85,7 @@ const LoginForm = ({
                         </Form.Item>
 
                         <Form.Item
-                            name="password1"
+                            name="password"
                             label="Password"
                             rules={[
                                 { required: true, message: 'Password is required' },

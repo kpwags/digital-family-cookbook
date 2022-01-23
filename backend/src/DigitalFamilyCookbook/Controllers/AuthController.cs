@@ -39,7 +39,7 @@ public class AuthController : Controller
     {
         var result = await _mediatr.Send(command, cancellationToken);
 
-        if (result.IsSuccessful)
+        if (!result.IsSuccessful)
         {
             return BadRequest(result.ErrorMessage);
         }

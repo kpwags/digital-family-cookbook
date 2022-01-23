@@ -6,6 +6,9 @@ type AppContextProps = {
     siteSettings: SiteSettings
     token: string | undefined
     user: UserAccount | null
+    loginUser: (token: string) => void
+    logout: () => void
+    refreshUser: () => void
 }
 
 const AppContext = createContext<AppContextProps>({
@@ -17,6 +20,12 @@ const AppContext = createContext<AppContextProps>({
     },
     token: undefined,
     user: null,
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    loginUser: () => { },
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    logout: () => { },
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    refreshUser: () => { },
 });
 
 export { AppContext };

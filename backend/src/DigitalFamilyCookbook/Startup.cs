@@ -50,7 +50,7 @@ public class Startup
             );
         });
 
-        services.AddIdentity<UserAccountDto, RoleTypeDto>(options => options.SignIn.RequireConfirmedAccount = true)
+        services.AddIdentity<UserAccountDto, RoleTypeDto>(options => options.SignIn.RequireConfirmedAccount = false)
             .AddEntityFrameworkStores<ApplicationDbContext>()
             .AddDefaultTokenProviders();
 

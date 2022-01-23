@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
     Form,
     Input,
@@ -10,10 +11,10 @@ import {
     Alert,
 } from 'antd';
 import { Api } from '@lib/api';
-import { useCookies } from 'react-cookie';
 import { AuthResult } from '@models/AuthResult';
 
 import './Register.css';
+import { AppContext } from '@contexts/AppContext';
 
 type FormValues = {
     name: string
@@ -25,11 +26,14 @@ type FormValues = {
 const { Title, Paragraph } = Typography;
 
 const Register = (): JSX.Element => {
+    const navigate = useNavigate();
+
     const [loadingMessage, setLoadingMessage] = useState<string>('');
     const [errorMessage, setErrorMessage] = useState<string>('');
-    const [, setCookie] = useCookies(['dfcuser']);
 
     const [form] = Form.useForm<FormValues>();
+
+    const { loginUser } = useContext(AppContext);
 
     const submitForm = async (values: FormValues) => {
         setLoadingMessage('Saving...');
@@ -49,9 +53,8 @@ const Register = (): JSX.Element => {
             return;
         }
 
-        setCookie('dfcuser', data.token, { path: '/' });
-
-        setLoadingMessage('');
+        loginUser(data.token);
+        navigate('/');
     };
 
     const validatePassword = (field: unknown, value: string) => {

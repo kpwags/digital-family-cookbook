@@ -8,7 +8,6 @@ public static class HttpContextExtensions
     {
         if (context.Items.ContainsKey("User"))
         {
-            Console.WriteLine("USER EXISTS");
             if (context.Items["User"] != null)
             {
                 var user = context.Items["User"] as UserAccountApiModel;
