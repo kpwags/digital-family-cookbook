@@ -6,7 +6,7 @@ import { AppContext } from '@contexts/AppContext';
 
 const { Title, Paragraph } = Typography;
 
-const Login = () => {
+const Login = (): JSX.Element => {
     const navigate = useNavigate();
 
     const { loginUser } = useContext(AppContext);
