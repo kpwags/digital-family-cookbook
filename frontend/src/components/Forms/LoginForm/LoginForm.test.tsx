@@ -1,5 +1,8 @@
 import {
-    waitForElementToBeRemoved, render, screen, act,
+    waitForElementToBeRemoved,
+    render,
+    screen,
+    act,
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MockAppProvider } from '@test/MockAppProvider';

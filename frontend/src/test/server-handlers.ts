@@ -30,6 +30,15 @@ const handlers = [
             ctx.text('Unable to verify username or password'),
         );
     }),
+
+    rest.post('*/auth/register', (req, res, ctx) => res(
+        ctx.status(200),
+        ctx.json({
+            isSuccesful: true,
+            error: '',
+            token: '1234567890',
+        }),
+    )),
 ];
 
 export { handlers };
