@@ -3,7 +3,8 @@ import { Link } from 'react-router-dom';
 import { Layout, Menu } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 import { AppContext } from '@contexts/AppContext';
-import './NavBar.css';
+
+import './NavBar.less';
 
 const { Header } = Layout;
 const { SubMenu } = Menu;

@@ -1,0 +1,122 @@
+@import './Theme.less';
+
+/* --- CSS Reset --- */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+img, picture, video, canvas, svg {
+  display: block;
+  max-width: 100%;
+}
+
+input, button, textarea, select {
+  font: inherit;
+}
+
+p, h1, h2, h3, h4, h5, h6 {
+  overflow-wrap: break-word;
+}
+
+#root, #__next {
+  isolation: isolate;
+}
+/* --- End Reset --- */
+
+html, body {
+  font-size: 100%;
+}
+
+/* --- ANT Overrides --- */
+section.ant-layout {
+  background: #fefefe;
+
+  h1.ant-typography {
+    color: @color-green-01;
+  }
+
+  div.ant-typography,
+  .ant-typogrpahy p {
+    font-size: 1.1rem;
+  }
+
+  .ant-form-item-label label {
+    font-size: 1.1rem;
+  }
+
+  input.ant-input[type="text"],
+  input.ant-input[type="email"],
+  input.ant-input[type="password"] {
+    padding: 5px 8px;
+    font-size: 1.1rem;
+  }
+
+  .ant-form-item {
+    margin-bottom: 36px;
+  }
+
+  .ant-form-item-has-error .ant-form-item-label {
+    align-items: flex-start;
+  }
+
+  .ant-form-item-label {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .ant-form-item-label > label {
+    justify-content: flex-end;
+  }
+
+  .ant-input:hover {
+    border-color: @color-green-01;
+  }
+
+  .ant-input:focus,
+  .ant-input-focused {
+    border-color: @color-green-01;
+    box-shadow: 0 0 0 2px rgb(0, 100, 0, 0.2);
+  }
+}
+
+button.ant-btn-primary {
+  background-color: @color-green-01;
+  border-color: @color-green-01;
+  height: auto;
+  padding: 8px 25px;
+  font-size: 1.1rem;
+}
+
+button.ant-btn-primary:hover {
+  background-color: @color-green-02;
+  border-color: @color-green-02;
+}
+/* --- End ANT Overrides --- */
+
+ul {
+  margin-block-start: 0px;
+    margin-block-end: 0px;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+    padding-inline-start: 0px;
+}
+
+.site-content {
+  margin: 64px 0 0;
+  padding: 20px;
+  border-top: 5px solid @color-green-01;
+}
+
