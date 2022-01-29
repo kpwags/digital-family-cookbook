@@ -7,6 +7,8 @@ import {
 import { AppContext } from '@contexts/AppContext';
 import { Api } from '@lib/api';
 import { PageState } from '@lib/enums';
+import { useCookies } from 'react-cookie';
+import { UserAccount } from '@models/UserAccount';
 
 const MainApp = ({ children }: { children: ReactNode }): JSX.Element => {
     const [siteSettingsLoaded, setSiteSettingsLoaded] = useState<boolean>(false);
@@ -16,8 +18,28 @@ const MainApp = ({ children }: { children: ReactNode }): JSX.Element => {
         title: 'Digital Family Cookbook',
         isPublic: false,
     });
+    const [user, setUser] = useState<UserAccount | null>(null);
     const [pageError, setPageError] = useState<string>('');
     const [pageState, setPageState] = useState<PageState>(PageState.Loading);
+    const [cookies, setCookie, removeCookie] = useCookies(['dfcuser']);
+
+    const loadUser = async (token: string | undefined = undefined) => {
+        const [data, error] = await Api.Get<UserAccount>('auth/getuser', { token: token || cookies.dfcuser });
+
+        if (error || data === null) {
+            setPageError(error || 'Unable to load site settings');
+            setPageState(PageState.Error);
+            return;
+        }
+
+        setUser(data);
+        setPageState(PageState.Ready);
+    };
+
+    const logout = () => {
+        removeCookie('dfcuser');
+        document.location.reload();
+    };
 
     const loadSiteSettings = async () => {
         setSiteSettingsLoaded(true);
@@ -29,8 +51,12 @@ const MainApp = ({ children }: { children: ReactNode }): JSX.Element => {
             return;
         }
 
-        setSiteSettings(data);
-        setPageState(PageState.Ready);
+        if (cookies.dfcuser) {
+            loadUser();
+        } else {
+            setSiteSettings(data);
+            setPageState(PageState.Ready);
+        }
     };
 
     useEffect(() => {
@@ -38,6 +64,17 @@ const MainApp = ({ children }: { children: ReactNode }): JSX.Element => {
             loadSiteSettings();
         }
     }, []);
+
+    const refreshUser = () => {
+        if (cookies.dfcuser) {
+            loadUser();
+        }
+    };
+
+    const loginUser = (token: string) => {
+        setCookie('dfcuser', token, { path: '/' });
+        loadUser(token);
+    };
 
     if (pageState === PageState.Loading) {
         return <></>;
@@ -52,6 +89,11 @@ const MainApp = ({ children }: { children: ReactNode }): JSX.Element => {
             // eslint-disable-next-line react/jsx-no-constructed-context-values
             value={{
                 siteSettings,
+                token: cookies.dfcuser,
+                user,
+                logout,
+                refreshUser,
+                loginUser,
             }}
         >
             {children}

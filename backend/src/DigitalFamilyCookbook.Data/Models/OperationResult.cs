@@ -19,4 +19,10 @@ public class OperationResult<T> where T : class
         IsSuccessful = true;
         Value = entity;
     }
+
+    public OperationResult(bool isSuccessful, T entity)
+    {
+        IsSuccessful = isSuccessful;
+        Value = entity;
+    }
 }

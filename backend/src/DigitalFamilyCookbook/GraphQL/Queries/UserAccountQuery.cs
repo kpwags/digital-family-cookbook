@@ -26,7 +26,6 @@ public class UserAccountQuery : ObjectGraphType<object>
 
                 var user = _dbContext
                     .UserAccounts
-                    .Include(u => u.RoleTypes)
                     .FirstOrDefault(u => u.UserId == id);
 
                 return user;
@@ -48,7 +47,6 @@ public class UserAccountQuery : ObjectGraphType<object>
 
                 var user = _dbContext
                     .UserAccounts
-                    .Include(u => u.RoleTypes)
                     .FirstOrDefault(u => u.Email == email);
 
                 return user;

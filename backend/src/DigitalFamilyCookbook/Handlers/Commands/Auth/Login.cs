@@ -8,7 +8,7 @@ namespace DigitalFamilyCookbook.Handlers.Commands.Auth;
 
 public class Login
 {
-    public class Handler : IRequestHandler<Command, OperationResult<AuthToken>>
+    public class Handler : IRequestHandler<Command, OperationResult<AuthResult>>
     {
         private readonly IAuthService _authService;
 
@@ -17,20 +17,20 @@ public class Login
             _authService = authService;
         }
 
-        public async Task<OperationResult<AuthToken>> Handle(Command cmd, CancellationToken cancellationToken)
+        public async Task<OperationResult<AuthResult>> Handle(Command cmd, CancellationToken cancellationToken)
         {
             var result = await _authService.LoginUser(cmd.Email, cmd.Password);
 
             if (result.IsSuccessful)
             {
-                return new OperationResult<AuthToken>(result.Token);
+                return new OperationResult<AuthResult>(result);
             }
 
-            return new OperationResult<AuthToken>("Unable to verify username or password");
+            return new OperationResult<AuthResult>("Unable to verify username or password");
         }
     }
 
-    public class Command : IRequest<OperationResult<AuthToken>>
+    public class Command : IRequest<OperationResult<AuthResult>>
     {
         public string Email { get; set; } = string.Empty;
 

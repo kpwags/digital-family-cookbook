@@ -1,5 +1,4 @@
 using DigitalFamilyCookbook.Handlers.Commands.Auth;
-using DigitalFamilyCookbook.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading;
 
@@ -17,28 +16,44 @@ public class AuthController : Controller
     }
 
     [HttpPost("register")]
-    public async Task<ActionResult<AuthToken>> RegisterUser(Register.Command command, CancellationToken cancellationToken)
+    public async Task<ActionResult<AuthResult>> RegisterUser(Register.Command command, CancellationToken cancellationToken)
     {
         var result = await _mediatr.Send(command, cancellationToken);
 
-        if (result.IsSuccessful)
+        if (!result.IsSuccessful)
         {
             return BadRequest(result.ErrorMessage);
+        }
+
+        if (result.Value is null)
+        {
+            return BadRequest("Unable to register");
         }
 
         return Ok(result.Value);
     }
 
     [HttpPost("login")]
-    public async Task<ActionResult<AuthToken>> LoginUser(Login.Command command, CancellationToken cancellationToken)
+    public async Task<ActionResult<AuthResult>> LoginUser(Login.Command command, CancellationToken cancellationToken)
     {
         var result = await _mediatr.Send(command, cancellationToken);
 
-        if (result.IsSuccessful)
+        if (!result.IsSuccessful)
         {
             return BadRequest(result.ErrorMessage);
         }
 
+        if (result.Value is null)
+        {
+            return BadRequest("Unable to login");
+        }
+
         return Ok(result.Value);
+    }
+
+    [HttpGet("getuser")]
+    public ActionResult<UserAccountApiModel> GetUser()
+    {
+        return HttpContext.CurrentUser(false);
     }
 }

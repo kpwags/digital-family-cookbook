@@ -1,37 +1,45 @@
 #nullable disable
 
-using DigitalFamilyCookbook.Data.Dtos;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace DigitalFamilyCookbook.Data.Database;
 
-public class ApplicationDbContext : DbContext
+public class ApplicationDbContext : IdentityDbContext<UserAccountDto, RoleTypeDto, string, UserAccountClaimDto, UserAccountRoleTypeDto, UserAccountLoginDto, RoleTypeClaimDto, UserAccountTokenDto>
 {
     public DbSet<CategoryDto> Categories { get; set; }
+
+    public DbSet<IngredientDto> Ingredients { get; set; }
 
     public DbSet<MeatDto> Meats { get; set; }
 
     public DbSet<RecipeDto> Recipes { get; set; }
 
-    public DbSet<IngredientDto> Ingredients { get; set; }
-
-    public DbSet<StepDto> Steps { get; set; }
-
-    public DbSet<RoleTypeDto> RoleTypes { get; set; }
-
     public DbSet<RecipeCategoryDto> RecipeCategories { get; set; }
-
-    public DbSet<RecipeMeatDto> RecipeMeats { get; set; }
 
     public DbSet<RecipeIngredientDto> RecipeIngredients { get; set; }
 
+    public DbSet<RecipeMeatDto> RecipeMeats { get; set; }
+
     public DbSet<RecipeStepDto> RecipeSteps { get; set; }
 
-    public DbSet<RefreshTokenDto> RefreshTokens { get; set; }
+    public DbSet<RoleTypeClaimDto> RoleTypeClaims { get; set; }
+
+    public DbSet<RoleTypeDto> RoleTypes { get; set; }
 
     public DbSet<SiteSettingsDto> SiteSettings { get; set; }
 
+    public DbSet<StepDto> Steps { get; set; }
+
     public DbSet<UserAccountDto> UserAccounts { get; set; }
+
+    public DbSet<UserAccountClaimDto> UserAccountClaims { get; set; }
+
+    public DbSet<UserAccountLoginDto> UserAccountLogins { get; set; }
+
+    public DbSet<UserAccountRoleTypeDto> UserAccountRoleTypes { get; set; }
+
+    public DbSet<UserAccountTokenDto> UserAccountTokens { get; set; }
 
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
     {
@@ -42,6 +50,41 @@ public class ApplicationDbContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
 
+        #region "application.RoleType"
+
+        modelBuilder.Entity<RoleTypeDto>()
+            .ToTable("RoleType", schema: "application");
+
+        #endregion
+
+        #region "application.RoleTypeClaim"
+
+        modelBuilder.Entity<RoleTypeClaimDto>()
+            .ToTable("RoleTypeClaim", schema: "application");
+
+        #endregion
+
+        #region "application.SiteSettings"
+
+        modelBuilder.Entity<SiteSettingsDto>()
+            .ToTable("SiteSettings", schema: "application");
+
+        modelBuilder.Entity<SiteSettingsDto>()
+            .HasKey(s => s.SiteSettingsId)
+            .HasName("PK_Application_SiteSettings_SiteSettingsId");
+
+        modelBuilder.Entity<SiteSettingsDto>()
+            .Property(s => s.Title)
+            .HasMaxLength(255)
+            .IsRequired();
+
+        modelBuilder.Entity<SiteSettingsDto>()
+            .Property(s => s.IsPublic)
+            .IsRequired()
+            .HasDefaultValue(false);
+
+        #endregion
+
         #region "application.UserAccount"
 
         modelBuilder.Entity<UserAccountDto>()
@@ -51,45 +94,33 @@ public class ApplicationDbContext : DbContext
             .Property(u => u.Name)
             .HasMaxLength(255)
             .IsRequired();
+        #endregion
+
+        #region "application.UserAccountClaim"
+
+        modelBuilder.Entity<UserAccountClaimDto>()
+            .ToTable("UserAccountClaim", schema: "application");
 
         #endregion
 
-        #region "application.RefreshToken"
+        #region "application.UserAccountLogin"
 
-        modelBuilder.Entity<RefreshTokenDto>()
-            .ToTable("RefreshToken", schema: "application");
+        modelBuilder.Entity<UserAccountLoginDto>()
+            .ToTable("UserAccountLogin", schema: "application");
 
-        modelBuilder.Entity<RefreshTokenDto>()
-            .HasKey(rt => rt.RefreshTokenId)
-            .HasName("PK_Application_RefreshToken_RefreshTokenId");
+        #endregion
 
-        modelBuilder.Entity<RefreshTokenDto>()
-            .Property(rt => rt.Token)
-            .HasMaxLength(500)
-            .IsRequired();
+        #region "application.UserAccountRoleType"
 
-        modelBuilder.Entity<RefreshTokenDto>()
-            .Property(rt => rt.JwtId)
-            .HasMaxLength(255)
-            .IsRequired();
+        modelBuilder.Entity<UserAccountRoleTypeDto>()
+            .ToTable("UserAccountRoleType", schema: "application");
 
-        modelBuilder.Entity<RefreshTokenDto>()
-            .Property(rt => rt.IsUsed)
-            .IsRequired();
+        #endregion
 
-        modelBuilder.Entity<RefreshTokenDto>()
-            .Property(rt => rt.IsRevoked)
-            .IsRequired();
+        #region "application.UserAccountToken"
 
-        modelBuilder.Entity<RefreshTokenDto>()
-            .Property(rt => rt.AddedDate)
-            .IsRequired()
-            .HasDefaultValue(DateTime.Now);
-
-        modelBuilder.Entity<RefreshTokenDto>()
-            .HasOne(rt => rt.UserAccount)
-            .WithMany(u => u.RefreshTokens)
-            .HasForeignKey(rt => rt.UserAccountId);
+        modelBuilder.Entity<UserAccountTokenDto>()
+            .ToTable("UserAccountToken", schema: "application");
 
         #endregion
 
@@ -341,39 +372,6 @@ public class ApplicationDbContext : DbContext
             .WithMany(m => m.RecipeMeats)
             .HasForeignKey(rm => rm.MeatId)
             .OnDelete(DeleteBehavior.Restrict);
-
-        #endregion
-
-        #region "application.RoleType"
-
-        modelBuilder.Entity<RoleTypeDto>()
-            .ToTable("RoleType", schema: "application");
-
-        modelBuilder.Entity<RoleTypeDto>()
-            .Property(rt => rt.Name)
-            .HasMaxLength(25)
-            .IsRequired();
-
-        #endregion
-
-        #region "application.SiteSettings"
-
-        modelBuilder.Entity<SiteSettingsDto>()
-            .ToTable("SiteSettings", schema: "application");
-
-        modelBuilder.Entity<SiteSettingsDto>()
-            .HasKey(s => s.SiteSettingsId)
-            .HasName("PK_Application_SiteSettings_SiteSettingsId");
-
-        modelBuilder.Entity<SiteSettingsDto>()
-            .Property(s => s.Title)
-            .HasMaxLength(255)
-            .IsRequired();
-
-        modelBuilder.Entity<SiteSettingsDto>()
-            .Property(s => s.IsPublic)
-            .IsRequired()
-            .HasDefaultValue(false);
 
         #endregion
     }

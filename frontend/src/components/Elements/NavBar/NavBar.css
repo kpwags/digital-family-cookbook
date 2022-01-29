@@ -11,6 +11,11 @@
     margin-right: 25px;
 }
 
+.logo a,
+.logo a:hover {
+    color: var(--white);
+}
+
 .ant-menu.nav-bar-menu {
     justify-content: flex-end;
 }

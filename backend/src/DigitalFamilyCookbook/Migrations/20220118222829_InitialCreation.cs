@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DigitalFamilyCookbook.Migrations
 {
-    public partial class InitialModelBuild : Migration
+    public partial class InitialCreation : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -16,6 +16,38 @@ namespace DigitalFamilyCookbook.Migrations
                 name: "application");
 
             migrationBuilder.CreateTable(
+                name: "RoleType",
+                schema: "application",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    RoleTypeId = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    NormalizedName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RoleType", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "SiteSettings",
+                schema: "application",
+                columns: table => new
+                {
+                    SiteSettingsId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Title = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
+                    IsPublic = table.Column<bool>(type: "bit", nullable: false, defaultValue: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Application_SiteSettings_SiteSettingsId", x => x.SiteSettingsId);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "UserAccount",
                 schema: "application",
                 columns: table => new
@@ -23,10 +55,10 @@ namespace DigitalFamilyCookbook.Migrations
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     UserId = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
-                    UserName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    NormalizedUserName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    NormalizedEmail = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    NormalizedEmail = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     EmailConfirmed = table.Column<bool>(type: "bit", nullable: false),
                     PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     SecurityStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -41,6 +73,30 @@ namespace DigitalFamilyCookbook.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_UserAccount", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "RoleTypeClaim",
+                schema: "application",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    RoleClaimId = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    RoleId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ClaimType = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ClaimValue = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RoleTypeClaim", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_RoleTypeClaim_RoleType_RoleId",
+                        column: x => x.RoleId,
+                        principalSchema: "application",
+                        principalTable: "RoleType",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -95,7 +151,7 @@ namespace DigitalFamilyCookbook.Migrations
                     JwtId = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
                     IsUsed = table.Column<bool>(type: "bit", nullable: false),
                     IsRevoked = table.Column<bool>(type: "bit", nullable: false),
-                    AddedDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2022, 1, 10, 20, 12, 26, 446, DateTimeKind.Local).AddTicks(6990)),
+                    AddedDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2022, 1, 18, 17, 28, 29, 197, DateTimeKind.Local).AddTicks(7870)),
                     ExpirationDate = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
@@ -111,26 +167,101 @@ namespace DigitalFamilyCookbook.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "RoleType",
+                name: "UserAccountClaim",
                 schema: "application",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    RoleTypeId = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    UserAccountId = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    Name = table.Column<string>(type: "nvarchar(25)", maxLength: 25, nullable: false),
-                    NormalizedName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserAccountClaimId = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ClaimType = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ClaimValue = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_RoleType", x => x.Id);
+                    table.PrimaryKey("PK_UserAccountClaim", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_RoleType_UserAccount_UserAccountId",
-                        column: x => x.UserAccountId,
+                        name: "FK_UserAccountClaim_UserAccount_UserId",
+                        column: x => x.UserId,
                         principalSchema: "application",
                         principalTable: "UserAccount",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserAccountLogin",
+                schema: "application",
+                columns: table => new
+                {
+                    LoginProvider = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ProviderKey = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    UserAccountLoginId = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ProviderDisplayName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserAccountLogin", x => new { x.LoginProvider, x.ProviderKey });
+                    table.ForeignKey(
+                        name: "FK_UserAccountLogin_UserAccount_UserId",
+                        column: x => x.UserId,
+                        principalSchema: "application",
+                        principalTable: "UserAccount",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserAccountRoleType",
+                schema: "application",
+                columns: table => new
+                {
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    RoleId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    UserAccountRoleTypeId = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserAccountRoleType", x => new { x.UserId, x.RoleId });
+                    table.ForeignKey(
+                        name: "FK_UserAccountRoleType_RoleType_RoleId",
+                        column: x => x.RoleId,
+                        principalSchema: "application",
+                        principalTable: "RoleType",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_UserAccountRoleType_UserAccount_UserId",
+                        column: x => x.UserId,
+                        principalSchema: "application",
+                        principalTable: "UserAccount",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserAccountToken",
+                schema: "application",
+                columns: table => new
+                {
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    LoginProvider = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    UserAccountTokenId = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Value = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserAccountToken", x => new { x.UserId, x.LoginProvider, x.Name });
+                    table.ForeignKey(
+                        name: "FK_UserAccountToken_UserAccount_UserId",
+                        column: x => x.UserId,
+                        principalSchema: "application",
+                        principalTable: "UserAccount",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -427,16 +558,56 @@ namespace DigitalFamilyCookbook.Migrations
                 column: "UserAccountId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_RoleType_UserAccountId",
+                name: "RoleNameIndex",
                 schema: "application",
                 table: "RoleType",
-                column: "UserAccountId");
+                column: "NormalizedName",
+                unique: true,
+                filter: "[NormalizedName] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RoleTypeClaim_RoleId",
+                schema: "application",
+                table: "RoleTypeClaim",
+                column: "RoleId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Step_RecipeId",
                 schema: "recipe",
                 table: "Step",
                 column: "RecipeId");
+
+            migrationBuilder.CreateIndex(
+                name: "EmailIndex",
+                schema: "application",
+                table: "UserAccount",
+                column: "NormalizedEmail");
+
+            migrationBuilder.CreateIndex(
+                name: "UserNameIndex",
+                schema: "application",
+                table: "UserAccount",
+                column: "NormalizedUserName",
+                unique: true,
+                filter: "[NormalizedUserName] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserAccountClaim_UserId",
+                schema: "application",
+                table: "UserAccountClaim",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserAccountLogin_UserId",
+                schema: "application",
+                table: "UserAccountLogin",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserAccountRoleType_RoleId",
+                schema: "application",
+                table: "UserAccountRoleType",
+                column: "RoleId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -462,7 +633,27 @@ namespace DigitalFamilyCookbook.Migrations
                 schema: "application");
 
             migrationBuilder.DropTable(
-                name: "RoleType",
+                name: "RoleTypeClaim",
+                schema: "application");
+
+            migrationBuilder.DropTable(
+                name: "SiteSettings",
+                schema: "application");
+
+            migrationBuilder.DropTable(
+                name: "UserAccountClaim",
+                schema: "application");
+
+            migrationBuilder.DropTable(
+                name: "UserAccountLogin",
+                schema: "application");
+
+            migrationBuilder.DropTable(
+                name: "UserAccountRoleType",
+                schema: "application");
+
+            migrationBuilder.DropTable(
+                name: "UserAccountToken",
                 schema: "application");
 
             migrationBuilder.DropTable(
@@ -480,6 +671,10 @@ namespace DigitalFamilyCookbook.Migrations
             migrationBuilder.DropTable(
                 name: "Step",
                 schema: "recipe");
+
+            migrationBuilder.DropTable(
+                name: "RoleType",
+                schema: "application");
 
             migrationBuilder.DropTable(
                 name: "Recipe",

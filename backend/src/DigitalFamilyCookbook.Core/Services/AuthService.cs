@@ -1,5 +1,4 @@
 using DigitalFamilyCookbook.Core.Configuration;
-using DigitalFamilyCookbook.Data.Repositories;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -15,21 +14,18 @@ public class AuthService : IAuthService
     private readonly UserManager<UserAccountDto> _userManager;
     private readonly SignInManager<UserAccountDto> _signInManager;
     private readonly RoleManager<RoleTypeDto> _roleManager;
-    private readonly IRefreshTokenRepository _refreshTokenRepository;
 
     public AuthService(DigitalFamilyCookbookConfiguration configuration,
         UserManager<UserAccountDto> userManager,
         SignInManager<UserAccountDto> signInManager,
         RoleManager<RoleTypeDto> roleManager,
-        TokenValidationParameters tokenValidationParameters,
-        IRefreshTokenRepository refreshTokenRepository)
+        TokenValidationParameters tokenValidationParameters)
     {
         _configuration = configuration;
         _userManager = userManager;
         _signInManager = signInManager;
         _roleManager = roleManager;
         _tokenValidationParameters = tokenValidationParameters;
-        _refreshTokenRepository = refreshTokenRepository;
     }
 
     public async Task<AuthResult> LoginUser(string email, string password)
@@ -49,7 +45,7 @@ public class AuthService : IAuthService
         return new AuthResult
         {
             IsSuccessful = false,
-            Errors = new List<string> { "Invalid email or password" }
+            Error = "Invalid email or password",
         };
     }
 
@@ -62,7 +58,7 @@ public class AuthService : IAuthService
             return new AuthResult
             {
                 IsSuccessful = false,
-                Errors = new List<string> { $"{email} already exists" },
+                Error = $"{email} already exists",
             };
         }
 
@@ -70,6 +66,8 @@ public class AuthService : IAuthService
         {
             Email = email,
             Name = name,
+            UserName = email,
+            UserId = Guid.NewGuid().ToString(),
         };
 
         var isCreated = await _userManager.CreateAsync(newUser, password);
@@ -82,7 +80,7 @@ public class AuthService : IAuthService
         return new AuthResult
         {
             IsSuccessful = false,
-            Errors = new List<string> { "Unable to create user account" }
+            Error = "Unable to create user account",
         };
     }
 
@@ -95,31 +93,17 @@ public class AuthService : IAuthService
         var tokenDescriptor = new SecurityTokenDescriptor
         {
             Subject = new ClaimsIdentity(claims),
-            Expires = DateTime.UtcNow.AddSeconds(30),
+            Expires = DateTime.UtcNow.AddDays(_configuration.Auth.JwtLifespan),
             SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_configuration.Auth.JwtSecret)), SecurityAlgorithms.HmacSha256Signature)
         };
 
         var token = jwtTokenHandler.CreateToken(tokenDescriptor);
         var jwtToken = jwtTokenHandler.WriteToken(token);
 
-        var refreshToken = new RefreshTokenDto()
-        {
-            JwtId = token.Id,
-            IsUsed = false,
-            IsRevoked = false,
-            UserAccountId = user.Id,
-            AddedDate = DateTime.UtcNow,
-            ExpirationDate = DateTime.UtcNow.AddMonths(6),
-            Token = RandomString(35) + Guid.NewGuid()
-        };
-
-        await _refreshTokenRepository.Add(refreshToken);
-
         return new AuthResult
         {
             Token = jwtToken,
             IsSuccessful = true,
-            RefreshToken = refreshToken.Token,
         };
     }
 

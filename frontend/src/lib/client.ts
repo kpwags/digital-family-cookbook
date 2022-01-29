@@ -1,26 +1,20 @@
 import { ApiArguments } from '@models/ApiArguments';
 
 const apiUrl = process.env.REACT_APP_API_URL;
-// const localStorageKey = '__fittracker_token__';
-
-// function logout() {
-//     window.localStorage.removeItem(localStorageKey);
-// }
 
 async function client(endpoint: string, {
     data = null,
+    token = undefined,
     contentType = 'application/json',
     fileUpload = false,
     ...customConfig
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 }: ApiArguments = {}) : Promise<any> {
-    // const token = window.localStorage.getItem(localStorageKey);
-
     const headers: Record<string, string> = {};
 
-    // if (token) {
-    //     headers.Authorization = `Bearer ${token}`;
-    // }
+    if (token) {
+        headers.Authorization = `Bearer ${token}`;
+    }
 
     if (contentType !== null) {
         headers['Content-Type'] = contentType;
@@ -45,8 +39,7 @@ async function client(endpoint: string, {
             // refresh the page for them
             window.location.assign(window.location.toString());
 
-            // eslint-disable-next-line prefer-promise-reject-errors
-            return Promise.reject({ message: 'Please re-authenticate.' });
+            return Promise.reject(new Error('Session Expired'));
         }
 
         if (response.status === 400) {

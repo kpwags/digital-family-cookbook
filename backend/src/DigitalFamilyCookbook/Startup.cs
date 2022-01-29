@@ -50,10 +50,11 @@ public class Startup
             );
         });
 
-        services.AddTokenAuthentication(_configuration.Auth.JwtSecret);
+        services.AddIdentity<UserAccountDto, RoleTypeDto>(options => options.SignIn.RequireConfirmedAccount = false)
+            .AddEntityFrameworkStores<ApplicationDbContext>()
+            .AddDefaultTokenProviders();
 
-        services.AddIdentity<UserAccountDto, RoleTypeDto>(options => options.SignIn.RequireConfirmedAccount = true)
-            .AddEntityFrameworkStores<ApplicationDbContext>();
+        services.AddTokenAuthentication(_configuration.Auth.JwtSecret);
 
         services.AddControllers()
             .AddJsonOptions(options =>
@@ -67,6 +68,8 @@ public class Startup
 
         services.AddRepositories();
         services.AddServices();
+
+        services.AddHttpContextAccessor();
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -84,6 +87,8 @@ public class Startup
         app.UseCors("Development");
 
         app.UseGraphiQl("/graphql");
+
+        app.UseMiddleware<DigitalFamilyCookbook.Helpers.JwtMiddleware>();
 
         app.UseAuthentication();
         app.UseAuthorization();

@@ -7,6 +7,7 @@ namespace DigitalFamilyCookbook.Controllers;
 
 [Route("system")]
 [ApiController]
+[Authorize]
 public class SystemController : Controller
 {
     private readonly IMediator _mediatr;
@@ -49,6 +50,7 @@ public class SystemController : Controller
     }
 
     [HttpGet("getsitesettings")]
+    [AllowAnonymous]
     public async Task<ActionResult<SiteSettingsApiModel>> GetSiteSettings(CancellationToken cancellationToken)
     {
         var settings = await _mediatr.Send(new GetSiteSettings.Query(), cancellationToken);

@@ -1,6 +1,6 @@
-namespace DigitalFamilyCookbook.Data.Dtos;
+namespace DigitalFamilyCookbook.Data.Models;
 
-public class RefreshTokenDto
+public class RefreshToken
 {
     public string Id { get; set; } = string.Empty;
 

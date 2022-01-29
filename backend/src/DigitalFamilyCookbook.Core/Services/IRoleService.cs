@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Identity;
+
 namespace DigitalFamilyCookbook.Core.Services;
 
 public interface IRoleService
