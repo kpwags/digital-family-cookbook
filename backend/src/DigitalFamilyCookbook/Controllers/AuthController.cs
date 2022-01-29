@@ -1,5 +1,4 @@
 using DigitalFamilyCookbook.Handlers.Commands.Auth;
-using DigitalFamilyCookbook.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading;
 
