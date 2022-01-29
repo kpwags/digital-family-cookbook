@@ -9,7 +9,7 @@ import {
 import { Api } from '@lib/api';
 import { AuthResult } from '@models/AuthResult';
 
-import './LoginForm.css';
+import './LoginForm.less';
 
 type FormValues = {
     email: string

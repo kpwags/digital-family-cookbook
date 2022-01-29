@@ -9,7 +9,7 @@ import {
 import { Api } from '@lib/api';
 import { AuthResult } from '@models/AuthResult';
 
-import './RegisterForm.css';
+import './RegisterForm.less';
 
 type RegisterFormProps = {
     onRegisterCompleted: (token: string) => void

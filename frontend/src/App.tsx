@@ -5,12 +5,11 @@ import {
     Route,
 } from 'react-router-dom';
 import { BaseLayout } from '@components/Elements/BaseLayout';
-
-import './styles/App.css';
-import 'antd/dist/antd.css';
 import { Register } from '@components/Pages/Register';
 import { CookiesProvider } from 'react-cookie';
 import { Login } from '@components/Pages/Login';
+
+import './styles/App.less';
 
 const Home = () => (
     <>
