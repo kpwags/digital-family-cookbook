@@ -8,6 +8,7 @@ import { BaseLayout } from '@components/Elements/BaseLayout';
 import { Register } from '@components/Pages/Register';
 import { CookiesProvider } from 'react-cookie';
 import { Login } from '@components/Pages/Login';
+import { Roles } from '@components/Pages/Roles';
 
 import './styles/App.less';
 
@@ -28,6 +29,7 @@ function App(): JSX.Element {
                             <Route path="/" element={<Home />} />
                             <Route path="/register" element={<Register />} />
                             <Route path="/login" element={<Login />} />
+                            <Route path="/roles" element={<Roles />} />
                         </Routes>
                     </BaseLayout>
                 </MainApp>

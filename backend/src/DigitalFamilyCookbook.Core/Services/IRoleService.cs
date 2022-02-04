@@ -6,6 +6,8 @@ public interface IRoleService
 {
     IEnumerable<RoleTypeDto> GetAllRoles();
 
+    Task<RoleType> GetRoleById(string id);
+
     Task<string> AddRole(string name);
 
     Task<string> UpdateRole(string roleTypeId, string name);

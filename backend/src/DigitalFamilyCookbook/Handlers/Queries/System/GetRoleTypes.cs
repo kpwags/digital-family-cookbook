@@ -1,5 +1,4 @@
 using DigitalFamilyCookbook.Core.Services;
-using Microsoft.AspNetCore.Identity;
 using System.Threading;
 
 namespace DigitalFamilyCookbook.Handlers.Queries.System;

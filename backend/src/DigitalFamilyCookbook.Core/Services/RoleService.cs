@@ -19,6 +19,13 @@ public class RoleService : IRoleService
         return _roleManager.Roles.OrderBy(r => r.Name).AsEnumerable();
     }
 
+    public async Task<RoleType> GetRoleById(string id)
+    {
+        var roleType = await _roleManager.FindByIdAsync(id);
+
+        return RoleType.FromDto(roleType);
+    }
+
     public async Task<string> AddRole(string name)
     {
         var doesRoleExist = await _roleManager.RoleExistsAsync(name);

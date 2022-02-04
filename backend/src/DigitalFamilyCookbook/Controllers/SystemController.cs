@@ -17,7 +17,7 @@ public class SystemController : Controller
         _mediatr = mediatr;
     }
 
-    [HttpPost("addrole")]
+    [HttpPost("saverole")]
     public async Task<ActionResult> AddRole(AddRoleType.Command command, CancellationToken cancellationToken)
     {
         await _mediatr.Send(command, cancellationToken);
@@ -34,11 +34,19 @@ public class SystemController : Controller
     }
 
     [HttpGet("getroles")]
-    public async Task<IReadOnlyCollection<RoleTypeDto>> GetRoles(GetRoleTypes.Query query, CancellationToken cancellationToken)
+    public async Task<IReadOnlyCollection<RoleTypeDto>> GetRoles(CancellationToken cancellationToken)
     {
-        var roles = await _mediatr.Send(query, cancellationToken);
+        var roles = await _mediatr.Send(new GetRoleTypes.Query(), cancellationToken);
 
         return roles;
+    }
+
+    [HttpGet("getrolebyid")]
+    public async Task<RoleTypeApiModel> GetRoleTypeById(string id, CancellationToken cancellationToken)
+    {
+        var role = await _mediatr.Send(new GetRoleTypeById.Query { Id = id }, cancellationToken);
+
+        return role;
     }
 
     [HttpPost("deleterole")]
