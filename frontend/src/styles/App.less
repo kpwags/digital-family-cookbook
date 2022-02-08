@@ -102,7 +102,8 @@ button.ant-btn-primary {
 }
 
 button.ant-btn-primary:hover,
-button.ant-btn-primary:active {
+button.ant-btn-primary:active,
+button.ant-btn-primary:focus {
   background-color: @color-green-02;
   border-color: @color-green-02;
 }
@@ -111,7 +112,9 @@ button.ant-btn-ghost {
   border-color: @color-green-01;
 }
 
-button.ant-btn-ghost:hover {
+button.ant-btn-ghost:hover,
+button.ant-btn-ghost:active,
+button.ant-btn-ghost:focus {
   border-color: @color-green-02;
   color: @color-green-02;
 }
@@ -122,6 +125,32 @@ button.ant-btn-link {
 
 button.ant-btn-link:hover {
   color: @color-green-02;
+}
+
+.ant-popover-buttons {
+  button.ant-btn-primary {
+    background-color: @color-red-01;
+    border-color: @color-red-01;
+  }
+
+  button.ant-btn-primary:hover,
+  button.ant-btn-primary:active,
+  button.ant-btn-primary:focus {
+    background-color: @color-red-02;
+    border-color: @color-red-02;
+  }
+
+  button.ant-btn:not(.ant-btn-primary) {
+    color: @color-red-01;
+    border-color: @color-red-01;
+  }
+
+  button.ant-btn:not(.ant-btn-primary):hover,
+  button.ant-btn:not(.ant-btn-primary):active,
+  button.ant-btn:not(.ant-btn-primary):focus {
+    color: @color-red-02;
+    border-color: @color-red-02;
+  }
 }
 
 .ant-space.full-width {

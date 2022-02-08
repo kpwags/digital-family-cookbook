@@ -6,20 +6,26 @@ import { RoleForm } from '@components/Forms/RoleForm';
 import { Button, Space } from 'antd';
 import { RolesTable } from './components/RolesTable';
 
-const Roles = () => {
+const Roles = (): JSX.Element => {
     const [roles, setRoles] = useState<RoleType[]>([]);
     const [rolesFormOpen, setRolesFormOpen] = useState<boolean>(false);
+    const [rolesLoadingMessage, setRolesLoadingMessage] = useState<string>('Loading...');
+    const [roleToEditId, setRoleToEditId] = useState<string>('');
 
     const { siteSettings, token } = useContext(AppContext);
 
     const fetchRoles = async () => {
+        setRolesLoadingMessage('Loading...');
+
         const [data, error] = await Api.Get<RoleType[]>('system/getroles', { token });
 
         if (error || data === null) {
+            setRolesLoadingMessage('');
             return;
         }
 
         setRoles(data);
+        setRolesLoadingMessage('');
     };
 
     useEffect(() => {
@@ -38,17 +44,29 @@ const Roles = () => {
                     Add Role
                 </Button>
 
-                <RolesTable roles={roles} />
+                <RolesTable
+                    roles={roles}
+                    onRoleEdit={(id) => {
+                        setRoleToEditId(id);
+                        setRolesFormOpen(true);
+                    }}
+                    loadingMessage={rolesLoadingMessage}
+                    onRoleChanged={() => fetchRoles()}
+                />
             </Space>
 
             <RoleForm
                 onSave={() => {
                     fetchRoles();
                     setRolesFormOpen(false);
+                    setRoleToEditId('');
                 }}
-                onClose={() => setRolesFormOpen(false)}
+                onClose={() => {
+                    setRolesFormOpen(false);
+                    setRoleToEditId('');
+                }}
                 visible={rolesFormOpen}
-                id=""
+                id={roleToEditId}
             />
         </>
     );

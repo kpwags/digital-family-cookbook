@@ -36,7 +36,11 @@ public class RoleService : IRoleService
             return "Role already exists";
         }
 
-        var result = await _roleManager.CreateAsync(new RoleTypeDto { Name = name });
+        var result = await _roleManager.CreateAsync(new RoleTypeDto
+        {
+            Name = name,
+            RoleTypeId = Guid.NewGuid().ToString()
+        });
 
         if (!result.Succeeded)
         {
@@ -56,9 +60,9 @@ public class RoleService : IRoleService
         return string.Empty;
     }
 
-    public async Task<string> UpdateRole(string roleTypeId, string name)
+    public async Task<string> UpdateRole(string id, string name)
     {
-        var role = _roleManager.Roles.FirstOrDefault(r => r.Id == roleTypeId);
+        var role = _roleManager.Roles.FirstOrDefault(r => r.Id == id);
 
         if (role == null)
         {
@@ -88,9 +92,9 @@ public class RoleService : IRoleService
         return string.Empty;
     }
 
-    public async Task<string> DeleteRole(string roleTypeId)
+    public async Task<string> DeleteRole(string id)
     {
-        var role = _roleManager.Roles.FirstOrDefault(r => r.Id == roleTypeId);
+        var role = _roleManager.Roles.FirstOrDefault(r => r.Id == id);
 
         if (role == null)
         {

@@ -70,14 +70,16 @@ const RoleForm = ({
     };
 
     useEffect(() => {
-        if (id !== '') {
-            getRoleType(id);
-        } else {
-            form.setFieldsValue({
-                name: '',
-            });
+        if (visible) {
+            if (id !== '') {
+                getRoleType(id);
+            } else {
+                form.setFieldsValue({
+                    name: '',
+                });
+            }
         }
-    }, [id]);
+    }, [visible, id]);
 
     return (
         <FormModal

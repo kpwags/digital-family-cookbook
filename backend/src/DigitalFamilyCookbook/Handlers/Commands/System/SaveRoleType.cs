@@ -3,7 +3,7 @@ using System.Threading;
 
 namespace DigitalFamilyCookbook.Handlers.Commands.System;
 
-public class AddRoleType
+public class SaveRoleType
 {
     public class Handler : IRequestHandler<Command, Unit>
     {
@@ -16,7 +16,16 @@ public class AddRoleType
 
         public async Task<Unit> Handle(Command command, CancellationToken cancellationToken)
         {
-            var errorMessage = await _roleService.AddRole(command.Name);
+            string errorMessage = string.Empty;
+
+            if (command.Id == string.Empty)
+            {
+                errorMessage = await _roleService.AddRole(command.Name);
+            }
+            else
+            {
+                errorMessage = await _roleService.UpdateRole(command.Id, command.Name);
+            }
 
             if (errorMessage != string.Empty)
             {
@@ -29,6 +38,8 @@ public class AddRoleType
 
     public class Command : IRequest<Unit>
     {
+        public string Id { get; set; } = string.Empty;
+
         public string Name { get; set; } = string.Empty;
     }
 }

@@ -18,15 +18,7 @@ public class SystemController : Controller
     }
 
     [HttpPost("saverole")]
-    public async Task<ActionResult> AddRole(AddRoleType.Command command, CancellationToken cancellationToken)
-    {
-        await _mediatr.Send(command, cancellationToken);
-
-        return Ok();
-    }
-
-    [HttpPost("updaterole")]
-    public async Task<ActionResult> UpdateRole(UpdateRoleType.Command command, CancellationToken cancellationToken)
+    public async Task<ActionResult> AddRole(SaveRoleType.Command command, CancellationToken cancellationToken)
     {
         await _mediatr.Send(command, cancellationToken);
 

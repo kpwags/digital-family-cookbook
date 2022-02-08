@@ -10,7 +10,7 @@ public interface IRoleService
 
     Task<string> AddRole(string name);
 
-    Task<string> UpdateRole(string roleTypeId, string name);
+    Task<string> UpdateRole(string id, string name);
 
-    Task<string> DeleteRole(string roleTypeId);
+    Task<string> DeleteRole(string id);
 }
