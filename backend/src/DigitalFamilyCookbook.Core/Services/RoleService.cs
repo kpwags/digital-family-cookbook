@@ -6,11 +6,13 @@ namespace DigitalFamilyCookbook.Core.Services;
 public class RoleService : IRoleService
 {
     private readonly RoleManager<RoleTypeDto> _roleManager;
+    private readonly UserManager<UserAccountDto> _userManager;
     private readonly ILogger<RoleService> _logger;
 
-    public RoleService(RoleManager<RoleTypeDto> roleManager, ILogger<RoleService> logger)
+    public RoleService(RoleManager<RoleTypeDto> roleManager, UserManager<UserAccountDto> userManager, ILogger<RoleService> logger)
     {
         _roleManager = roleManager;
+        _userManager = userManager;
         _logger = logger;
     }
 
@@ -120,5 +122,31 @@ public class RoleService : IRoleService
 
         _logger.LogInformation($"The role has been deleted successfully");
         return string.Empty;
+    }
+
+    public async Task<IEnumerable<RoleType>> GetUserRoles(string userId)
+    {
+        var user = await _userManager.FindByIdAsync(userId);
+
+        if (user == null)
+        {
+            throw new Exception("User not found");
+        }
+
+        var roles = await _userManager.GetRolesAsync(user);
+
+        var rolesList = new List<RoleType>();
+
+        foreach (var roleName in roles)
+        {
+            var role = _roleManager.FindByNameAsync(roleName);
+
+            if (role != null)
+            {
+                rolesList.Add(RoleType.FromDto(role.Result));
+            }
+        }
+
+        return rolesList.AsEnumerable();
     }
 }

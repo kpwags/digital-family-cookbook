@@ -13,4 +13,6 @@ public interface IRoleService
     Task<string> UpdateRole(string id, string name);
 
     Task<string> DeleteRole(string id);
+
+    Task<IEnumerable<RoleType>> GetUserRoles(string userId);
 }

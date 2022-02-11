@@ -3,8 +3,16 @@ import { Api } from '@lib/api';
 import { RoleType } from '@models/RoleType';
 import { useEffect, useState, useContext } from 'react';
 import { RoleForm } from '@components/Forms/RoleForm';
-import { Button, Space } from 'antd';
+import {
+    Button,
+    Space,
+    Alert,
+    Typography,
+} from 'antd';
+import { WarningOutlined } from '@ant-design/icons';
 import { RolesTable } from './components/RolesTable';
+
+const { Text } = Typography;
 
 const Roles = (): JSX.Element => {
     const [roles, setRoles] = useState<RoleType[]>([]);
@@ -36,6 +44,13 @@ const Roles = (): JSX.Element => {
     return (
         <>
             <h1>Roles</h1>
+
+            <Alert
+                type="warning"
+                message={<Text><WarningOutlined />&nbsp;<Text strong>WARNING:</Text> Adjusting roles can cause the site to break.</Text>}
+                style={{ margin: '24px 0' }}
+            />
+
             <Space direction="vertical" size={24} className="full-width">
                 <Button
                     type="primary"

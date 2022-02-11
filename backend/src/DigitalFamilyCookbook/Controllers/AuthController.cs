@@ -1,4 +1,5 @@
 using DigitalFamilyCookbook.Handlers.Commands.Auth;
+using DigitalFamilyCookbook.Handlers.Queries.Auth;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading;
 
@@ -52,8 +53,8 @@ public class AuthController : Controller
     }
 
     [HttpGet("getuser")]
-    public ActionResult<UserAccountApiModel> GetUser()
+    public async Task<ActionResult<UserAccountApiModel>> GetUser(CancellationToken cancellationToken)
     {
-        return HttpContext.CurrentUser(false);
+        return await _mediatr.Send(new GetLoggedInUser.Query(), cancellationToken);
     }
 }

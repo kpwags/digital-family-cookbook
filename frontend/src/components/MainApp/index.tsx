@@ -53,6 +53,8 @@ const MainApp = ({ children }: { children: ReactNode }): JSX.Element => {
 
         if (cookies.dfcuser) {
             loadUser();
+            setSiteSettings(data);
+            setPageState(PageState.Ready);
         } else {
             setSiteSettings(data);
             setPageState(PageState.Ready);

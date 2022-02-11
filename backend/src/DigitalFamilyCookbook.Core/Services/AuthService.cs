@@ -74,7 +74,11 @@ public class AuthService : IAuthService
 
         if (isCreated.Succeeded)
         {
-            return await GenerateToken(newUser);
+            var createdUser = await _userManager.FindByEmailAsync(email);
+
+            await _userManager.AddToRoleAsync(createdUser, "User");
+
+            return await GenerateToken(createdUser);
         }
 
         return new AuthResult

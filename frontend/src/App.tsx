@@ -5,8 +5,10 @@ import {
     Route,
 } from 'react-router-dom';
 import { BaseLayout } from '@components/Elements/BaseLayout';
-import { Register } from '@components/Pages/Register';
 import { CookiesProvider } from 'react-cookie';
+import { ProtectedRoute } from '@components/ProtectedRoute';
+
+import { Register } from '@components/Pages/Register';
 import { Login } from '@components/Pages/Login';
 import { Roles } from '@components/Pages/Roles';
 
@@ -19,23 +21,28 @@ const Home = () => (
     </>
 );
 
-function App(): JSX.Element {
-    return (
-        <CookiesProvider>
-            <BrowserRouter>
-                <MainApp>
-                    <BaseLayout>
-                        <Routes>
-                            <Route path="/" element={<Home />} />
-                            <Route path="/register" element={<Register />} />
-                            <Route path="/login" element={<Login />} />
-                            <Route path="/roles" element={<Roles />} />
-                        </Routes>
-                    </BaseLayout>
-                </MainApp>
-            </BrowserRouter>
-        </CookiesProvider>
-    );
-}
+const App = (): JSX.Element => (
+    <CookiesProvider>
+        <BrowserRouter>
+            <MainApp>
+                <BaseLayout>
+                    <Routes>
+                        <Route path="/" element={<Home />} />
+                        <Route path="/register" element={<Register />} />
+                        <Route path="/login" element={<Login />} />
+                        <Route
+                            path="/roles"
+                            element={(
+                                <ProtectedRoute requiredRoles={['ADMINISTRATOR']}>
+                                    <Roles />
+                                </ProtectedRoute>
+                            )}
+                        />
+                    </Routes>
+                </BaseLayout>
+            </MainApp>
+        </BrowserRouter>
+    </CookiesProvider>
+);
 
 export default App;

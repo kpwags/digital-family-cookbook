@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
     Row,
@@ -13,7 +13,13 @@ const { Title, Paragraph } = Typography;
 const Register = (): JSX.Element => {
     const navigate = useNavigate();
 
-    const { loginUser } = useContext(AppContext);
+    const { user, loginUser } = useContext(AppContext);
+
+    useEffect(() => {
+        if (user !== null) {
+            navigate('/');
+        }
+    }, [user]);
 
     const completeRegistration = (token: string) => {
         loginUser(token);

@@ -23,7 +23,7 @@ public class GetRoleTypeById
                 return RoleTypeApiModel.None();
             }
 
-            return RoleTypeApiModel.FromDto(role);
+            return RoleTypeApiModel.FromDomainModel(role);
         }
     }
 

@@ -10,6 +10,8 @@ public class UserAccountApiModel
 
     public string Email { get; set; } = string.Empty;
 
+    public IReadOnlyCollection<RoleTypeApiModel> Roles { get; set; } = Array.Empty<RoleTypeApiModel>();
+
     public static UserAccountApiModel None() => new UserAccountApiModel();
 
     public static UserAccountApiModel FromDomainModel(UserAccount model)
@@ -20,6 +22,7 @@ public class UserAccountApiModel
             UserId = model.UserId,
             Name = model.Name,
             Email = model.Email,
+            Roles = model.RoleTypes.Select(r => RoleTypeApiModel.FromDomainModel(r)).ToList(),
         };
     }
 }

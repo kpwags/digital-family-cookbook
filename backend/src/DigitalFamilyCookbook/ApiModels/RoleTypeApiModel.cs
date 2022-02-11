@@ -14,7 +14,7 @@ public class RoleTypeApiModel
 
     public static RoleTypeApiModel None() => new RoleTypeApiModel();
 
-    public static RoleTypeApiModel FromDto(RoleType role)
+    public static RoleTypeApiModel FromDomainModel(RoleType role)
     {
         return new RoleTypeApiModel
         {
