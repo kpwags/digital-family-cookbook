@@ -7,7 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Src\DigitalFamilyCookbook\DigitalFamilyCookbook.csproj" />
     <ProjectReference Include="..\..\Src\DigitalFamilyCookbook.Core\DigitalFamilyCookbook.Core.csproj" />
     <ProjectReference Include="..\..\Src\DigitalFamilyCookbook.Data\DigitalFamilyCookbook.Data.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Moq" Version="4.16.1" />
   </ItemGroup>
 </Project>

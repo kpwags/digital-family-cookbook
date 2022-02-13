@@ -18,11 +18,6 @@ public class GetRoleTypeById
         {
             var role = await _roleService.GetRoleById(query.Id);
 
-            if (role == null)
-            {
-                return RoleTypeApiModel.None();
-            }
-
             return RoleTypeApiModel.FromDomainModel(role);
         }
     }

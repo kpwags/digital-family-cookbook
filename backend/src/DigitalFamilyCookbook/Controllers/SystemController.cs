@@ -26,7 +26,7 @@ public class SystemController : Controller
     }
 
     [HttpGet("getroles")]
-    public async Task<IReadOnlyCollection<RoleTypeDto>> GetRoles(CancellationToken cancellationToken)
+    public async Task<IReadOnlyCollection<RoleTypeApiModel>> GetRoles(CancellationToken cancellationToken)
     {
         var roles = await _mediatr.Send(new GetRoleTypes.Query(), cancellationToken);
 

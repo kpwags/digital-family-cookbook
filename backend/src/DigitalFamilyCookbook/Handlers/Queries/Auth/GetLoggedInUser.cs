@@ -39,6 +39,6 @@ public class GetLoggedInUser
 
     public class Query : IRequest<UserAccountApiModel>
     {
-        public string Id { get; set; } = string.Empty;
+
     }
 }

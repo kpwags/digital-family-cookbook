@@ -22,4 +22,46 @@ public class SiteSettingsApiModel
             IsPublic = settings.IsPublic,
         };
     }
+
+    public override bool Equals(object? obj)
+    {
+        if (obj is null)
+        {
+            return false;
+        }
+
+        var model = obj as SiteSettingsApiModel;
+
+        if (model is null)
+        {
+            return false;
+        }
+
+        return this.Equals(model);
+    }
+
+    public bool Equals(SiteSettingsApiModel model)
+    {
+        if (model is null)
+        {
+            return false;
+        }
+
+        if (Object.ReferenceEquals(this, model))
+        {
+            return true;
+        }
+
+        if (this.GetType() != model.GetType())
+        {
+            return false;
+        }
+
+        return Id == model.Id
+            && SiteSettingsId == model.SiteSettingsId
+            && Title == model.Title
+            && IsPublic == model.IsPublic;
+    }
+
+    public override int GetHashCode() => (Id, SiteSettingsId, Title, IsPublic).GetHashCode();
 }

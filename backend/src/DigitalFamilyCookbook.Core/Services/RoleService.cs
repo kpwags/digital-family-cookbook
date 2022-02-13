@@ -16,14 +16,19 @@ public class RoleService : IRoleService
         _logger = logger;
     }
 
-    public IEnumerable<RoleTypeDto> GetAllRoles()
+    public IEnumerable<RoleType> GetAllRoles()
     {
-        return _roleManager.Roles.OrderBy(r => r.Name).AsEnumerable();
+        return _roleManager.Roles.Select(r => RoleType.FromDto(r)).OrderBy(r => r.Name).AsEnumerable();
     }
 
     public async Task<RoleType> GetRoleById(string id)
     {
         var roleType = await _roleManager.FindByIdAsync(id);
+
+        if (roleType is null)
+        {
+            roleType = RoleTypeDto.None();
+        }
 
         return RoleType.FromDto(roleType);
     }

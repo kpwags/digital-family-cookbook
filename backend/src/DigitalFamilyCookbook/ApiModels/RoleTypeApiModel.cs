@@ -25,4 +25,46 @@ public class RoleTypeApiModel
             Id = role.Id,
         };
     }
+
+    public override bool Equals(object? obj)
+    {
+        if (obj is null)
+        {
+            return false;
+        }
+
+        var model = obj as RoleTypeApiModel;
+
+        if (model is null)
+        {
+            return false;
+        }
+
+        return this.Equals(model);
+    }
+
+    public bool Equals(RoleTypeApiModel model)
+    {
+        if (model is null)
+        {
+            return false;
+        }
+
+        if (Object.ReferenceEquals(this, model))
+        {
+            return true;
+        }
+
+        if (this.GetType() != model.GetType())
+        {
+            return false;
+        }
+
+        return Id == model.Id
+            && RoleTypeId == model.RoleTypeId
+            && Name == model.Name
+            && NormalizedName == model.NormalizedName;
+    }
+
+    public override int GetHashCode() => (Id, RoleTypeId, Name, NormalizedName).GetHashCode();
 }
