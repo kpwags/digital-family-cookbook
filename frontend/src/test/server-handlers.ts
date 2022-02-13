@@ -2,6 +2,7 @@
 import { rest } from 'msw';
 import { MockAdminUserAccount } from '@test/mocks/MockUsers';
 import { AuthResult } from '@models/AuthResult';
+import { MockAdminRole, MockUserRole } from './mocks/MockRoleType';
 
 const handlers = [
     // auth controller actions
@@ -39,6 +40,43 @@ const handlers = [
             token: '1234567890',
         }),
     )),
+
+    // system controller actions
+    rest.get('*/system/getrolebyid', (req, res, ctx) => {
+        const id = req.url.searchParams.get('id');
+
+        if (id === 'admin') {
+            return res(
+                ctx.status(200),
+                ctx.json(MockAdminRole),
+            );
+        }
+
+        if (id === 'user') {
+            return res(
+                ctx.status(200),
+                ctx.json(MockUserRole),
+            );
+        }
+
+        return res(
+            ctx.status(400),
+            ctx.text('Unable to find role'),
+        );
+    }),
+
+    rest.post('*/system/saverole', (req, res, ctx) => {
+        const { name } = req.body as { name: string };
+
+        if (['administrator', 'user'].includes(name.toLowerCase())) {
+            return res(
+                ctx.status(400),
+                ctx.text('Role already exists'),
+            );
+        }
+
+        return res(ctx.status(200));
+    }),
 ];
 
 export { handlers };

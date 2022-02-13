@@ -34,11 +34,16 @@ public class SystemController : Controller
     }
 
     [HttpGet("getrolebyid")]
-    public async Task<RoleTypeApiModel> GetRoleTypeById(string id, CancellationToken cancellationToken)
+    public async Task<ActionResult<RoleTypeApiModel>> GetRoleTypeById(string id, CancellationToken cancellationToken)
     {
         var role = await _mediatr.Send(new GetRoleTypeById.Query { Id = id }, cancellationToken);
 
-        return role;
+        if (role.RoleTypeId == string.Empty)
+        {
+            return BadRequest("Unable to find role");
+        }
+
+        return Ok(role);
     }
 
     [HttpPost("deleterole")]

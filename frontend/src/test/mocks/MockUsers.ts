@@ -1,20 +1,24 @@
+import { v4 as uuid4 } from 'uuid';
 import { UserAccount } from '@models/UserAccount';
+import { MockAdminRole, MockUserRole } from './MockRoleType';
 
-const MockAdminUserAccount: UserAccount = {
-    id: '4e867e8f-9764-4667-99a3-9969dc0850f3',
-    userId: '4e867e8f-9764-4667-99a3-9969dc0850f3',
+export const MockAdminUserAccount: UserAccount = {
+    id: uuid4(),
+    userId: uuid4(),
     email: 'testadmin@toEditorSettings.com',
     name: 'Admin User',
     roles: [
-        {
-            name: 'Administrator',
-            normalizedName: 'ADMINISTRATOR',
-            id: '123456',
-            roleTypeId: '789012',
-        },
+        MockAdminRole,
+        MockUserRole,
     ],
 };
 
-export {
-    MockAdminUserAccount,
+export const MockUserAccount: UserAccount = {
+    id: uuid4(),
+    userId: uuid4(),
+    email: 'user@toEditorSettings.com',
+    name: 'Regular User',
+    roles: [
+        MockUserRole,
+    ],
 };
