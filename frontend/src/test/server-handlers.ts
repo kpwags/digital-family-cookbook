@@ -42,6 +42,14 @@ const handlers = [
     )),
 
     // system controller actions
+    rest.get('*/system/getroles', (req, res, ctx) => res(
+        ctx.status(200),
+        ctx.json([
+            MockAdminRole,
+            MockUserRole,
+        ]),
+    )),
+
     rest.get('*/system/getrolebyid', (req, res, ctx) => {
         const id = req.url.searchParams.get('id');
 

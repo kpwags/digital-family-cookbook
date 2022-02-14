@@ -18,7 +18,13 @@ public class RoleService : IRoleService
 
     public IEnumerable<RoleType> GetAllRoles()
     {
-        return _roleManager.Roles.Select(r => RoleType.FromDto(r)).OrderBy(r => r.Name).AsEnumerable();
+        var roles = _roleManager.Roles;
+
+        return roles
+            .Select(r => RoleType.FromDto(r))
+            .ToList()
+            .OrderBy(r => r.Name)
+            .AsEnumerable();
     }
 
     public async Task<RoleType> GetRoleById(string id)
