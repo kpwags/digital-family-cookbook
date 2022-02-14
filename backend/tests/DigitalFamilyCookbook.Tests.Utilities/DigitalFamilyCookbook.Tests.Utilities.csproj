@@ -7,9 +7,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Src\DigitalFamilyCookbook\DigitalFamilyCookbook.csproj" />
-    <ProjectReference Include="..\..\Src\DigitalFamilyCookbook.Core\DigitalFamilyCookbook.Core.csproj" />
-    <ProjectReference Include="..\..\Src\DigitalFamilyCookbook.Data\DigitalFamilyCookbook.Data.csproj" />
+    <ProjectReference Include="..\..\src\DigitalFamilyCookbook\DigitalFamilyCookbook.csproj" />
+    <ProjectReference Include="..\..\src\DigitalFamilyCookbook.Core\DigitalFamilyCookbook.Core.csproj" />
+    <ProjectReference Include="..\..\src\DigitalFamilyCookbook.Data\DigitalFamilyCookbook.Data.csproj" />
   </ItemGroup>
 
   <ItemGroup>
