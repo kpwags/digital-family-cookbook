@@ -1,4 +1,4 @@
-name: DigitalFamilyCookbook.Core Tests
+name: DigitalFamilyCookbook.Core Unit Tests
 
 on:
     push:
