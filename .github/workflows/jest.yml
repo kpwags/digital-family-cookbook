@@ -1,4 +1,4 @@
-name: Jest
+name: Front End Unit Tests
 
 on:
     push:
