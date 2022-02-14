@@ -22,8 +22,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Src\DigitalFamilyCookbook.Core\DigitalFamilyCookbook.Core.csproj" />
-    <ProjectReference Include="..\..\Src\DigitalFamilyCookbook.Data\DigitalFamilyCookbook.Data.csproj" />
+    <ProjectReference Include="..\..\src\DigitalFamilyCookbook.Core\DigitalFamilyCookbook.Core.csproj" />
+    <ProjectReference Include="..\..\src\DigitalFamilyCookbook.Data\DigitalFamilyCookbook.Data.csproj" />
     <ProjectReference Include="..\DigitalFamilyCookbook.Tests.Utilities\DigitalFamilyCookbook.Tests.Utilities.csproj" />
   </ItemGroup>
 </Project>

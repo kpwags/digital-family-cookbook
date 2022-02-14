@@ -69,8 +69,13 @@ public class AuthServiceTests
     [Fact]
     public async Task ItSuccessfullyRegistersAUser()
     {
+        var createdUser = MockUser.GenerateUserDto();
+
 #nullable disable
-        _userManager.Setup(u => u.FindByEmailAsync(It.IsAny<string>())).ReturnsAsync((UserAccountDto)null);
+        _userManager
+            .SetupSequence(u => u.FindByEmailAsync(It.IsAny<string>()))
+            .ReturnsAsync((UserAccountDto)null)
+            .ReturnsAsync(createdUser);
 #nullable enable
 
         _userManager.Setup(u => u.CreateAsync(It.IsAny<UserAccountDto>(), It.IsAny<string>())).ReturnsAsync(IdentityResult.Success);
@@ -85,7 +90,7 @@ public class AuthServiceTests
             _tokenValidationParameters
         );
 
-        var result = await authService.RegisterUser(MockDataGenerator.RandomEmail(), MockDataGenerator.RandomString(12), MockDataGenerator.RandomString(10));
+        var result = await authService.RegisterUser(createdUser.Email, MockDataGenerator.RandomString(12), MockDataGenerator.RandomString(10));
 
         Assert.True(result.IsSuccessful);
     }
