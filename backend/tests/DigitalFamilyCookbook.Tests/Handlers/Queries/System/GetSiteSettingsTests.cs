@@ -24,6 +24,6 @@ public class GetSiteSettingsTests
 
         var result = await handler.Handle(new GetSiteSettings.Query(), new CancellationToken());
 
-        Assert.True(apiModel.Equals(result.Value));
+        Assert.True(apiModel.Equals(result.Value ?? DigitalFamilyCookbook.ApiModels.SiteSettingsApiModel.None()));
     }
 }
