@@ -1,20 +1,32 @@
 import { Row, Col, Typography } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { LoginForm } from '@components/Forms/LoginForm';
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { AppContext } from '@contexts/AppContext';
 
 const { Title, Paragraph } = Typography;
 
-const Login = (): JSX.Element => {
+type LoginProps = {
+    redirectTo?: string
+}
+
+const Login = ({
+    redirectTo = '/',
+}: LoginProps): JSX.Element => {
     const navigate = useNavigate();
 
-    const { loginUser } = useContext(AppContext);
+    const { user, loginUser } = useContext(AppContext);
 
     const completeLoginProcess = (token: string) => {
         loginUser(token);
-        navigate('/');
+        navigate(redirectTo);
     };
+
+    useEffect(() => {
+        if (user !== null) {
+            navigate('/');
+        }
+    }, [user]);
 
     return (
         <Row justify="center" align="top">

@@ -17,16 +17,8 @@ public class SystemController : Controller
         _mediatr = mediatr;
     }
 
-    [HttpPost("addrole")]
-    public async Task<ActionResult> AddRole(AddRoleType.Command command, CancellationToken cancellationToken)
-    {
-        await _mediatr.Send(command, cancellationToken);
-
-        return Ok();
-    }
-
-    [HttpPost("updaterole")]
-    public async Task<ActionResult> UpdateRole(UpdateRoleType.Command command, CancellationToken cancellationToken)
+    [HttpPost("saverole")]
+    public async Task<ActionResult> AddRole(SaveRoleType.Command command, CancellationToken cancellationToken)
     {
         await _mediatr.Send(command, cancellationToken);
 
@@ -34,11 +26,24 @@ public class SystemController : Controller
     }
 
     [HttpGet("getroles")]
-    public async Task<IReadOnlyCollection<RoleTypeDto>> GetRoles(GetRoleTypes.Query query, CancellationToken cancellationToken)
+    public async Task<IReadOnlyCollection<RoleTypeApiModel>> GetRoles(CancellationToken cancellationToken)
     {
-        var roles = await _mediatr.Send(query, cancellationToken);
+        var roles = await _mediatr.Send(new GetRoleTypes.Query(), cancellationToken);
 
         return roles;
+    }
+
+    [HttpGet("getrolebyid")]
+    public async Task<ActionResult<RoleTypeApiModel>> GetRoleTypeById(string id, CancellationToken cancellationToken)
+    {
+        var role = await _mediatr.Send(new GetRoleTypeById.Query { Id = id }, cancellationToken);
+
+        if (role.RoleTypeId == string.Empty)
+        {
+            return BadRequest("Unable to find role");
+        }
+
+        return Ok(role);
     }
 
     [HttpPost("deleterole")]

@@ -43,66 +43,122 @@ html, body {
 /* --- ANT Overrides --- */
 section.ant-layout {
   background: #fefefe;
+}
 
-  h1.ant-typography {
-    color: @color-green-01;
-  }
+h1.ant-typography {
+  color: @color-green-01;
+}
 
-  div.ant-typography,
-  .ant-typogrpahy p {
-    font-size: 1.1rem;
-  }
+div.ant-typography,
+.ant-typogrpahy p {
+  font-size: 1.1rem;
+}
 
-  .ant-form-item-label label {
-    font-size: 1.1rem;
-  }
+.ant-form-item {
+  margin-bottom: 36px;
+}
 
-  input.ant-input[type="text"],
-  input.ant-input[type="email"],
-  input.ant-input[type="password"] {
-    padding: 5px 8px;
-    font-size: 1.1rem;
-  }
+.ant-form-item-has-error .ant-form-item-label {
+  align-items: flex-start;
+}
 
-  .ant-form-item {
-    margin-bottom: 36px;
-  }
+.ant-form-item-label {
+  display: inline-flex;
+  align-items: center;
+}
 
-  .ant-form-item-has-error .ant-form-item-label {
-    align-items: flex-start;
-  }
+.ant-form-item-label > label {
+  justify-content: flex-end;
+}
 
-  .ant-form-item-label {
-    display: inline-flex;
-    align-items: center;
-  }
+.ant-input:hover {
+  border-color: @color-green-01;
+}
 
-  .ant-form-item-label > label {
-    justify-content: flex-end;
-  }
+.ant-input:focus,
+.ant-input-focused {
+  border-color: @color-green-01;
+  box-shadow: 0 0 0 2px rgb(0, 100, 0, 0.2);
+}
 
-  .ant-input:hover {
+.ant-form {
+  button.ant-btn-primary {
+    background-color: @color-green-01;
     border-color: @color-green-01;
+    height: auto;
+    padding: 8px 25px;
+    font-size: 1.1rem;
   }
 
-  .ant-input:focus,
-  .ant-input-focused {
-    border-color: @color-green-01;
-    box-shadow: 0 0 0 2px rgb(0, 100, 0, 0.2);
+  button.ant-btn-primary:hover {
+    background-color: @color-green-02;
+    border-color: @color-green-02;
   }
 }
 
 button.ant-btn-primary {
   background-color: @color-green-01;
   border-color: @color-green-01;
-  height: auto;
-  padding: 8px 25px;
-  font-size: 1.1rem;
 }
 
-button.ant-btn-primary:hover {
+button.ant-btn-primary:hover,
+button.ant-btn-primary:active,
+button.ant-btn-primary:focus {
   background-color: @color-green-02;
   border-color: @color-green-02;
+}
+
+button.ant-btn-ghost {
+  border-color: @color-green-01;
+}
+
+button.ant-btn-ghost:hover,
+button.ant-btn-ghost:active,
+button.ant-btn-ghost:focus {
+  border-color: @color-green-02;
+  color: @color-green-02;
+}
+
+button.ant-btn-link {
+  color: @color-green-01;
+}
+
+button.ant-btn-link:hover {
+  color: @color-green-02;
+}
+
+.ant-popover-buttons {
+  button.ant-btn-primary {
+    background-color: @color-red-01;
+    border-color: @color-red-01;
+  }
+
+  button.ant-btn-primary:hover,
+  button.ant-btn-primary:active,
+  button.ant-btn-primary:focus {
+    background-color: @color-red-02;
+    border-color: @color-red-02;
+  }
+
+  button.ant-btn:not(.ant-btn-primary) {
+    color: @color-red-01;
+    border-color: @color-red-01;
+  }
+
+  button.ant-btn:not(.ant-btn-primary):hover,
+  button.ant-btn:not(.ant-btn-primary):active,
+  button.ant-btn:not(.ant-btn-primary):focus {
+    color: @color-red-02;
+    border-color: @color-red-02;
+  }
+}
+
+.ant-space.full-width {
+  width: 100%;
+}
+
+.ant-table {
+  border: 1px solid #e3e3e3;
 }
 /* --- End ANT Overrides --- */
 

@@ -10,6 +10,8 @@ public class UserAccount : IdentityUser
 
     public IEnumerable<Recipe> Recipes { get; set; } = Enumerable.Empty<Recipe>();
 
+    public IEnumerable<RoleType> RoleTypes { get; set; } = Enumerable.Empty<RoleType>();
+
     public static UserAccount None() => new UserAccount();
 
     public static UserAccount FromDto(UserAccountDto dto)

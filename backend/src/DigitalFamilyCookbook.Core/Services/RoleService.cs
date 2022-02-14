@@ -6,17 +6,37 @@ namespace DigitalFamilyCookbook.Core.Services;
 public class RoleService : IRoleService
 {
     private readonly RoleManager<RoleTypeDto> _roleManager;
+    private readonly UserManager<UserAccountDto> _userManager;
     private readonly ILogger<RoleService> _logger;
 
-    public RoleService(RoleManager<RoleTypeDto> roleManager, ILogger<RoleService> logger)
+    public RoleService(RoleManager<RoleTypeDto> roleManager, UserManager<UserAccountDto> userManager, ILogger<RoleService> logger)
     {
         _roleManager = roleManager;
+        _userManager = userManager;
         _logger = logger;
     }
 
-    public IEnumerable<RoleTypeDto> GetAllRoles()
+    public IEnumerable<RoleType> GetAllRoles()
     {
-        return _roleManager.Roles.OrderBy(r => r.Name).AsEnumerable();
+        var roles = _roleManager.Roles;
+
+        return roles
+            .Select(r => RoleType.FromDto(r))
+            .ToList()
+            .OrderBy(r => r.Name)
+            .AsEnumerable();
+    }
+
+    public async Task<RoleType> GetRoleById(string id)
+    {
+        var roleType = await _roleManager.FindByIdAsync(id);
+
+        if (roleType is null)
+        {
+            roleType = RoleTypeDto.None();
+        }
+
+        return RoleType.FromDto(roleType);
     }
 
     public async Task<string> AddRole(string name)
@@ -29,7 +49,11 @@ public class RoleService : IRoleService
             return "Role already exists";
         }
 
-        var result = await _roleManager.CreateAsync(new RoleTypeDto { Name = name });
+        var result = await _roleManager.CreateAsync(new RoleTypeDto
+        {
+            Name = name,
+            RoleTypeId = Guid.NewGuid().ToString()
+        });
 
         if (!result.Succeeded)
         {
@@ -49,9 +73,9 @@ public class RoleService : IRoleService
         return string.Empty;
     }
 
-    public async Task<string> UpdateRole(string roleTypeId, string name)
+    public async Task<string> UpdateRole(string id, string name)
     {
-        var role = _roleManager.Roles.FirstOrDefault(r => r.Id == roleTypeId);
+        var role = _roleManager.Roles.FirstOrDefault(r => r.Id == id);
 
         if (role == null)
         {
@@ -81,9 +105,9 @@ public class RoleService : IRoleService
         return string.Empty;
     }
 
-    public async Task<string> DeleteRole(string roleTypeId)
+    public async Task<string> DeleteRole(string id)
     {
-        var role = _roleManager.Roles.FirstOrDefault(r => r.Id == roleTypeId);
+        var role = _roleManager.Roles.FirstOrDefault(r => r.Id == id);
 
         if (role == null)
         {
@@ -109,5 +133,31 @@ public class RoleService : IRoleService
 
         _logger.LogInformation($"The role has been deleted successfully");
         return string.Empty;
+    }
+
+    public async Task<IEnumerable<RoleType>> GetUserRoles(string userId)
+    {
+        var user = await _userManager.FindByIdAsync(userId);
+
+        if (user == null)
+        {
+            throw new Exception("User not found");
+        }
+
+        var roles = await _userManager.GetRolesAsync(user);
+
+        var rolesList = new List<RoleType>();
+
+        foreach (var roleName in roles)
+        {
+            var role = _roleManager.FindByNameAsync(roleName);
+
+            if (role != null)
+            {
+                rolesList.Add(RoleType.FromDto(role.Result));
+            }
+        }
+
+        return rolesList.AsEnumerable();
     }
 }

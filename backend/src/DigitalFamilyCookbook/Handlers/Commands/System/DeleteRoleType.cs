@@ -16,7 +16,7 @@ public class DeleteRoleType
 
         public async Task<Unit> Handle(Command command, CancellationToken cancellationToken)
         {
-            var errorMessage = await _roleService.DeleteRole(command.RoleTypeId);
+            var errorMessage = await _roleService.DeleteRole(command.Id);
 
             if (errorMessage != string.Empty)
             {
@@ -29,6 +29,6 @@ public class DeleteRoleType
 
     public class Command : IRequest<Unit>
     {
-        public string RoleTypeId { get; set; } = string.Empty;
+        public string Id { get; set; } = string.Empty;
     }
 }
