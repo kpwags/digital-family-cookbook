@@ -11,6 +11,7 @@ import { ProtectedRoute } from '@components/ProtectedRoute';
 import { Register } from '@components/Pages/Register';
 import { Login } from '@components/Pages/Login';
 import { Roles } from '@components/Pages/Roles';
+import { SiteSettings } from '@components/Pages/SiteSettings';
 
 import './styles/App.less';
 
@@ -35,6 +36,14 @@ const App = (): JSX.Element => (
                             element={(
                                 <ProtectedRoute requiredRoles={['ADMINISTRATOR']}>
                                     <Roles />
+                                </ProtectedRoute>
+                            )}
+                        />
+                        <Route
+                            path="/site-settings"
+                            element={(
+                                <ProtectedRoute requiredRoles={['ADMINISTRATOR']}>
+                                    <SiteSettings />
                                 </ProtectedRoute>
                             )}
                         />

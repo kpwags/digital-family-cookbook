@@ -2,26 +2,29 @@ import { ReactNode } from 'react';
 import { AppContext } from '@contexts/AppContext';
 import { UserAccount } from '@models/UserAccount';
 import { SiteSettings } from '@models/SiteSettings';
+import { defaultSiteSettings } from '@lib/defaults';
+import { copyObject } from '@lib/copyObject';
 
 interface MockAppProviderProps {
     siteSettings?: SiteSettings
     user?: UserAccount | null
     token?: string | undefined
+    updateSiteSettings?: (settings: SiteSettings) => void
     loginUser?: (token: string) => void
     logout?: () => void
     refreshUser?: () => void
     children: ReactNode
 }
 
+const mockSiteSettings = copyObject(defaultSiteSettings);
+mockSiteSettings.invitationCode = 'dfa26202-1f0a-4be6-a326-9f675cd992bf';
+mockSiteSettings.isPublic = true;
+
 const MockAppProvider = ({
-    siteSettings = {
-        id: '1',
-        siteSettingsId: 1,
-        title: 'Digital Family Cookbook',
-        isPublic: false,
-    },
+    siteSettings = mockSiteSettings,
     user = null,
     token = undefined,
+    updateSiteSettings = jest.fn(),
     loginUser = jest.fn(),
     logout = jest.fn(),
     refreshUser = jest.fn(),
@@ -36,6 +39,7 @@ const MockAppProvider = ({
             loginUser,
             logout,
             refreshUser,
+            updateSiteSettings,
         }}
     >
         {children}

@@ -72,4 +72,34 @@ public class SystemController : Controller
 
         return settings.Value;
     }
+
+    [HttpPost("savesitesettings")]
+    public async Task<IActionResult> SaveSiteSettings(SaveSiteSettings.Command command, CancellationToken cancellationToken)
+    {
+        try
+        {
+            await _mediatr.Send(command, cancellationToken);
+
+            return Ok();
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
+    [HttpPost("refreshinvitationcode")]
+    public async Task<ActionResult<SiteSettingsApiModel>> RefreshInvitationCode(CancellationToken cancellationToken)
+    {
+        try
+        {
+            var settings = await _mediatr.Send(new RefreshInvitationCode.Command(), cancellationToken);
+
+            return Ok(settings);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
 }

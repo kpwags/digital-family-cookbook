@@ -7,13 +7,7 @@ public class GetSiteSettingsTests
     [Fact]
     public async Task ItSuccessfullyReturnsSiteSettings()
     {
-        var siteSettings = new SiteSettings
-        {
-            Id = Guid.NewGuid().ToString(),
-            SiteSettingsId = 1,
-            Title = "Digital Family Cookbook",
-            IsPublic = false,
-        };
+        var siteSettings = MockSiteSettings.GenerateSiteSettings();
 
         var apiModel = ApiModels.SiteSettingsApiModel.FromDomainModel(siteSettings);
 

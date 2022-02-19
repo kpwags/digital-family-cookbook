@@ -9,15 +9,11 @@ import { Api } from '@lib/api';
 import { PageState } from '@lib/enums';
 import { useCookies } from 'react-cookie';
 import { UserAccount } from '@models/UserAccount';
+import { defaultSiteSettings } from '@lib/defaults';
 
 const MainApp = ({ children }: { children: ReactNode }): JSX.Element => {
     const [siteSettingsLoaded, setSiteSettingsLoaded] = useState<boolean>(false);
-    const [siteSettings, setSiteSettings] = useState<SiteSettings>({
-        id: '1',
-        siteSettingsId: 1,
-        title: 'Digital Family Cookbook',
-        isPublic: false,
-    });
+    const [siteSettings, setSiteSettings] = useState<SiteSettings>(defaultSiteSettings);
     const [user, setUser] = useState<UserAccount | null>(null);
     const [pageError, setPageError] = useState<string>('');
     const [pageState, setPageState] = useState<PageState>(PageState.Loading);
@@ -96,6 +92,9 @@ const MainApp = ({ children }: { children: ReactNode }): JSX.Element => {
                 logout,
                 refreshUser,
                 loginUser,
+                updateSiteSettings: (settings) => {
+                    setSiteSettings(settings);
+                },
             }}
         >
             {children}
