@@ -1,6 +1,8 @@
+global using DigitalFamilyCookbook.ApiModels;
 global using DigitalFamilyCookbook.Core.Services;
 global using DigitalFamilyCookbook.Data.Domain.Models;
 global using DigitalFamilyCookbook.Data.Models;
+global using DigitalFamilyCookbook.Data.Repositories;
 global using DigitalFamilyCookbook.Tests.Utilities.Helpers;
 global using DigitalFamilyCookbook.Tests.Utilities.Mocks;
 global using MediatR;

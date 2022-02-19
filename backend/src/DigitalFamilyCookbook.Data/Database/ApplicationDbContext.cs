@@ -83,6 +83,16 @@ public class ApplicationDbContext : IdentityDbContext<UserAccountDto, RoleTypeDt
             .IsRequired()
             .HasDefaultValue(false);
 
+        modelBuilder.Entity<SiteSettingsDto>()
+            .Property(s => s.AllowPublicRegistration)
+            .IsRequired()
+            .HasDefaultValue(false);
+
+        modelBuilder.Entity<SiteSettingsDto>()
+            .Property(s => s.InvitationCode)
+            .IsRequired()
+            .HasDefaultValue(Guid.NewGuid().ToString());
+
         #endregion
 
         #region "application.UserAccount"

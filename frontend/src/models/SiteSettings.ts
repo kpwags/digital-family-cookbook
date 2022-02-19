@@ -3,4 +3,6 @@ export interface SiteSettings {
     id: string
     title: string
     isPublic: boolean
+    allowPublicRegistration: boolean
+    invitationCode: string
 }

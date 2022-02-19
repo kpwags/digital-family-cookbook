@@ -10,5 +10,9 @@ public class SiteSettingsDto
 
     public bool IsPublic { get; set; }
 
+    public bool AllowPublicRegistration { get; set; }
+
+    public string InvitationCode { get; set; } = string.Empty;
+
     public static SiteSettingsDto None() => new SiteSettingsDto();
 }

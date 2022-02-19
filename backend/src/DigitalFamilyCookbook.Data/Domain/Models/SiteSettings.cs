@@ -10,6 +10,10 @@ public class SiteSettings
 
     public bool IsPublic { get; set; }
 
+    public bool AllowPublicRegistration { get; set; }
+
+    public string InvitationCode { get; set; } = string.Empty;
+
     public static SiteSettings None() => new SiteSettings();
 
     public static SiteSettings FromDto(SiteSettingsDto dto)
@@ -20,6 +24,8 @@ public class SiteSettings
             Id = dto.Id,
             Title = dto.Title,
             IsPublic = dto.IsPublic,
+            AllowPublicRegistration = dto.AllowPublicRegistration,
+            InvitationCode = dto.InvitationCode,
         };
     }
 }

@@ -1,23 +1,20 @@
 import { createContext } from 'react';
 import { SiteSettings } from '@models/SiteSettings';
 import { UserAccount } from '@models/UserAccount';
+import { defaultSiteSettings } from '@lib/defaults';
 
 type AppContextProps = {
     siteSettings: SiteSettings
     token: string | undefined
     user: UserAccount | null
+    updateSiteSettings: (settings: SiteSettings) => void
     loginUser: (token: string) => void
     logout: () => void
     refreshUser: () => void
 }
 
 const AppContext = createContext<AppContextProps>({
-    siteSettings: {
-        id: '1',
-        siteSettingsId: 1,
-        title: 'Digital Family Cookbook',
-        isPublic: false,
-    },
+    siteSettings: defaultSiteSettings,
     token: undefined,
     user: null,
     // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -26,6 +23,8 @@ const AppContext = createContext<AppContextProps>({
     logout: () => { },
     // eslint-disable-next-line @typescript-eslint/no-empty-function
     refreshUser: () => { },
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    updateSiteSettings: () => { },
 });
 
 export { AppContext };

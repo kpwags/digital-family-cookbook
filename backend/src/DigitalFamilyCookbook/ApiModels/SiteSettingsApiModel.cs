@@ -10,6 +10,10 @@ public class SiteSettingsApiModel
 
     public bool IsPublic { get; set; }
 
+    public bool AllowPublicRegistration { get; set; }
+
+    public string InvitationCode { get; set; } = string.Empty;
+
     public static SiteSettingsApiModel None() => new SiteSettingsApiModel();
 
     public static SiteSettingsApiModel FromDomainModel(SiteSettings settings)
@@ -20,6 +24,8 @@ public class SiteSettingsApiModel
             Id = settings.Id,
             Title = settings.Title,
             IsPublic = settings.IsPublic,
+            AllowPublicRegistration = settings.AllowPublicRegistration,
+            InvitationCode = settings.InvitationCode,
         };
     }
 
@@ -60,7 +66,9 @@ public class SiteSettingsApiModel
         return Id == model.Id
             && SiteSettingsId == model.SiteSettingsId
             && Title == model.Title
-            && IsPublic == model.IsPublic;
+            && IsPublic == model.IsPublic
+            && AllowPublicRegistration == model.AllowPublicRegistration
+            && InvitationCode == model.InvitationCode;
     }
 
     public override int GetHashCode() => (Id, SiteSettingsId, Title, IsPublic).GetHashCode();
