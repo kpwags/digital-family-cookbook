@@ -1,7 +1,4 @@
-using DigitalFamilyCookbook.Data.Models;
-using DigitalFamilyCookbook.Models;
 using DigitalFamilyCookbook.Core.Services;
-using MediatR;
 using System.Threading;
 
 namespace DigitalFamilyCookbook.Handlers.Commands.Auth;
@@ -11,10 +8,12 @@ public class Register
     public class Handler : IRequestHandler<Command, OperationResult<AuthResult>>
     {
         private readonly IAuthService _authService;
+        private readonly ISystemRepository _systemRepository;
 
-        public Handler(IAuthService authService)
+        public Handler(IAuthService authService, ISystemRepository systemRepository)
         {
             _authService = authService;
+            _systemRepository = systemRepository;
         }
 
         public async Task<OperationResult<AuthResult>> Handle(Command cmd, CancellationToken cancellationToken)
@@ -32,6 +31,12 @@ public class Register
             if (cmd.Password != cmd.ConfirmPassword)
             {
                 return new OperationResult<AuthResult>("Passwords do not match");
+            }
+
+            var siteSettings = _systemRepository.GetSiteSettings(1);
+            if (!siteSettings.AllowPublicRegistration && cmd.InvitationCode != siteSettings.InvitationCode)
+            {
+                return new OperationResult<AuthResult>("Invalid invitation code");
             }
 
             var result = await _authService.RegisterUser(cmd.Email, cmd.Password, cmd.Name);
@@ -54,5 +59,7 @@ public class Register
         public string Password { get; set; } = string.Empty;
 
         public string ConfirmPassword { get; set; } = string.Empty;
+
+        public string InvitationCode { get; set; } = string.Empty;
     }
 }

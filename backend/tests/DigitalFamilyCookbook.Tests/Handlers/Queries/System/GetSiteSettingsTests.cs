@@ -7,7 +7,7 @@ public class GetSiteSettingsTests
     [Fact]
     public async Task ItSuccessfullyReturnsSiteSettings()
     {
-        var siteSettings = MockSiteSettings.GenerateSiteSettings();
+        var siteSettings = MockSiteSettings.GenerateNonPublicSiteSettings();
 
         var apiModel = ApiModels.SiteSettingsApiModel.FromDomainModel(siteSettings);
 

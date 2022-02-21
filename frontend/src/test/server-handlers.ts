@@ -32,14 +32,25 @@ const handlers = [
         );
     }),
 
-    rest.post('*/auth/register', (req, res, ctx) => res(
-        ctx.status(200),
-        ctx.json({
-            isSuccesful: true,
-            error: '',
-            token: '1234567890',
-        }),
-    )),
+    rest.post('*/auth/register', (req, res, ctx) => {
+        const { invitationCode } = req.body as { invitationCode: string };
+
+        if (invitationCode === 'please') {
+            return res(
+                ctx.status(200),
+                ctx.json({
+                    isSuccesful: true,
+                    error: '',
+                    token: '1234567890',
+                }),
+            );
+        }
+
+        return res(
+            ctx.status(400),
+            ctx.text('Invalid invitation code'),
+        );
+    }),
 
     // system controller actions
     rest.get('*/system/getroles', (req, res, ctx) => res(
