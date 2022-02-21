@@ -2,6 +2,7 @@ global using DigitalFamilyCookbook.ApiModels;
 global using DigitalFamilyCookbook.Data.Domain.Models;
 global using DigitalFamilyCookbook.Data.Dtos;
 global using DigitalFamilyCookbook.Data.Models;
+global using DigitalFamilyCookbook.Data.Repositories;
 global using DigitalFamilyCookbook.Extensions;
 global using DigitalFamilyCookbook.GraphQL;
 global using DigitalFamilyCookbook.GraphQL.Queries;

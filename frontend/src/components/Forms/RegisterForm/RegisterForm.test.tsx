@@ -7,6 +7,8 @@ import {
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MockAppProvider } from '@test/MockAppProvider';
+import { defaultSiteSettings } from '@lib/defaults';
+import { copyObject } from '@lib/copyObject';
 import { RegisterForm } from '.';
 
 describe('<RegisterForm />', () => {
@@ -21,7 +23,27 @@ describe('<RegisterForm />', () => {
         await screen.findByLabelText(/Email/);
         await screen.findByLabelText('Password');
         await screen.findByLabelText(/Re-Enter Password/);
+        await screen.findByLabelText(/Invitation Code/);
         await screen.findByRole('button', { name: 'Register' });
+    });
+
+    test('It renders the registration form when public registration is allowed', async () => {
+        const siteSettings = copyObject(defaultSiteSettings);
+        siteSettings.allowPublicRegistration = true;
+
+        render(
+            <MockAppProvider siteSettings={siteSettings}>
+                <RegisterForm onRegisterCompleted={jest.fn()} />
+            </MockAppProvider>,
+        );
+
+        await screen.findByLabelText(/Name/);
+        await screen.findByLabelText(/Email/);
+        await screen.findByLabelText('Password');
+        await screen.findByLabelText(/Re-Enter Password/);
+        await screen.findByRole('button', { name: 'Register' });
+
+        expect(screen.queryByLabelText(/Invitation Code/)).not.toBeInTheDocument();
     });
 
     test('It validates the registration form', async () => {
@@ -75,6 +97,7 @@ describe('<RegisterForm />', () => {
         const emailField: HTMLInputElement = await screen.findByLabelText(/Email/);
         const passwordField1: HTMLInputElement = await screen.findByLabelText('Password');
         const passwordField2: HTMLInputElement = await screen.findByLabelText(/Re-Enter Password/);
+        const invitationCodeField: HTMLInputElement = await screen.findByLabelText(/Invitation Code/);
         const registerButton = await screen.findByRole('button', { name: 'Register' });
 
         await act(async () => {
@@ -82,11 +105,13 @@ describe('<RegisterForm />', () => {
             await userEvent.clear(emailField);
             await userEvent.clear(passwordField1);
             await userEvent.clear(passwordField2);
+            await userEvent.clear(invitationCodeField);
 
             await userEvent.type(nameField, 'Test');
             await userEvent.type(emailField, 'test@testing.com');
             await userEvent.type(passwordField1, 'validPassword123');
             await userEvent.type(passwordField2, 'validPassword123');
+            await userEvent.type(invitationCodeField, 'please');
 
             await userEvent.click(registerButton);
         });
@@ -94,5 +119,42 @@ describe('<RegisterForm />', () => {
         await waitForElementToBeRemoved(() => screen.queryByText(/Registerring.../));
 
         expect(mockRegisterCompleted).toHaveBeenCalledTimes(1);
+    });
+
+    test('It errors registering the user with an invalid invitation code', async () => {
+        const mockRegisterCompleted = jest.fn();
+
+        render(
+            <MockAppProvider>
+                <RegisterForm onRegisterCompleted={() => { mockRegisterCompleted(); }} />
+            </MockAppProvider>,
+        );
+
+        const nameField: HTMLInputElement = await screen.findByLabelText(/Name/);
+        const emailField: HTMLInputElement = await screen.findByLabelText(/Email/);
+        const passwordField1: HTMLInputElement = await screen.findByLabelText('Password');
+        const passwordField2: HTMLInputElement = await screen.findByLabelText(/Re-Enter Password/);
+        const invitationCodeField: HTMLInputElement = await screen.findByLabelText(/Invitation Code/);
+        const registerButton = await screen.findByRole('button', { name: 'Register' });
+
+        await act(async () => {
+            await userEvent.clear(nameField);
+            await userEvent.clear(emailField);
+            await userEvent.clear(passwordField1);
+            await userEvent.clear(passwordField2);
+            await userEvent.clear(invitationCodeField);
+
+            await userEvent.type(nameField, 'Test');
+            await userEvent.type(emailField, 'test@testing.com');
+            await userEvent.type(passwordField1, 'validPassword123');
+            await userEvent.type(passwordField2, 'validPassword123');
+            await userEvent.type(invitationCodeField, 'wrong');
+
+            await userEvent.click(registerButton);
+        });
+
+        await waitForElementToBeRemoved(() => screen.queryByText(/Registerring.../));
+
+        await screen.findByText(/Invalid invitation code/);
     });
 });

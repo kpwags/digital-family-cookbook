@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import {
     Form,
     Input,
@@ -10,6 +10,7 @@ import { Api } from '@lib/api';
 import { AuthResult } from '@models/AuthResult';
 
 import './RegisterForm.less';
+import { AppContext } from '@contexts/AppContext';
 
 type RegisterFormProps = {
     onRegisterCompleted: (token: string) => void
@@ -20,12 +21,15 @@ type FormValues = {
     email: string
     password1: string
     password2: string
+    invitationCode?: string
 }
 
 const RegisterForm = ({
     onRegisterCompleted,
 }: RegisterFormProps): JSX.Element => {
     const [form] = Form.useForm<FormValues>();
+
+    const { siteSettings } = useContext(AppContext);
 
     const [loadingMessage, setLoadingMessage] = useState<string>('');
     const [errorMessage, setErrorMessage] = useState<string>('');
@@ -39,6 +43,7 @@ const RegisterForm = ({
                 name: values.name,
                 password: values.password1,
                 confirmPassword: values.password2,
+                invitationCode: values.invitationCode || '',
             },
         });
 
@@ -165,6 +170,21 @@ const RegisterForm = ({
                                 type="password"
                             />
                         </Form.Item>
+
+                        {!siteSettings.allowPublicRegistration ? (
+                            <Form.Item
+                                name="invitationCode"
+                                label="Invitation Code"
+                                rules={[
+                                    { required: !siteSettings.allowPublicRegistration, message: 'Invitation Code is required' },
+                                ]}
+                                required
+                            >
+                                <Input
+                                    type="text"
+                                />
+                            </Form.Item>
+                        ) : null}
 
                         <Form.Item
                             className="action-area"

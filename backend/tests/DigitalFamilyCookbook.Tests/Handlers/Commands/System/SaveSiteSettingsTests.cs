@@ -7,7 +7,7 @@ public class SaveSiteSettingsTests
     [Fact]
     public async Task ItSuccessfullySavesSiteSettings()
     {
-        var siteSettings = MockSiteSettings.GenerateSiteSettings();
+        var siteSettings = MockSiteSettings.GenerateNonPublicSiteSettings();
         var siteSettingsApiModel = SiteSettingsApiModel.FromDomainModel(siteSettings);
 
         var systemRepostiory = new Mock<ISystemRepository>();

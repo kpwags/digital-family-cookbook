@@ -7,7 +7,7 @@ public class RefreshInvitationCodeTests
     [Fact]
     public async Task ItSuccessfullyRefreshesTheCode()
     {
-        var siteSettings = MockSiteSettings.GenerateSiteSettings();
+        var siteSettings = MockSiteSettings.GenerateNonPublicSiteSettings();
         var siteSettingsApiModel = SiteSettingsApiModel.FromDomainModel(siteSettings);
 
         var systemRepostiory = new Mock<ISystemRepository>();
