@@ -14,6 +14,8 @@ public class SiteSettingsApiModel
 
     public string InvitationCode { get; set; } = string.Empty;
 
+    public bool SaveRecipesOnDeleteUser { get; set; }
+
     public static SiteSettingsApiModel None() => new SiteSettingsApiModel();
 
     public static SiteSettingsApiModel FromDomainModel(SiteSettings settings)
@@ -26,6 +28,7 @@ public class SiteSettingsApiModel
             IsPublic = settings.IsPublic,
             AllowPublicRegistration = settings.AllowPublicRegistration,
             InvitationCode = settings.InvitationCode,
+            SaveRecipesOnDeleteUser = settings.SaveRecipesOnDeleteUser,
         };
     }
 
@@ -68,7 +71,8 @@ public class SiteSettingsApiModel
             && Title == model.Title
             && IsPublic == model.IsPublic
             && AllowPublicRegistration == model.AllowPublicRegistration
-            && InvitationCode == model.InvitationCode;
+            && InvitationCode == model.InvitationCode
+            && SaveRecipesOnDeleteUser == model.SaveRecipesOnDeleteUser;
     }
 
     public override int GetHashCode() => (Id, SiteSettingsId, Title, IsPublic).GetHashCode();

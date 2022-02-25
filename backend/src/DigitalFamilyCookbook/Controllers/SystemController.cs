@@ -102,4 +102,39 @@ public class SystemController : Controller
             return BadRequest(ex.Message);
         }
     }
+
+    [HttpGet("getusers")]
+    public async Task<IReadOnlyCollection<UserAccountApiModel>> GetUsers(bool includeRoles, CancellationToken cancellationToken)
+    {
+        var users = await _mediatr.Send(
+            new GetAllUsers.Query { IncludeRoles = includeRoles },
+            cancellationToken
+        );
+
+        return users;
+    }
+
+    [HttpPost("deleteuser")]
+    public async Task<ActionResult> DeleteUser(DeleteUserAccount.Command command, CancellationToken cancellationToken)
+    {
+        await _mediatr.Send(command, cancellationToken);
+
+        return Ok();
+    }
+
+    [HttpPost("addusertorole")]
+    public async Task<ActionResult> AddUserToRole(AddUserToRole.Command command, CancellationToken cancellationToken)
+    {
+        await _mediatr.Send(command, cancellationToken);
+
+        return Ok();
+    }
+
+    [HttpPost("deleterolefromuser")]
+    public async Task<ActionResult> DeleteRoleFromUser(DeleteRoleFromUser.Command command, CancellationToken cancellationToken)
+    {
+        await _mediatr.Send(command, cancellationToken);
+
+        return Ok();
+    }
 }

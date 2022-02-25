@@ -14,5 +14,7 @@ public class SiteSettingsDto
 
     public string InvitationCode { get; set; } = string.Empty;
 
+    public bool? SaveRecipesOnDeleteUser { get; set; }
+
     public static SiteSettingsDto None() => new SiteSettingsDto();
 }

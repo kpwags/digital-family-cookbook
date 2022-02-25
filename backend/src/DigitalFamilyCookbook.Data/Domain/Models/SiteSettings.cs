@@ -14,6 +14,8 @@ public class SiteSettings
 
     public string InvitationCode { get; set; } = string.Empty;
 
+    public bool SaveRecipesOnDeleteUser { get; set; }
+
     public static SiteSettings None() => new SiteSettings();
 
     public static SiteSettings FromDto(SiteSettingsDto dto)
@@ -26,6 +28,7 @@ public class SiteSettings
             IsPublic = dto.IsPublic,
             AllowPublicRegistration = dto.AllowPublicRegistration,
             InvitationCode = dto.InvitationCode,
+            SaveRecipesOnDeleteUser = dto.SaveRecipesOnDeleteUser.HasValue ? dto.SaveRecipesOnDeleteUser.Value : true,
         };
     }
 }
