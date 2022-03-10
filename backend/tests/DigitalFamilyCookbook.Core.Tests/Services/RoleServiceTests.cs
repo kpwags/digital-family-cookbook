@@ -33,6 +33,8 @@ public class RoleServiceTests
         _logger = new Mock<ILogger<RoleService>>();
     }
 
+    #region GetAllRoles
+
     [Fact]
     public void ItRetrievesAllRoles()
     {
@@ -53,6 +55,10 @@ public class RoleServiceTests
 
         Assert.Equal(2, roles.Count());
     }
+
+    #endregion
+
+    #region AddRole
 
     [Fact]
     public async Task ItSuccessfullyAddsARole()
@@ -87,6 +93,10 @@ public class RoleServiceTests
 
         Assert.Equal("Role already exists", result);
     }
+
+    #endregion
+
+    #region UpdateRole
 
     [Fact]
     public async Task ItSuccessfullyUpdatesARole()
@@ -132,6 +142,10 @@ public class RoleServiceTests
         Assert.Equal("The role to update was not found", result);
     }
 
+    #endregion
+
+    #region DeleteRole
+
     [Fact]
     public async Task ItSuccessfullyDeletesARole()
     {
@@ -176,6 +190,10 @@ public class RoleServiceTests
         Assert.Equal("The role to delete was not found", result);
     }
 
+    #endregion
+
+    #region GetUserRoles
+
     [Fact]
     public async Task ItRetrievesAUsersRole()
     {
@@ -197,4 +215,74 @@ public class RoleServiceTests
 
         Assert.Equal(2, roles.Count());
     }
+
+    #endregion
+
+    #region AddUserToRole
+
+    [Fact]
+    public async Task ItAddsAUserToARole()
+    {
+        var user = MockUser.GenerateUser();
+        var role = MockRoleType.GenerateRoleDto();
+
+        var roles = new List<RoleTypeDto>
+        {
+            role,
+        };
+
+        _userManager.Setup(u => u.FindByIdAsync(It.IsAny<string>())).ReturnsAsync(new UserAccountDto { Email = MockDataGenerator.RandomEmail() });
+        _userManager.Setup(u => u.AddToRoleAsync(It.IsAny<UserAccountDto>(), It.IsAny<string>()));
+
+        _roleManager.Setup(r => r.Roles).Returns(roles.AsQueryable());
+
+        var logger = new Mock<ILogger<RoleService>>().Object;
+
+        var roleService = new RoleService(
+            _roleManager.Object,
+            _userManager.Object,
+            _logger.Object
+        );
+
+        await roleService.AddUserToRole(user.Id, role.Name);
+
+        _userManager.Verify(u => u.FindByIdAsync(It.IsAny<string>()), Times.Once);
+        _userManager.Verify(u => u.AddToRoleAsync(It.IsAny<UserAccountDto>(), It.IsAny<string>()), Times.Once);
+    }
+
+    #endregion
+
+    #region DeleteRoleFromUser
+
+    [Fact]
+    public async Task ItRemovessAUserFromARole()
+    {
+        var user = MockUser.GenerateUser();
+        var role = MockRoleType.GenerateRoleDto();
+
+        var roles = new List<RoleTypeDto>
+        {
+            role,
+        };
+
+        _userManager.Setup(u => u.FindByIdAsync(It.IsAny<string>())).ReturnsAsync(new UserAccountDto { Email = MockDataGenerator.RandomEmail() });
+        _userManager.Setup(u => u.RemoveFromRoleAsync(It.IsAny<UserAccountDto>(), It.IsAny<string>()));
+
+        _roleManager.Setup(r => r.Roles).Returns(roles.AsQueryable());
+
+        var logger = new Mock<ILogger<RoleService>>().Object;
+
+        var roleService = new RoleService(
+            _roleManager.Object,
+            _userManager.Object,
+            _logger.Object
+        );
+
+        await roleService.DeleteRoleFromUser(user.Id, role.Name);
+
+        _userManager.Verify(u => u.FindByIdAsync(It.IsAny<string>()), Times.Once);
+        _userManager.Verify(u => u.RemoveFromRoleAsync(It.IsAny<UserAccountDto>(), It.IsAny<string>()), Times.Once);
+    }
+
+    #endregion
 }
