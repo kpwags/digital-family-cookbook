@@ -35,10 +35,17 @@ const NavBar = ({
                 {user && user.id !== '' ? (
                     <SubMenu key="user-dropdown" icon={<UserOutlined />} title={user.name}>
                         {hasRole(user, 'ADMINISTRATOR') ? (
+                            <Menu.Item key="manage-users">
+                                <Link to="/manage-users">Manage Users</Link>
+                            </Menu.Item>
+                        ) : null}
+
+                        {hasRole(user, 'ADMINISTRATOR') ? (
                             <Menu.Item key="site-settings">
                                 <Link to="/site-settings">Edit Site Settings</Link>
                             </Menu.Item>
                         ) : null}
+
                         <Menu.Item key="logout" onClick={logout}>Log Out</Menu.Item>
                     </SubMenu>
                 ) : (

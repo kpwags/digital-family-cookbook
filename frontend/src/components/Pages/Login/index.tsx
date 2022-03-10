@@ -15,7 +15,7 @@ const Login = ({
 }: LoginProps): JSX.Element => {
     const navigate = useNavigate();
 
-    const { user, loginUser } = useContext(AppContext);
+    const { user, loginUser, siteSettings } = useContext(AppContext);
 
     const completeLoginProcess = (token: string) => {
         loginUser(token);
@@ -27,6 +27,10 @@ const Login = ({
             navigate('/');
         }
     }, [user]);
+
+    useEffect(() => {
+        document.title = `Login - ${siteSettings.title}`;
+    }, []);
 
     return (
         <Row justify="center" align="top">

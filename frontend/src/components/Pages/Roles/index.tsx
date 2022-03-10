@@ -12,7 +12,7 @@ import {
 import { WarningOutlined } from '@ant-design/icons';
 import { RolesTable } from './components/RolesTable';
 
-const { Text } = Typography;
+const { Text, Title } = Typography;
 
 const Roles = (): JSX.Element => {
     const [roles, setRoles] = useState<RoleType[]>([]);
@@ -43,7 +43,7 @@ const Roles = (): JSX.Element => {
 
     return (
         <>
-            <h1>Roles</h1>
+            <Title level={1}>Roles</Title>
 
             <Alert
                 type="warning"

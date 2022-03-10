@@ -13,13 +13,17 @@ const { Title, Paragraph } = Typography;
 const Register = (): JSX.Element => {
     const navigate = useNavigate();
 
-    const { user, loginUser } = useContext(AppContext);
+    const { user, loginUser, siteSettings } = useContext(AppContext);
 
     useEffect(() => {
         if (user !== null) {
             navigate('/');
         }
     }, [user]);
+
+    useEffect(() => {
+        document.title = `Register - ${siteSettings.title}`;
+    }, []);
 
     const completeRegistration = (token: string) => {
         loginUser(token);

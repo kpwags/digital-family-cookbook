@@ -93,6 +93,11 @@ public class ApplicationDbContext : IdentityDbContext<UserAccountDto, RoleTypeDt
             .IsRequired()
             .HasDefaultValue(Guid.NewGuid().ToString());
 
+        modelBuilder.Entity<SiteSettingsDto>()
+            .Property(s => s.SaveRecipesOnDeleteUser)
+            .IsRequired()
+            .HasDefaultValue(true);
+
         #endregion
 
         #region "application.UserAccount"

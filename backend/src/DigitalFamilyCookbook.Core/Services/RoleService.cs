@@ -160,4 +160,42 @@ public class RoleService : IRoleService
 
         return rolesList.AsEnumerable();
     }
+
+    public async Task AddUserToRole(string userAccountId, string roleName)
+    {
+        var user = await _userManager.FindByIdAsync(userAccountId);
+
+        if (user == null)
+        {
+            throw new Exception("User not found");
+        }
+
+        var role = _roleManager.Roles.FirstOrDefault(r => r.NormalizedName == roleName.ToUpper());
+
+        if (role == null)
+        {
+            throw new Exception("Role not found");
+        }
+
+        await _userManager.AddToRoleAsync(user, role.Name);
+    }
+
+    public async Task DeleteRoleFromUser(string userAccountId, string roleName)
+    {
+        var user = await _userManager.FindByIdAsync(userAccountId);
+
+        if (user == null)
+        {
+            throw new Exception("User not found");
+        }
+
+        var role = _roleManager.Roles.FirstOrDefault(r => r.NormalizedName == roleName.ToUpper());
+
+        if (role == null)
+        {
+            throw new Exception("Role not found");
+        }
+
+        await _userManager.RemoveFromRoleAsync(user, role.Name);
+    }
 }

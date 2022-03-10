@@ -1,10 +1,10 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import { rest } from 'msw';
-import { MockAdminUserAccount } from '@test/mocks/MockUsers';
+import { MockAdminUserAccount, MockUserAccount } from '@test/mocks/MockUsers';
 import { AuthResult } from '@models/AuthResult';
 import { MockAdminRole, MockUserRole } from './mocks/MockRoleType';
 
-const handlers = [
+const mockApiHandlers = [
     // auth controller actions
     rest.get('*/auth/getuser', (_, res, ctx) => res(
         ctx.status(200),
@@ -61,6 +61,14 @@ const handlers = [
         ]),
     )),
 
+    rest.get('*/system/getusers', (_, res, ctx) => res(
+        ctx.status(200),
+        ctx.json([
+            MockAdminUserAccount,
+            MockUserAccount,
+        ]),
+    )),
+
     rest.get('*/system/getrolebyid', (req, res, ctx) => {
         const id = req.url.searchParams.get('id');
 
@@ -98,4 +106,4 @@ const handlers = [
     }),
 ];
 
-export { handlers };
+export { mockApiHandlers };

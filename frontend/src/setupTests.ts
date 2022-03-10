@@ -3,7 +3,7 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import '@testing-library/jest-dom';
 
-import { server } from './test/server';
+import { mockServer } from './test/mockServer';
 
 // eslint-disable-next-line func-names
 window.matchMedia = window.matchMedia || function () {
@@ -21,7 +21,7 @@ window.scrollTo = jest.fn();
 const { warn, error } = console;
 
 beforeAll(() => {
-    server.listen();
+    mockServer.listen();
 
     const ignoredWarnings: string[] = [
         'async-validator:',
@@ -71,9 +71,9 @@ beforeAll(() => {
 // if you need to add a handler after calling setupServer for some specific test
 // this will remove that handler for the rest of them
 // (which is important for test isolation):
-afterEach(() => server.resetHandlers());
+afterEach(() => mockServer.resetHandlers());
 afterAll(() => {
-    server.close();
+    mockServer.close();
 
     // eslint-disable-next-line no-console
     console.warn = warn;

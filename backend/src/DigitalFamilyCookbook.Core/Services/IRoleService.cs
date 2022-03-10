@@ -15,4 +15,8 @@ public interface IRoleService
     Task<string> DeleteRole(string id);
 
     Task<IEnumerable<RoleType>> GetUserRoles(string userId);
+
+    Task AddUserToRole(string userAccountId, string roleName);
+
+    Task DeleteRoleFromUser(string userAccountId, string roleName);
 }
