@@ -9,6 +9,7 @@ public static class TestPreparation
         SeedSiteSettings(db);
         SeedRoles(db);
         SeedUsers(db);
+        db.SaveChanges();
     }
 
     public static void SeedSiteSettings(ApplicationDbContext db)
@@ -59,7 +60,7 @@ public static class TestPreparation
         db.UserAccounts.Add(new UserAccountDto
         {
             ConcurrencyStamp = MockDataGenerator.RandomId(),
-            Id = MockDataGenerator.RandomId(),
+            Id = "JAMESTKIRK1701",
             UserName = "james.t.kirk@starfleet.gov",
             NormalizedUserName = "JAMES.T.KIRK@STARFLEET.GOV",
             Email = "james.t.kirk@starfleet.gov",
@@ -89,7 +90,7 @@ public static class TestPreparation
         db.UserAccounts.Add(new UserAccountDto
         {
             ConcurrencyStamp = MockDataGenerator.RandomId(),
-            Id = MockDataGenerator.RandomId(),
+            Id = "JEANLUCPICARD1701D",
             UserName = "jeanluc.picard@starfleet.gov",
             NormalizedUserName = "JEANLUC.PICARD@STARFLEET.GOV",
             Email = "jeanluc.picard@starfleet.gov",
@@ -119,7 +120,7 @@ public static class TestPreparation
         db.UserAccounts.Add(new UserAccountDto
         {
             ConcurrencyStamp = MockDataGenerator.RandomId(),
-            Id = MockDataGenerator.RandomId(),
+            Id = "BENJAMINSISKO74205",
             UserName = "benjamin.sisko@starfleet.gov",
             NormalizedUserName = "BENJAMIN.SISKO@STARFLEET.GOV",
             Email = "benjamin.sisko@starfleet.gov",
@@ -142,7 +143,7 @@ public static class TestPreparation
         db.UserAccounts.Add(new UserAccountDto
         {
             ConcurrencyStamp = MockDataGenerator.RandomId(),
-            Id = MockDataGenerator.RandomId(),
+            Id = "KATHRYNJANEWAY74656",
             UserName = "kathryn.janeway@starfleet.gov",
             NormalizedUserName = "KATHRYN.JANEWAY@STARFLEET.GOV",
             Email = "kathryn.janeway@starfleet.gov",
