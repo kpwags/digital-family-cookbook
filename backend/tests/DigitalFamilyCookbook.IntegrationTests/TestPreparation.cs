@@ -31,7 +31,7 @@ public static class TestPreparation
         db.Roles.Add(new RoleTypeDto
         {
             ConcurrencyStamp = MockDataGenerator.RandomId(),
-            Id = MockDataGenerator.RandomId(),
+            Id = "USERROLEID",
             Name = "User",
             NormalizedName = "USER",
             RoleTypeId = MockDataGenerator.RandomId(),
@@ -40,7 +40,7 @@ public static class TestPreparation
         db.Roles.Add(new RoleTypeDto
         {
             ConcurrencyStamp = MockDataGenerator.RandomId(),
-            Id = MockDataGenerator.RandomId(),
+            Id = "ADMINROLEID",
             Name = "Administrator",
             NormalizedName = "ADMINISTRATOR",
             RoleTypeId = MockDataGenerator.RandomId(),
@@ -65,7 +65,7 @@ public static class TestPreparation
             NormalizedUserName = "JAMES.T.KIRK@STARFLEET.GOV",
             Email = "james.t.kirk@starfleet.gov",
             NormalizedEmail = "JAMES.T.KIRK@STARFLEET.GOV",
-            UserId = MockDataGenerator.RandomId(),
+            UserId = "JAMESTKIRK1701",
         });
 
         var kirk = db.UserAccounts.FirstOrDefault(u => u.NormalizedEmail == "JAMES.T.KIRK@STARFLEET.GOV");
@@ -95,7 +95,7 @@ public static class TestPreparation
             NormalizedUserName = "JEANLUC.PICARD@STARFLEET.GOV",
             Email = "jeanluc.picard@starfleet.gov",
             NormalizedEmail = "JEANLUC.PICARD@STARFLEET.GOV",
-            UserId = MockDataGenerator.RandomId(),
+            UserId = "JEANLUCPICARD1701D",
         });
 
         var picard = db.UserAccounts.FirstOrDefault(u => u.NormalizedEmail == "JEANLUC.PICARD@STARFLEET.GOV");
@@ -125,7 +125,7 @@ public static class TestPreparation
             NormalizedUserName = "BENJAMIN.SISKO@STARFLEET.GOV",
             Email = "benjamin.sisko@starfleet.gov",
             NormalizedEmail = "BENJAMIN.SISKO@STARFLEET.GOV",
-            UserId = MockDataGenerator.RandomId(),
+            UserId = "BENJAMINSISKO74205",
         });
 
         var sisko = db.UserAccounts.FirstOrDefault(u => u.NormalizedEmail == "BENJAMIN.SISKO@STARFLEET.GOV");
@@ -148,7 +148,7 @@ public static class TestPreparation
             NormalizedUserName = "KATHRYN.JANEWAY@STARFLEET.GOV",
             Email = "kathryn.janeway@starfleet.gov",
             NormalizedEmail = "KATHRYN.JANEWAY@STARFLEET.GOV",
-            UserId = MockDataGenerator.RandomId(),
+            UserId = "KATHRYNJANEWAY74656",
         });
 
         var janeway = db.UserAccounts.FirstOrDefault(u => u.NormalizedEmail == "KATHRYN.JANEWAY@STARFLEET.GOV");

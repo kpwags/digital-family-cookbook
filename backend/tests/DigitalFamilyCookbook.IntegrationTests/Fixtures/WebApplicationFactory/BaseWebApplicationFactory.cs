@@ -4,10 +4,12 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace DigitalFamilyCookbook.IntegrationTests;
+namespace DigitalFamilyCookbook.IntegrationTests.Fixtures.WebApplicationFactory;
 
-public class TestWebApplicationFactory<TEntryPoint> : WebApplicationFactory<Program> where TEntryPoint : Program
+public class BaseWebApplicationFactory : WebApplicationFactory<Startup>
 {
+    public ITestOutputHelper? Output { get; set; }
+
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         builder.ConfigureServices(services =>

@@ -1,31 +1,57 @@
-﻿using DigitalFamilyCookbook.Core.Configuration;
+﻿using DigitalFamilyCookbook.Handlers.Commands.System;
 
 namespace DigitalFamilyCookbook.IntegrationTests.Controllers;
 
-public class SystemControllerTests : IClassFixture<TestWebApplicationFactory<DigitalFamilyCookbook.Program>>
+public class SystemControllerTests : BaseServerTest<BaseWebApplicationFactory>
 {
-    private readonly TestWebApplicationFactory<DigitalFamilyCookbook.Program> _factory;
-    private readonly DigitalFamilyCookbookConfiguration _configuration;
+    public SystemControllerTests(BaseWebApplicationFactory factory, ITestOutputHelper output) : base(factory, output) { }
 
-    public SystemControllerTests(TestWebApplicationFactory<DigitalFamilyCookbook.Program> factory, DigitalFamilyCookbookConfiguration configuration)
+    [Fact]
+    public async Task ItRequiresAuthentication()
     {
-        _factory = factory;
-        _configuration = configuration;
+        var client = CreateClient();
+
+        var response = await client.GetAsync("/system/getroles");
+
+        Assert.Equal(System.Net.HttpStatusCode.Unauthorized, response.StatusCode);
+    }
+
+    [Fact]
+    public async Task ItSavesANewRole()
+    {
+        var client = CreateClient(Mocks.User.MockAdmin);
+
+        var payload = PayloadBuilder.Build(new SaveRoleType.Command
+        {
+            Id = string.Empty,
+            Name = MockDataGenerator.RandomString(8, false),
+        }); ;
+
+        var response = await client.PostAsync("/system/saverole", payload);
+
+        response.EnsureSuccessStatusCode();
+    }
+
+    [Fact]
+    public async Task ItUpdatesAnExistingRole()
+    {
+        var client = CreateClient(Mocks.User.MockAdmin);
+
+        var payload = PayloadBuilder.Build(new SaveRoleType.Command
+        {
+            Id = "USERROLEID",
+            Name = MockDataGenerator.RandomString(8, false),
+        });
+
+        var response = await client.PostAsync("/system/saverole", payload);
+
+        response.EnsureSuccessStatusCode();
     }
 
     [Fact]
     public async Task ItReturnsRoles()
     {
-        var user = new UserAccountDto
-        {
-            Id = "JEANLUCPICARD1701D",
-            Email = "jeanluc.picard@starfleet.gov"
-        };
-
-        var token = MockAuthToken.GenerateToken(user, _configuration.Auth);
-
-        var client = _factory.CreateClient();
-        client.DefaultRequestHeaders.Add("Authorization", $"bearer {token}");
+        var client = CreateClient(Mocks.User.MockAdmin);
 
         var response = await client.GetAsync("/system/getroles");
 
@@ -35,5 +61,40 @@ public class SystemControllerTests : IClassFixture<TestWebApplicationFactory<Dig
 
         Assert.Contains("ADMINISTRATOR", responseString);
         Assert.Contains("USER", responseString);
+    }
+
+    [Fact]
+    public async Task ItReturnsTheSpecifiedRole()
+    {
+        var client = CreateClient(Mocks.User.MockAdmin);
+
+        var response = await client.GetAsync("/system/getrolebyid?id=USERROLEID");
+
+        response.EnsureSuccessStatusCode();
+    }
+
+    [Fact]
+    public async Task ItErrorsWhenGettingARoleThatDoesNotExist()
+    {
+        var client = CreateClient(Mocks.User.MockAdmin);
+
+        var response = await client.GetAsync("/system/getrolebyid?id=WTF");
+
+        Assert.Equal(System.Net.HttpStatusCode.BadRequest, response.StatusCode);
+    }
+
+    [Fact]
+    public async Task ItDeletesARole()
+    {
+        var client = CreateClient(Mocks.User.MockAdmin);
+
+        var payload = PayloadBuilder.Build(new DeleteRoleType.Command
+        {
+            Id = "USERROLEID",
+        });
+
+        var response = await client.PostAsync("/system/deleterole", payload);
+
+        response.EnsureSuccessStatusCode();
     }
 }
