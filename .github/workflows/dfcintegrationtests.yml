@@ -22,6 +22,13 @@ jobs:
             - name: Build
               run: dotnet build --no-restore
               working-directory: ./backend/tests/DigitalFamilyCookbook.IntegrationTests
+            - name: App Settings Variable Substitution
+              uses: microsoft/variable-substitution@v1
+              working-directory: ./backend/tests/DigitalFamilyCookbook.IntegrationTests
+              with:
+                  files: '${{env.DOTNET_ROOT}}\appsettings.json'
+              env:
+                  Auth.JwtSecret: 'YADAYADAYADA'
             - name: Test
               run: dotnet test --no-build --verbosity normal
               working-directory: ./backend/tests/DigitalFamilyCookbook.IntegrationTests
