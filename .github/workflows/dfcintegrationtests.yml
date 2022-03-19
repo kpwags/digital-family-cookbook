@@ -1,4 +1,4 @@
-name: DigitalFamilyCookbook Unit Tests
+name: DigitalFamilyCookbook Integration Tests
 
 on:
     push:
