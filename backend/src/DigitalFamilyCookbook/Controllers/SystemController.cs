@@ -18,7 +18,7 @@ public class SystemController : Controller
     }
 
     [HttpPost("saverole")]
-    public async Task<ActionResult> AddRole(SaveRoleType.Command command, CancellationToken cancellationToken)
+    public async Task<ActionResult> SaveRole(SaveRoleType.Command command, CancellationToken cancellationToken)
     {
         await _mediatr.Send(command, cancellationToken);
 
@@ -49,7 +49,7 @@ public class SystemController : Controller
     [HttpPost("deleterole")]
     public async Task<ActionResult> DeleteRole(DeleteRoleType.Command command, CancellationToken cancellationToken)
     {
-        var role = await _mediatr.Send(command, cancellationToken);
+        await _mediatr.Send(command, cancellationToken);
 
         return Ok();
     }
