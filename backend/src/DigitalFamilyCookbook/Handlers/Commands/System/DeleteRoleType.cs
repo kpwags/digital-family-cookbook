@@ -1,11 +1,10 @@
-using DigitalFamilyCookbook.Core.Services;
 using System.Threading;
 
 namespace DigitalFamilyCookbook.Handlers.Commands.System;
 
 public class DeleteRoleType
 {
-    public class Handler : IRequestHandler<Command, Unit>
+    public class Handler : IRequestHandler<Command, OperationResult<string>>
     {
         private readonly IRoleService _roleService;
 
@@ -14,20 +13,22 @@ public class DeleteRoleType
             _roleService = roleService;
         }
 
-        public async Task<Unit> Handle(Command command, CancellationToken cancellationToken)
+        public async Task<OperationResult<string>> Handle(Command command, CancellationToken cancellationToken)
         {
-            var errorMessage = await _roleService.DeleteRole(command.Id);
-
-            if (errorMessage != string.Empty)
+            try
             {
-                throw new Exception(errorMessage);
+                await _roleService.DeleteRole(command.Id);
+            }
+            catch (Exception ex)
+            {
+                return new OperationResult<string>(false, "", ex.Message);
             }
 
-            return Unit.Value;
+            return new OperationResult<string>(true, "");
         }
     }
 
-    public class Command : IRequest<Unit>
+    public class Command : IRequest<OperationResult<string>>
     {
         public string Id { get; set; } = string.Empty;
     }

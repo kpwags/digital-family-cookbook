@@ -39,14 +39,14 @@ public class RoleService : IRoleService
         return RoleType.FromDto(roleType);
     }
 
-    public async Task<string> AddRole(string name)
+    public async Task AddRole(string name)
     {
         var doesRoleExist = await _roleManager.RoleExistsAsync(name);
 
         if (doesRoleExist)
         {
             _logger.LogInformation($"The role '{name}' already exists");
-            return "Role already exists";
+            throw new Exception("Role already exists");
         }
 
         var result = await _roleManager.CreateAsync(new RoleTypeDto
@@ -63,14 +63,13 @@ public class RoleService : IRoleService
 
             if (error == null)
             {
-                return "Error adding role";
+                throw new Exception("Error adding role");
             }
 
-            return error.Description;
+            throw new Exception(error.Description);
         }
 
         _logger.LogInformation($"The role, {name} has been added successfully");
-        return string.Empty;
     }
 
     public async Task<string> UpdateRole(string id, string name)
@@ -105,14 +104,14 @@ public class RoleService : IRoleService
         return string.Empty;
     }
 
-    public async Task<string> DeleteRole(string id)
+    public async Task DeleteRole(string id)
     {
         var role = _roleManager.Roles.FirstOrDefault(r => r.Id == id);
 
         if (role == null)
         {
             _logger.LogInformation("The role to delete was not found");
-            return "The role to delete was not found";
+            throw new Exception("The role to delete was not found");
         }
 
         var result = await _roleManager.DeleteAsync(role);
@@ -125,14 +124,13 @@ public class RoleService : IRoleService
 
             if (error == null)
             {
-                return "Error deleting role";
+                throw new Exception("Error deleting role");
             }
 
-            return error.Description;
+            throw new Exception(error.Description);
         }
 
         _logger.LogInformation($"The role has been deleted successfully");
-        return string.Empty;
     }
 
     public async Task<IEnumerable<RoleType>> GetUserRoles(string userId)

@@ -5,7 +5,7 @@ namespace DigitalFamilyCookbook.Handlers.Commands.System;
 
 public class SaveRoleType
 {
-    public class Handler : IRequestHandler<Command, Unit>
+    public class Handler : IRequestHandler<Command, OperationResult<string>>
     {
         private readonly IRoleService _roleService;
 
@@ -14,29 +14,29 @@ public class SaveRoleType
             _roleService = roleService;
         }
 
-        public async Task<Unit> Handle(Command command, CancellationToken cancellationToken)
+        public async Task<OperationResult<string>> Handle(Command command, CancellationToken cancellationToken)
         {
-            string errorMessage = string.Empty;
-
-            if (command.Id == string.Empty)
+            try
             {
-                errorMessage = await _roleService.AddRole(command.Name);
+                if (command.Id == string.Empty)
+                {
+                    await _roleService.AddRole(command.Name);
+                }
+                else
+                {
+                    await _roleService.UpdateRole(command.Id, command.Name);
+                }
             }
-            else
+            catch (Exception ex)
             {
-                errorMessage = await _roleService.UpdateRole(command.Id, command.Name);
+                return new OperationResult<string>(false, "", ex.Message);
             }
 
-            if (errorMessage != string.Empty)
-            {
-                throw new Exception(errorMessage);
-            }
-
-            return Unit.Value;
+            return new OperationResult<string>(true, "");
         }
     }
 
-    public class Command : IRequest<Unit>
+    public class Command : IRequest<OperationResult<string>>
     {
         public string Id { get; set; } = string.Empty;
 
