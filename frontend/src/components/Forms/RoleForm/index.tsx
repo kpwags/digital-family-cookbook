@@ -17,6 +17,7 @@ type FormValues = {
 type RoleFormProps = {
     id?: string
     visible: boolean
+    currentRoles?: RoleType[]
     onSave: () => void
     onClose: () => void
 }
@@ -24,6 +25,7 @@ type RoleFormProps = {
 const RoleForm = ({
     id = '',
     visible = false,
+    currentRoles = [],
     onSave,
     onClose,
 }: RoleFormProps): JSX.Element => {
@@ -33,8 +35,14 @@ const RoleForm = ({
 
     const { token } = useContext(AppContext);
 
+    const resetForm = () => {
+        form.resetFields();
+        setErrorMessage('');
+    };
+
     const getRoleType = async (id: string) => {
         setLoadingMessage('Loading...');
+
         const [data, error] = await Api.Get<RoleType>('system/getrolebyid', { params: { id }, token });
 
         if (error) {
@@ -46,11 +54,19 @@ const RoleForm = ({
         form.setFieldsValue({
             name: data?.name,
         });
+
         setLoadingMessage('');
     };
 
     const submitForm = async (values: FormValues) => {
         setLoadingMessage('Saving...');
+
+        if (currentRoles.find((r) => r.normalizedName === values.name.toUpperCase().trim())) {
+            setErrorMessage(`A role with the name '${values.name}' already exists.`);
+            setLoadingMessage('');
+            return;
+        }
+
         const [, error] = await Api.Post('system/saverole', {
             token,
             data: {
@@ -66,6 +82,7 @@ const RoleForm = ({
         }
 
         setLoadingMessage('');
+        resetForm();
         onSave();
     };
 
@@ -89,7 +106,10 @@ const RoleForm = ({
             onOk={() => {
                 form.submit();
             }}
-            onCancel={onClose}
+            onCancel={() => {
+                resetForm();
+                onClose();
+            }}
         >
             <Spin
                 size="large"

@@ -143,6 +143,51 @@ describe('<RoleForm />', () => {
         expect(mockSuccess).toHaveBeenCalledTimes(1);
     });
 
+    test('It alerts the user saving a new role that already exists (client side validation)', async () => {
+        const mockSuccess = jest.fn();
+        const mockClose = jest.fn();
+
+        renderWithRouter(
+            <MockAppProvider user={MockAdminUserAccount}>
+                <RoleForm
+                    id=""
+                    visible
+                    currentRoles={[
+                        {
+                            id: '1234',
+                            name: 'Administrator',
+                            normalizedName: 'ADMINISTRATOR',
+                            roleTypeId: '1234',
+                        },
+                        {
+                            id: '5678',
+                            name: 'User',
+                            normalizedName: 'USER',
+                            roleTypeId: '5678',
+                        },
+                    ]}
+                    onSave={mockSuccess}
+                    onClose={mockClose}
+                />
+            </MockAppProvider>,
+        );
+
+        const nameField = await screen.findByLabelText(/Name/) as HTMLInputElement;
+        const saveButton = await screen.findByRole('button', { name: 'Save' });
+
+        await act(async () => {
+            await userEvent.clear(nameField);
+            await userEvent.type(nameField, 'Administrator');
+
+            userEvent.click(saveButton);
+        });
+
+        await screen.findByText("A role with the name 'Administrator' already exists.");
+
+        expect(mockSuccess).not.toBeCalled();
+        expect(mockClose).not.toBeCalled();
+    });
+
     test('It errors saving a new role that already exists', async () => {
         const mockSuccess = jest.fn();
         const mockClose = jest.fn();
