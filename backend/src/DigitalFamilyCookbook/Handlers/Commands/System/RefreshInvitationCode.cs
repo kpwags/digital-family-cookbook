@@ -5,7 +5,7 @@ namespace DigitalFamilyCookbook.Handlers.Commands.System;
 
 public class RefreshInvitationCode
 {
-    public class Handler : IRequestHandler<Command, SiteSettingsApiModel>
+    public class Handler : IRequestHandler<Command, OperationResult<SiteSettingsApiModel>>
     {
         private readonly ISystemRepository _systemRepository;
 
@@ -14,15 +14,22 @@ public class RefreshInvitationCode
             _systemRepository = systemRepository;
         }
 
-        public async Task<SiteSettingsApiModel> Handle(Command command, CancellationToken cancellationToken)
+        public async Task<OperationResult<SiteSettingsApiModel>> Handle(Command command, CancellationToken cancellationToken)
         {
-            var settings = await _systemRepository.RegnerateInvitationCode();
+            try
+            {
+                var settings = await _systemRepository.RegnerateInvitationCode();
 
-            return SiteSettingsApiModel.FromDomainModel(settings);
+                return new OperationResult<SiteSettingsApiModel>(SiteSettingsApiModel.FromDomainModel(settings));
+            }
+            catch (Exception ex)
+            {
+                return new OperationResult<SiteSettingsApiModel>(ex.Message);
+            }
         }
     }
 
-    public class Command : IRequest<SiteSettingsApiModel>
+    public class Command : IRequest<OperationResult<SiteSettingsApiModel>>
     {
 
     }

@@ -20,17 +20,27 @@ public class SystemController : Controller
     [HttpPost("saverole")]
     public async Task<ActionResult> SaveRole(SaveRoleType.Command command, CancellationToken cancellationToken)
     {
-        await _mediatr.Send(command, cancellationToken);
+        var result = await _mediatr.Send(command, cancellationToken);
+
+        if (!result.IsSuccessful)
+        {
+            return BadRequest(result.ErrorMessage);
+        }
 
         return Ok();
     }
 
     [HttpGet("getroles")]
-    public async Task<IReadOnlyCollection<RoleTypeApiModel>> GetRoles(CancellationToken cancellationToken)
+    public async Task<ActionResult<IReadOnlyCollection<RoleTypeApiModel>>> GetRoles(CancellationToken cancellationToken)
     {
-        var roles = await _mediatr.Send(new GetRoleTypes.Query(), cancellationToken);
+        var result = await _mediatr.Send(new GetRoleTypes.Query(), cancellationToken);
 
-        return roles;
+        if (!result.IsSuccessful)
+        {
+            return BadRequest(result.ErrorMessage);
+        }
+
+        return Ok(result.Value);
     }
 
     [HttpGet("getrolebyid")]
@@ -49,7 +59,12 @@ public class SystemController : Controller
     [HttpPost("deleterole")]
     public async Task<ActionResult> DeleteRole(DeleteRoleType.Command command, CancellationToken cancellationToken)
     {
-        await _mediatr.Send(command, cancellationToken);
+        var result = await _mediatr.Send(command, cancellationToken);
+
+        if (!result.IsSuccessful)
+        {
+            return BadRequest(result.ErrorMessage);
+        }
 
         return Ok();
     }
@@ -76,48 +91,54 @@ public class SystemController : Controller
     [HttpPost("savesitesettings")]
     public async Task<IActionResult> SaveSiteSettings(SaveSiteSettings.Command command, CancellationToken cancellationToken)
     {
-        try
-        {
-            await _mediatr.Send(command, cancellationToken);
+        var result = await _mediatr.Send(command, cancellationToken);
 
-            return Ok();
-        }
-        catch (Exception ex)
+        if (!result.IsSuccessful)
         {
-            return BadRequest(ex.Message);
+            return BadRequest(result.ErrorMessage);
         }
+
+        return Ok();
     }
 
     [HttpPost("refreshinvitationcode")]
     public async Task<ActionResult<SiteSettingsApiModel>> RefreshInvitationCode(CancellationToken cancellationToken)
     {
-        try
-        {
-            var settings = await _mediatr.Send(new RefreshInvitationCode.Command(), cancellationToken);
+        var result = await _mediatr.Send(new RefreshInvitationCode.Command(), cancellationToken);
 
-            return Ok(settings);
-        }
-        catch (Exception ex)
+        if (!result.IsSuccessful)
         {
-            return BadRequest(ex.Message);
+            return BadRequest(result.ErrorMessage);
         }
+
+        return Ok(result.Value);
     }
 
     [HttpGet("getusers")]
-    public async Task<IReadOnlyCollection<UserAccountApiModel>> GetUsers(bool includeRoles, CancellationToken cancellationToken)
+    public async Task<ActionResult<IReadOnlyCollection<UserAccountApiModel>>> GetUsers(bool includeRoles, CancellationToken cancellationToken)
     {
-        var users = await _mediatr.Send(
+        var result = await _mediatr.Send(
             new GetAllUsers.Query { IncludeRoles = includeRoles },
             cancellationToken
         );
 
-        return users;
+        if (!result.IsSuccessful)
+        {
+            return BadRequest(result.ErrorMessage);
+        }
+
+        return Ok(result.Value);
     }
 
     [HttpPost("deleteuser")]
     public async Task<ActionResult> DeleteUser(DeleteUserAccount.Command command, CancellationToken cancellationToken)
     {
-        await _mediatr.Send(command, cancellationToken);
+        var result = await _mediatr.Send(command, cancellationToken);
+
+        if (!result.IsSuccessful)
+        {
+            return BadRequest(result.ErrorMessage);
+        }
 
         return Ok();
     }
@@ -125,7 +146,12 @@ public class SystemController : Controller
     [HttpPost("addusertorole")]
     public async Task<ActionResult> AddUserToRole(AddUserToRole.Command command, CancellationToken cancellationToken)
     {
-        await _mediatr.Send(command, cancellationToken);
+        var result = await _mediatr.Send(command, cancellationToken);
+
+        if (!result.IsSuccessful)
+        {
+            return BadRequest(result.ErrorMessage);
+        }
 
         return Ok();
     }
@@ -133,7 +159,12 @@ public class SystemController : Controller
     [HttpPost("deleterolefromuser")]
     public async Task<ActionResult> DeleteRoleFromUser(DeleteRoleFromUser.Command command, CancellationToken cancellationToken)
     {
-        await _mediatr.Send(command, cancellationToken);
+        var result = await _mediatr.Send(command, cancellationToken);
+
+        if (!result.IsSuccessful)
+        {
+            return BadRequest(result.ErrorMessage);
+        }
 
         return Ok();
     }

@@ -19,6 +19,11 @@ public class RefreshInvitationCodeTests
 
         var result = await handler.Handle(command, new CancellationToken());
 
-        Assert.True(siteSettingsApiModel.Equals(result));
+        Assert.NotNull(result.Value);
+
+        if (result.Value is not null)
+        {
+            Assert.True(siteSettingsApiModel.Equals(result.Value));
+        }
     }
 }

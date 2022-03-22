@@ -4,7 +4,7 @@ namespace DigitalFamilyCookbook.Handlers.Commands.System;
 
 public class AddUserToRole
 {
-    public class Handler : IRequestHandler<Command, Unit>
+    public class Handler : IRequestHandler<Command, OperationResult<string>>
     {
         private readonly IRoleService _roleService;
 
@@ -13,15 +13,22 @@ public class AddUserToRole
             _roleService = roleService;
         }
 
-        public async Task<Unit> Handle(Command command, CancellationToken cancellationToken)
+        public async Task<OperationResult<string>> Handle(Command command, CancellationToken cancellationToken)
         {
-            await _roleService.AddUserToRole(command.UserAccountId, command.RoleName);
+            try
+            {
+                await _roleService.AddUserToRole(command.UserAccountId, command.RoleName);
+            }
+            catch (Exception ex)
+            {
+                return new OperationResult<string>(false, "", ex.Message);
+            }
 
-            return Unit.Value;
+            return new OperationResult<string>(true, "");
         }
     }
 
-    public class Command : IRequest<Unit>
+    public class Command : IRequest<OperationResult<string>>
     {
         public string UserAccountId { get; set; } = string.Empty;
 

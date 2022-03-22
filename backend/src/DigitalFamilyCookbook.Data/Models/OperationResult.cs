@@ -20,9 +20,10 @@ public class OperationResult<T> where T : class
         Value = entity;
     }
 
-    public OperationResult(bool isSuccessful, T entity)
+    public OperationResult(bool isSuccessful, T entity, string errorMessage = "")
     {
         IsSuccessful = isSuccessful;
         Value = entity;
+        ErrorMessage = errorMessage;
     }
 }

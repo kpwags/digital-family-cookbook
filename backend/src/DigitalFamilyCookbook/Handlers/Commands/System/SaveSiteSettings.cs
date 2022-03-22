@@ -5,7 +5,7 @@ namespace DigitalFamilyCookbook.Handlers.Commands.System;
 
 public class SaveSiteSettings
 {
-    public class Handler : IRequestHandler<Command, Unit>
+    public class Handler : IRequestHandler<Command, OperationResult<string>>
     {
         private readonly ISystemRepository _systemRepository;
 
@@ -14,20 +14,27 @@ public class SaveSiteSettings
             _systemRepository = systemRepository;
         }
 
-        public async Task<Unit> Handle(Command command, CancellationToken cancellationToken)
+        public async Task<OperationResult<string>> Handle(Command command, CancellationToken cancellationToken)
         {
-            await _systemRepository.SaveSiteSettings(new SiteSettings
+            try
             {
-                Title = command.Title,
-                IsPublic = command.IsPublic,
-                AllowPublicRegistration = command.AllowPublicRegistration,
-            });
+                await _systemRepository.SaveSiteSettings(new SiteSettings
+                {
+                    Title = command.Title,
+                    IsPublic = command.IsPublic,
+                    AllowPublicRegistration = command.AllowPublicRegistration,
+                });
 
-            return Unit.Value;
+                return new OperationResult<string>(true, "");
+            }
+            catch (Exception ex)
+            {
+                return new OperationResult<string>(false, "", ex.Message);
+            }
         }
     }
 
-    public class Command : IRequest<Unit>
+    public class Command : IRequest<OperationResult<string>>
     {
         public string Title { get; set; } = string.Empty;
 

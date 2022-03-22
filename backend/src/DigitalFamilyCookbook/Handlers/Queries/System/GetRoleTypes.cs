@@ -5,7 +5,7 @@ namespace DigitalFamilyCookbook.Handlers.Queries.System;
 
 public class GetRoleTypes
 {
-    public class Handler : IRequestHandler<Query, IReadOnlyCollection<RoleTypeApiModel>>
+    public class Handler : IRequestHandler<Query, OperationResult<IReadOnlyCollection<RoleTypeApiModel>>>
     {
         private readonly IRoleService _roleService;
 
@@ -14,15 +14,22 @@ public class GetRoleTypes
             _roleService = roleService;
         }
 
-        public async Task<IReadOnlyCollection<RoleTypeApiModel>> Handle(Query request, CancellationToken cancellationToken)
+        public async Task<OperationResult<IReadOnlyCollection<RoleTypeApiModel>>> Handle(Query request, CancellationToken cancellationToken)
         {
-            var roles = await Task.FromResult(_roleService.GetAllRoles());
+            try
+            {
+                var roles = await Task.FromResult(_roleService.GetAllRoles());
 
-            return roles.Select(r => RoleTypeApiModel.FromDomainModel(r)).ToList();
+                return new OperationResult<IReadOnlyCollection<RoleTypeApiModel>>(roles.Select(r => RoleTypeApiModel.FromDomainModel(r)).ToList());
+            }
+            catch (Exception ex)
+            {
+                return new OperationResult<IReadOnlyCollection<RoleTypeApiModel>>(ex.Message);
+            }
         }
     }
 
-    public class Query : IRequest<IReadOnlyCollection<RoleTypeApiModel>>
+    public class Query : IRequest<OperationResult<IReadOnlyCollection<RoleTypeApiModel>>>
     {
 
     }

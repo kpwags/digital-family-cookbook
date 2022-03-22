@@ -4,7 +4,7 @@ namespace DigitalFamilyCookbook.Handlers.Queries.System;
 
 public class GetAllUsers
 {
-    public class Handler : IRequestHandler<Query, IReadOnlyCollection<UserAccountApiModel>>
+    public class Handler : IRequestHandler<Query, OperationResult<IReadOnlyCollection<UserAccountApiModel>>>
     {
         private readonly IUserAccountRepository _userAccountRepository;
         private readonly IRoleService _roleService;
@@ -15,33 +15,40 @@ public class GetAllUsers
             _roleService = roleService;
         }
 
-        public async Task<IReadOnlyCollection<UserAccountApiModel>> Handle(Query request, CancellationToken cancellationToken)
+        public async Task<OperationResult<IReadOnlyCollection<UserAccountApiModel>>> Handle(Query request, CancellationToken cancellationToken)
         {
-            var users = await _userAccountRepository.GetAllUserAccounts();
-
-            if (request.IncludeRoles)
+            try
             {
-                var userList = new List<UserAccountApiModel>();
+                var users = await _userAccountRepository.GetAllUserAccounts();
 
-                foreach (var user in users)
+                if (request.IncludeRoles)
                 {
-                    var roles = await _roleService.GetUserRoles(user.Id);
+                    var userList = new List<UserAccountApiModel>();
 
-                    user.RoleTypes = roles;
+                    foreach (var user in users)
+                    {
+                        var roles = await _roleService.GetUserRoles(user.Id);
 
-                    userList.Add(UserAccountApiModel.FromDomainModel(user));
+                        user.RoleTypes = roles;
+
+                        userList.Add(UserAccountApiModel.FromDomainModel(user));
+                    }
+
+                    return new OperationResult<IReadOnlyCollection<UserAccountApiModel>>(userList.AsReadOnly());
                 }
-
-                return userList.AsReadOnly();
+                else
+                {
+                    return new OperationResult<IReadOnlyCollection<UserAccountApiModel>>(users.Select(u => UserAccountApiModel.FromDomainModel(u)).ToList());
+                }
             }
-            else
+            catch (Exception ex)
             {
-                return users.Select(u => UserAccountApiModel.FromDomainModel(u)).ToList();
+                return new OperationResult<IReadOnlyCollection<UserAccountApiModel>>(ex.Message);
             }
         }
     }
 
-    public class Query : IRequest<IReadOnlyCollection<UserAccountApiModel>>
+    public class Query : IRequest<OperationResult<IReadOnlyCollection<UserAccountApiModel>>>
     {
         public bool IncludeRoles { get; set; }
     }
