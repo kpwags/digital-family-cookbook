@@ -72,9 +72,9 @@ public class RoleServiceTests
             _logger.Object
         );
 
-        var result = await roleService.AddRole("User");
+        var result = await Record.ExceptionAsync(async () => await roleService.AddRole("User"));
 
-        Assert.Empty(result);
+        Assert.Null(result);
     }
 
     [Fact]
@@ -89,9 +89,7 @@ public class RoleServiceTests
             _logger.Object
         );
 
-        var result = await roleService.AddRole("User");
-
-        Assert.Equal("Role already exists", result);
+        await Assert.ThrowsAsync<Exception>(async () => await roleService.AddRole("User"));
     }
 
     #endregion
@@ -164,9 +162,7 @@ public class RoleServiceTests
             _logger.Object
         );
 
-        var result = await roleService.DeleteRole(roleTypeId);
-
-        Assert.Empty(result);
+        await roleService.DeleteRole(roleTypeId);
     }
 
     [Fact]
@@ -177,7 +173,7 @@ public class RoleServiceTests
             new RoleTypeDto { Id = Guid.NewGuid().ToString(), RoleTypeId = Guid.NewGuid().ToString(), Name = "User" }
         }.AsQueryable());
 
-        _roleManager.Setup(r => r.UpdateAsync(It.IsAny<RoleTypeDto>())).ReturnsAsync(IdentityResult.Success);
+        _roleManager.Setup(r => r.DeleteAsync(It.IsAny<RoleTypeDto>())).ReturnsAsync(IdentityResult.Failed());
 
         var roleService = new RoleService(
             _roleManager.Object,
@@ -185,9 +181,7 @@ public class RoleServiceTests
             _logger.Object
         );
 
-        var result = await roleService.DeleteRole(Guid.NewGuid().ToString());
-
-        Assert.Equal("The role to delete was not found", result);
+        await Assert.ThrowsAsync<Exception>(async () => await roleService.DeleteRole(Guid.NewGuid().ToString()));
     }
 
     #endregion

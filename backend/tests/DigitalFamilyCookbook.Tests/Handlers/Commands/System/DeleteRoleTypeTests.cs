@@ -8,7 +8,7 @@ public class DeleteRoleTypeTests
     public async Task ItSuccessfullyDeletesARole()
     {
         var roleService = new Mock<IRoleService>();
-        roleService.Setup(r => r.DeleteRole(It.IsAny<string>())).ReturnsAsync("");
+        roleService.Setup(r => r.DeleteRole(It.IsAny<string>()));
 
         var command = new DeleteRoleType.Command
         {
@@ -19,14 +19,15 @@ public class DeleteRoleTypeTests
 
         var result = await handler.Handle(command, new CancellationToken());
 
-        Assert.Equal(Unit.Value, result);
+        Assert.True(result.IsSuccessful);
+        Assert.Empty(result.ErrorMessage);
     }
 
     [Fact]
     public async Task ItErrorsDeletingARoleThatDoesntExist()
     {
         var roleService = new Mock<IRoleService>();
-        roleService.Setup(r => r.DeleteRole(It.IsAny<string>())).ReturnsAsync("The role to delete was not found");
+        roleService.Setup(r => r.DeleteRole(It.IsAny<string>())).ThrowsAsync(new Exception("The role to delete was not found"));
 
         var command = new DeleteRoleType.Command
         {
@@ -35,8 +36,9 @@ public class DeleteRoleTypeTests
 
         var handler = new DeleteRoleType.Handler(roleService.Object);
 
-        var ex = await Assert.ThrowsAsync<Exception>(async () => await handler.Handle(command, new CancellationToken()));
+        var result = await handler.Handle(command, new CancellationToken());
 
-        Assert.Equal("The role to delete was not found", ex.Message);
+        Assert.False(result.IsSuccessful);
+        Assert.Equal("The role to delete was not found", result.ErrorMessage);
     }
 }

@@ -19,6 +19,6 @@ public class GetRoleTypesTests
 
         var result = await handler.Handle(new GetRoleTypes.Query(), new CancellationToken());
 
-        Assert.Equal(2, result.Count());
+        Assert.Equal(2, result.Value?.Count);
     }
 }

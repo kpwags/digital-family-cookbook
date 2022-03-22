@@ -23,6 +23,6 @@ public class GetAllUsersTests
 
         var result = await handler.Handle(new GetAllUsers.Query(), new CancellationToken());
 
-        Assert.Equal(3, result.Count());
+        Assert.Equal(3, result.Value?.Count);
     }
 }

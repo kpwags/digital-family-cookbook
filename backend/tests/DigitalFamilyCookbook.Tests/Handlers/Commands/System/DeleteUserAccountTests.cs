@@ -19,6 +19,7 @@ public class DeleteUserAccountTests
 
         var result = await handler.Handle(command, new CancellationToken());
 
-        Assert.Equal(Unit.Value, result);
+        Assert.True(result.IsSuccessful);
+        Assert.Empty(result.ErrorMessage);
     }
 }
