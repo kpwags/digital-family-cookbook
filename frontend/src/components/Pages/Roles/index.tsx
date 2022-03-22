@@ -80,6 +80,7 @@ const Roles = (): JSX.Element => {
                     setRolesFormOpen(false);
                     setRoleToEditId('');
                 }}
+                currentRoles={roles}
                 visible={rolesFormOpen}
                 id={roleToEditId}
             />
