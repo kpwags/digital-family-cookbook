@@ -1,4 +1,5 @@
 import { ApiArguments } from '@models/ApiArguments';
+import { CookieUtils } from './CookieUtils';
 
 const apiUrl = process.env.REACT_APP_API_URL;
 
@@ -34,7 +35,7 @@ async function client(endpoint: string, {
 
     return window.fetch(`${apiUrl}/${endpoint}`, config).then(async (response) => {
         if (response.status === 401) {
-            // logout();
+            CookieUtils.DeleteCookie('dfcuser');
 
             // refresh the page for them
             window.location.assign(window.location.toString());
