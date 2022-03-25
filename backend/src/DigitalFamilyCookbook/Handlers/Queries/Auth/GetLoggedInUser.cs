@@ -9,11 +9,13 @@ public class GetLoggedInUser
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IRoleService _roleService;
+        private readonly IUserAccountRepository _userAccountRepository;
 
-        public Handler(IHttpContextAccessor httpContextAccessor, IRoleService roleService)
+        public Handler(IHttpContextAccessor httpContextAccessor, IRoleService roleService, IUserAccountRepository userAccountRepository)
         {
             _httpContextAccessor = httpContextAccessor;
             _roleService = roleService;
+            _userAccountRepository = userAccountRepository;
         }
 
         public async Task<UserAccountApiModel> Handle(Query query, CancellationToken cancellationToken)
@@ -24,6 +26,13 @@ public class GetLoggedInUser
 
                 if (currentUser.Id != string.Empty)
                 {
+                    var userAccount = await _userAccountRepository.GetUserAccountByIdOrDefault(currentUser.Id);
+
+                    if (userAccount is null)
+                    {
+                        return UserAccountApiModel.None();
+                    }
+
                     var roles = await _roleService.GetUserRoles(currentUser.Id);
 
                     currentUser.Roles = roles.Select(r => RoleTypeApiModel.FromDomainModel(r)).ToList();

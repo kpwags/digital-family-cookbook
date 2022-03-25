@@ -8,6 +8,7 @@ namespace DigitalFamilyCookbook.Controllers;
 [Route("system")]
 [ApiController]
 [Authorize]
+[ValidateUser]
 public class SystemController : Controller
 {
     private readonly IMediator _mediatr;

@@ -23,6 +23,13 @@ public class UserAccountRepository : IUserAccountRepository
         return UserAccount.FromDto(user);
     }
 
+    public async Task<UserAccount?> GetUserAccountByIdOrDefault(string userAccountId)
+    {
+        var user = await _userManager.FindByIdAsync(userAccountId);
+
+        return user is not null ? UserAccount.FromDto(user) : null;
+    }
+
     public async Task<IEnumerable<UserAccount>> GetAllUserAccounts()
     {
         var users = await Task.FromResult(_userManager.Users.ToList());
