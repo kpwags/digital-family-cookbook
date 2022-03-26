@@ -39,7 +39,7 @@ const MainApp = ({ children }: { children: ReactNode }): JSX.Element => {
 
     const loadSiteSettings = async () => {
         setSiteSettingsLoaded(true);
-        const [data, error] = await Api.Get<SiteSettings>('system/getsitesettings');
+        const [data, error] = await Api.Get<SiteSettings>('public/getsitesettings');
 
         if (error || data === null) {
             setPageError(error || 'Unable to load site settings');
