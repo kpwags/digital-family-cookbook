@@ -1,4 +1,4 @@
-import { AppContext } from '@contexts/AppContext';
+import AppContext from '@contexts/AppContext';
 import { Api } from '@utils/api';
 import { RoleType } from '@models/RoleType';
 import { useEffect, useState, useContext } from 'react';

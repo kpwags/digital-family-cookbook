@@ -7,7 +7,7 @@ import {
 import { ColumnsType } from 'antd/lib/table';
 import ConfirmDialog from '@components/ConfirmDialog';
 import { Api } from '@utils/api';
-import { AppContext } from '@contexts/AppContext';
+import AppContext from '@contexts/AppContext';
 import { RoleType } from '@models/RoleType';
 
 type RolesTableProps = {

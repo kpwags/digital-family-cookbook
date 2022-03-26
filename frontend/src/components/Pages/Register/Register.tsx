@@ -5,7 +5,7 @@ import {
     Col,
     Typography,
 } from 'antd';
-import { AppContext } from '@contexts/AppContext';
+import AppContext from '@contexts/AppContext';
 import RegisterForm from '@components/Forms/RegisterForm';
 
 const { Title, Paragraph } = Typography;

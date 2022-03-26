@@ -9,7 +9,7 @@ import {
     Typography,
     message,
 } from 'antd';
-import { AppContext } from '@contexts/AppContext';
+import AppContext from '@contexts/AppContext';
 import { Api } from '@utils/api';
 
 import './SiteSettingsForm.less';

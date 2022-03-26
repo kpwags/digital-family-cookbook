@@ -4,7 +4,7 @@ import {
     Col,
     Typography,
 } from 'antd';
-import { AppContext } from '@contexts/AppContext';
+import AppContext from '@contexts/AppContext';
 import SiteSettingsForm from './SiteSettingsForm';
 
 const { Title } = Typography;

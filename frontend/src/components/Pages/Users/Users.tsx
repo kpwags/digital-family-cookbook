@@ -1,6 +1,6 @@
 import { useContext, useEffect } from 'react';
 import { Typography } from 'antd';
-import { AppContext } from '@contexts/AppContext';
+import AppContext from '@contexts/AppContext';
 import UsersGrid from './UsersGrid';
 
 const { Title } = Typography;

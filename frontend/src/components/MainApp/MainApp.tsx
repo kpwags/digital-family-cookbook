@@ -4,7 +4,7 @@ import {
     useState,
     useEffect,
 } from 'react';
-import { AppContext } from '@contexts/AppContext';
+import AppContext from '@contexts/AppContext';
 import { Api } from '@utils/api';
 import { PageState } from '@utils/constants';
 import { useCookies } from 'react-cookie';

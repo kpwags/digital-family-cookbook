@@ -10,7 +10,7 @@ import { Api } from '@utils/api';
 import { AuthResult } from '@models/AuthResult';
 
 import './RegisterForm.less';
-import { AppContext } from '@contexts/AppContext';
+import AppContext from '@contexts/AppContext';
 
 type RegisterFormProps = {
     onRegisterCompleted: (token: string) => void

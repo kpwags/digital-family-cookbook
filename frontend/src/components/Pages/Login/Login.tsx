@@ -2,7 +2,7 @@ import { Row, Col, Typography } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import LoginForm from '@components/Forms/LoginForm';
 import { useContext, useEffect } from 'react';
-import { AppContext } from '@contexts/AppContext';
+import AppContext from '@contexts/AppContext';
 
 const { Title, Paragraph } = Typography;
 

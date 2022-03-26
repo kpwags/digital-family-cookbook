@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { AppContext } from '@contexts/AppContext';
+import AppContext from '@contexts/AppContext';
 import { UserAccount } from '@models/UserAccount';
 import { SiteSettings } from '@models/SiteSettings';
 import { defaultSiteSettings } from '@utils/defaults';

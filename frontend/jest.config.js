@@ -37,9 +37,9 @@ module.exports = {
         '\\.(css|less|scss)$': 'identity-obj-proxy',
         '@components/(.*)$': '<rootDir>/src/components/$1',
         '@contexts/(.*)$': '<rootDir>/src/contexts/$1',
-        '@lib/(.*)$': '<rootDir>/src/lib/$1',
         '@models/(.*)$': '<rootDir>/src/models/$1',
         '@test/(.*)$': '<rootDir>/src/test/$1',
+        '@utils/(.*)$': '<rootDir>/src/utils/$1',
     },
 
     transformIgnorePatterns: [

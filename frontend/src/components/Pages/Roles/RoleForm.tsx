@@ -6,7 +6,7 @@ import {
     Alert,
 } from 'antd';
 import { Api } from '@utils/api';
-import { AppContext } from '@contexts/AppContext';
+import AppContext from '@contexts/AppContext';
 import { RoleType } from '@models/RoleType';
 import FormModal from '@components/FormModal';
 

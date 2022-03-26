@@ -27,4 +27,4 @@ const AppContext = createContext<AppContextProps>({
     updateSiteSettings: () => { },
 });
 
-export { AppContext };
+export default AppContext;

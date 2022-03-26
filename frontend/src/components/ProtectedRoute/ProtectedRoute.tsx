@@ -1,5 +1,5 @@
 import { ReactElement, useContext } from 'react';
-import { AppContext } from '@contexts/AppContext';
+import AppContext from '@contexts/AppContext';
 import Login from '@components/Pages/Login';
 import NoAccess from '@components/Pages/NoAccess';
 

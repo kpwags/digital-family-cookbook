@@ -2,7 +2,7 @@ import { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { Layout, Menu } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
-import { AppContext } from '@contexts/AppContext';
+import AppContext from '@contexts/AppContext';
 import { hasRole } from '@utils/UserFunctions';
 
 import './NavBar.less';
