@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event';
 import { MockAppProvider } from '@test/MockAppProvider';
 import { MockAdminUserAccount } from '@test/mocks/MockUsers';
 import { renderWithRouter } from '@test/renderWithRouter';
-import { RoleForm } from '.';
+import RoleForm from './RoleForm';
 
 describe('<RoleForm />', () => {
     test('It renders the form for a new role', async () => {

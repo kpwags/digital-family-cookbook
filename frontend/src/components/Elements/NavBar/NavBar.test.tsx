@@ -4,7 +4,7 @@ import {
 import { MockAppProvider } from '@test/MockAppProvider';
 import { MockAdminUserAccount } from '@test/mocks/MockUsers';
 import { renderWithRouter } from '@test/renderWithRouter';
-import { NavBar } from '.';
+import NavBar from '.';
 
 describe('<NavBar />', () => {
     test('it does shows the sign in and register button when the user is not logged in', async () => {

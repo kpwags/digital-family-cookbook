@@ -7,9 +7,9 @@ import {
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MockAppProvider } from '@test/MockAppProvider';
-import { defaultSiteSettings } from '@lib/defaults';
-import { copyObject } from '@lib/copyObject';
-import { RegisterForm } from '.';
+import { defaultSiteSettings } from '@utils/defaults';
+import copyObject from '@utils/copyObject';
+import RegisterForm from '.';
 
 describe('<RegisterForm />', () => {
     test('It renders the registration form', async () => {

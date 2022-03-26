@@ -6,12 +6,12 @@ import {
     Space,
 } from 'antd';
 import { ColumnsType } from 'antd/lib/table';
-import { ConfirmDialog } from '@components/ConfirmDialog';
-import { Api } from '@lib/api';
+import ConfirmDialog from '@components/ConfirmDialog';
+import { Api } from '@utils/api';
 import { UserAccount } from '@models/UserAccount';
-import { AppContext } from '@contexts/AppContext';
+import AppContext from '@contexts/AppContext';
 
-const Users = (): JSX.Element => {
+const UsersGrid = (): JSX.Element => {
     const [users, setUsers] = useState<UserAccount[]>([]);
     const [errorMessage, setErrorMessage] = useState<string>('');
     const [loadingMessage, setLoadingMessage] = useState<string>('Loading...');
@@ -172,4 +172,4 @@ const Users = (): JSX.Element => {
     );
 };
 
-export { Users };
+export default UsersGrid;

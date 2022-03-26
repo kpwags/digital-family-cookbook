@@ -8,7 +8,7 @@ module.exports = {
         alias: {
             '@components': path.resolve(__dirname, 'src/components/'),
             '@contexts': path.resolve(__dirname, 'src/contexts/'),
-            '@lib': path.resolve(__dirname, 'src/lib/'),
+            '@utils': path.resolve(__dirname, 'src/utils/'),
             '@models': path.resolve(__dirname, 'src/models/'),
             '@test': path.resolve(__dirname, 'src/test/'),
         },

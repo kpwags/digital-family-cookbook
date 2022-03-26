@@ -5,10 +5,10 @@ import {
     Spin,
     Alert,
 } from 'antd';
-import { Api } from '@lib/api';
-import { AppContext } from '@contexts/AppContext';
+import { Api } from '@utils/api';
+import AppContext from '@contexts/AppContext';
 import { RoleType } from '@models/RoleType';
-import { FormModal } from '@components/FormModal';
+import FormModal from '@components/FormModal';
 
 type FormValues = {
     name: string,
@@ -151,4 +151,4 @@ const RoleForm = ({
     );
 };
 
-export { RoleForm };
+export default RoleForm;

@@ -1,7 +1,2 @@
-import { Alert } from 'antd';
-
-const NoAccess = (): JSX.Element => (
-    <Alert type="error" message="No Access" />
-);
-
-export { NoAccess };
+export * from './NoAccess';
+export { default } from './NoAccess';

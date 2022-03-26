@@ -3,13 +3,13 @@ import userEvent from '@testing-library/user-event';
 import { MockAppProvider } from '@test/MockAppProvider';
 import { MockAdminUserAccount } from '@test/mocks/MockUsers';
 import { renderWithRouter } from '@test/renderWithRouter';
-import { Users } from '.';
+import UsersGrid from './UsersGrid';
 
-describe('<Users />', () => {
+describe('<UsersGrid />', () => {
     test('It renders the grid', async () => {
         renderWithRouter(
             <MockAppProvider user={MockAdminUserAccount}>
-                <Users />
+                <UsersGrid />
             </MockAppProvider>,
         );
 
@@ -26,7 +26,7 @@ describe('<Users />', () => {
     test('It confirms the user wants to delete a user', async () => {
         renderWithRouter(
             <MockAppProvider user={MockAdminUserAccount}>
-                <Users />
+                <UsersGrid />
             </MockAppProvider>,
         );
 

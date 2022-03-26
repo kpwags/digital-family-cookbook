@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event';
 import { MockAppProvider } from '@test/MockAppProvider';
 import { MockAdminUserAccount } from '@test/mocks/MockUsers';
 import { renderWithRouter } from '@test/renderWithRouter';
-import { SiteSettingsForm } from '.';
+import SiteSettingsForm from './SiteSettingsForm';
 
 describe('<SiteSettingsForm />', () => {
     test('It renders the form', async () => {

@@ -9,8 +9,8 @@ import {
     Typography,
     message,
 } from 'antd';
-import { AppContext } from '@contexts/AppContext';
-import { Api } from '@lib/api';
+import AppContext from '@contexts/AppContext';
+import { Api } from '@utils/api';
 
 import './SiteSettingsForm.less';
 import { SiteSettings } from '@models/SiteSettings';
@@ -166,4 +166,4 @@ const SiteSettingsForm = (): JSX.Element => {
     );
 };
 
-export { SiteSettingsForm };
+export default SiteSettingsForm;

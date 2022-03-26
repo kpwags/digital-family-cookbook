@@ -1,18 +1,18 @@
-import { MainApp } from '@components/MainApp';
+import MainApp from '@components/MainApp';
 import {
     BrowserRouter,
     Routes,
     Route,
 } from 'react-router-dom';
-import { BaseLayout } from '@components/Elements/BaseLayout';
+import BaseLayout from '@components/Elements/BaseLayout';
 import { CookiesProvider } from 'react-cookie';
-import { ProtectedRoute } from '@components/ProtectedRoute';
+import ProtectedRoute from '@components/ProtectedRoute';
 
-import { Register } from '@components/Pages/Register';
-import { Login } from '@components/Pages/Login';
-import { Roles } from '@components/Pages/Roles';
-import { Users } from '@components/Pages/Users';
-import { SiteSettings } from '@components/Pages/SiteSettings';
+import Register from '@components/Pages/Register';
+import Login from '@components/Pages/Login';
+import Roles from '@components/Pages/Roles';
+import Users from '@components/Pages/Users';
+import SiteSettings from '@components/Pages/SiteSettings';
 
 import './styles/App.less';
 

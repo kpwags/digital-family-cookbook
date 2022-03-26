@@ -5,9 +5,9 @@ import {
     Alert,
 } from 'antd';
 import { ColumnsType } from 'antd/lib/table';
-import { ConfirmDialog } from '@components/ConfirmDialog';
-import { Api } from '@lib/api';
-import { AppContext } from '@contexts/AppContext';
+import ConfirmDialog from '@components/ConfirmDialog';
+import { Api } from '@utils/api';
+import AppContext from '@contexts/AppContext';
 import { RoleType } from '@models/RoleType';
 
 type RolesTableProps = {
@@ -86,4 +86,4 @@ const RolesTable = ({
     );
 };
 
-export { RolesTable };
+export default RolesTable;

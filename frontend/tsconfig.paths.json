@@ -4,7 +4,7 @@
         "paths": {
             "@components/*": ["components/*"],
             "@contexts/*": ["contexts/*"],
-            "@lib/*": ["lib/*"],
+            "@utils/*": ["utils/*"],
             "@test/*": ["test/*"],
             "@models/*": ["models/*"]
         }

@@ -1,9 +1,9 @@
 import { ReactNode } from 'react';
-import { AppContext } from '@contexts/AppContext';
+import AppContext from '@contexts/AppContext';
 import { UserAccount } from '@models/UserAccount';
 import { SiteSettings } from '@models/SiteSettings';
-import { defaultSiteSettings } from '@lib/defaults';
-import { copyObject } from '@lib/copyObject';
+import { defaultSiteSettings } from '@utils/defaults';
+import copyObject from '@utils/copyObject';
 
 interface MockAppProviderProps {
     siteSettings?: SiteSettings

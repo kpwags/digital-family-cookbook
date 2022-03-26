@@ -1,5 +1,5 @@
 import { ApiArguments } from '@models/ApiArguments';
-import { client, handleApiError } from '@lib/client';
+import { client, handleApiError } from '@utils/client';
 
 class Api {
     static Post<T>(endpoint: string, config: ApiArguments = {}) : Promise<[T | null, string | null]> {

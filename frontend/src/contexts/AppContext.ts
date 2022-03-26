@@ -1,7 +1,7 @@
 import { createContext } from 'react';
 import { SiteSettings } from '@models/SiteSettings';
 import { UserAccount } from '@models/UserAccount';
-import { defaultSiteSettings } from '@lib/defaults';
+import { defaultSiteSettings } from '@utils/defaults';
 
 type AppContextProps = {
     siteSettings: SiteSettings
@@ -27,4 +27,4 @@ const AppContext = createContext<AppContextProps>({
     updateSiteSettings: () => { },
 });
 
-export { AppContext };
+export default AppContext;
