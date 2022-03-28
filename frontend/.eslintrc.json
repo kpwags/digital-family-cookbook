@@ -69,9 +69,10 @@
                 "map": [
                     ["@components", "./src/components"],
                     ["@contexts", "./src/contexts"],
-                    ["@utils", "./src/utils"],
+                    ["@hooks", "./src/hooks"],
                     ["@models", "./src/models"],
-                    ["@test", "./src/test"]
+                    ["@test", "./src/test"],
+                    ["@utils", "./src/utils"]
                 ]
             }
         }

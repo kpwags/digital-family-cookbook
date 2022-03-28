@@ -4,9 +4,10 @@
         "paths": {
             "@components/*": ["components/*"],
             "@contexts/*": ["contexts/*"],
-            "@utils/*": ["utils/*"],
+            "@hooks/*": ["hooks/*"],
+            "@models/*": ["models/*"],
             "@test/*": ["test/*"],
-            "@models/*": ["models/*"]
+            "@utils/*": ["utils/*"],
         }
     }
 }
