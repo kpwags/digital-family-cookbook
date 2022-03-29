@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
     Form,
     Input,
@@ -6,7 +6,6 @@ import {
     Alert,
 } from 'antd';
 import { Api } from '@utils/api';
-import AppContext from '@contexts/AppContext';
 import { RoleType } from '@models/RoleType';
 import FormModal from '@components/FormModal';
 
@@ -33,8 +32,6 @@ const RoleForm = ({
     const [loadingMessage, setLoadingMessage] = useState<string>('');
     const [errorMessage, setErrorMessage] = useState<string>('');
 
-    const { token } = useContext(AppContext);
-
     const resetForm = () => {
         form.resetFields();
         setErrorMessage('');
@@ -43,7 +40,7 @@ const RoleForm = ({
     const getRoleType = async (id: string) => {
         setLoadingMessage('Loading...');
 
-        const [data, error] = await Api.Get<RoleType>('system/getrolebyid', { params: { id }, token });
+        const [data, error] = await Api.Get<RoleType>('system/getrolebyid', { params: { id } });
 
         if (error) {
             setErrorMessage(error);
@@ -68,7 +65,6 @@ const RoleForm = ({
         }
 
         const [, error] = await Api.Post('system/saverole', {
-            token,
             data: {
                 id,
                 name: values.name,

@@ -16,13 +16,10 @@ const UsersGrid = (): JSX.Element => {
     const [errorMessage, setErrorMessage] = useState<string>('');
     const [loadingMessage, setLoadingMessage] = useState<string>('Loading...');
 
-    const {
-        user,
-        token,
-    } = useContext(AppContext);
+    const { user } = useContext(AppContext);
 
     const fetchUsers = async () => {
-        const [data, error] = await Api.Get<UserAccount[]>('system/getusers', { params: { includeRoles: true }, token });
+        const [data, error] = await Api.Get<UserAccount[]>('system/getusers', { params: { includeRoles: true } });
 
         if (error || data === null) {
             setErrorMessage(error || 'An error has occurred');
@@ -37,7 +34,7 @@ const UsersGrid = (): JSX.Element => {
     const deleteUser = async (id: string) => {
         setLoadingMessage('Deleting User...');
 
-        const [, error] = await Api.Post('system/deleteuser', { data: { id }, token });
+        const [, error] = await Api.Post('system/deleteuser', { data: { id } });
 
         if (error) {
             setErrorMessage(error);
@@ -57,7 +54,6 @@ const UsersGrid = (): JSX.Element => {
                     userAccountId: userId,
                     roleName: 'Administrator',
                 },
-                token,
             },
         );
 
@@ -79,7 +75,6 @@ const UsersGrid = (): JSX.Element => {
                     userAccountId: userId,
                     roleName: 'Administrator',
                 },
-                token,
             },
         );
 

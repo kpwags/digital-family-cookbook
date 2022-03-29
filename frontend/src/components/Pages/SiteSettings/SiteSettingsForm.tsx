@@ -29,14 +29,13 @@ const SiteSettingsForm = (): JSX.Element => {
 
     const [form] = Form.useForm<FormValues>();
 
-    const { siteSettings, token, updateSiteSettings } = useContext(AppContext);
+    const { siteSettings, updateSiteSettings } = useContext(AppContext);
 
     const submitForm = async ({ title, isPublic, allowPublicRegistration }: FormValues) => {
         setLoadingMessage('Saving...');
         setErrorMessage('');
 
         const [, error] = await Api.Post('system/savesitesettings', {
-            token,
             data: {
                 title,
                 isPublic,
@@ -70,7 +69,6 @@ const SiteSettingsForm = (): JSX.Element => {
         const [data, error] = await Api.Post<SiteSettings>(
             'system/refreshinvitationcode',
             {
-                token,
                 data: {},
             },
         );

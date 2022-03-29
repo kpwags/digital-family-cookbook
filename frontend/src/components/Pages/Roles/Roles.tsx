@@ -20,12 +20,12 @@ const Roles = (): JSX.Element => {
     const [rolesLoadingMessage, setRolesLoadingMessage] = useState<string>('Loading...');
     const [roleToEditId, setRoleToEditId] = useState<string>('');
 
-    const { siteSettings, token } = useContext(AppContext);
+    const { siteSettings } = useContext(AppContext);
 
     const fetchRoles = async () => {
         setRolesLoadingMessage('Loading...');
 
-        const [data, error] = await Api.Get<RoleType[]>('system/getroles', { token });
+        const [data, error] = await Api.Get<RoleType[]>('system/getroles');
 
         if (error || data === null) {
             setRolesLoadingMessage('');
