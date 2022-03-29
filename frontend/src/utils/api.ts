@@ -20,7 +20,7 @@ class Api {
 
         url = url.substring(0, url.length - 1);
 
-        return client(url, { token: config.token }).then(
+        return client(url).then(
             (data) => [data, null],
             (error) => [null, handleApiError(error)],
         );

@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useState } from 'react';
 import {
     Table,
     Button,
@@ -7,7 +7,6 @@ import {
 import { ColumnsType } from 'antd/lib/table';
 import ConfirmDialog from '@components/ConfirmDialog';
 import { Api } from '@utils/api';
-import AppContext from '@contexts/AppContext';
 import { RoleType } from '@models/RoleType';
 
 type RolesTableProps = {
@@ -25,10 +24,8 @@ const RolesTable = ({
 }: RolesTableProps): JSX.Element => {
     const [errorMessage, setErrorMessage] = useState<string>('');
 
-    const { token } = useContext(AppContext);
-
     const deleteRole = async (id: string) => {
-        const [, error] = await Api.Post('system/deleterole', { data: { id }, token });
+        const [, error] = await Api.Post('system/deleterole', { data: { id } });
 
         if (error) {
             setErrorMessage(error);

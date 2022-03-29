@@ -5,13 +5,14 @@ const apiUrl = process.env.REACT_APP_API_URL;
 
 async function client(endpoint: string, {
     data = null,
-    token = undefined,
     contentType = 'application/json',
     fileUpload = false,
     ...customConfig
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 }: ApiArguments = {}) : Promise<any> {
     const headers: Record<string, string> = {};
+
+    const token = CookieUtils.GetValue('dfcuser');
 
     if (token) {
         headers.Authorization = `Bearer ${token}`;

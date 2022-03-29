@@ -19,8 +19,8 @@ const MainApp = ({ children }: { children: ReactNode }): JSX.Element => {
     const [pageState, setPageState] = useState<PageState>(PageState.Loading);
     const [cookies, setCookie, removeCookie] = useCookies(['dfcuser']);
 
-    const loadUser = async (token: string | undefined = undefined) => {
-        const [data, error] = await Api.Get<UserAccount>('auth/getuser', { token: token || cookies.dfcuser });
+    const loadUser = async () => {
+        const [data, error] = await Api.Get<UserAccount>('auth/getuser');
 
         if (error || data === null) {
             setPageError(error || 'Unable to load site settings');
@@ -71,7 +71,7 @@ const MainApp = ({ children }: { children: ReactNode }): JSX.Element => {
 
     const loginUser = (token: string) => {
         setCookie('dfcuser', token, { path: '/' });
-        loadUser(token);
+        loadUser();
     };
 
     if (pageState === PageState.Loading) {
