@@ -9,6 +9,18 @@ public class CategoryRepository : ICategoryRepository
         _db = db;
     }
 
+    public Category Get(int categoryId)
+    {
+        var c = _db.Categories.FirstOrDefault(c => c.CategoryId == categoryId);
+
+        if (c is null)
+        {
+            throw new Exception("Category not found");
+        }
+
+        return Category.FromDto(c);
+    }
+
     public IEnumerable<Category> GetAllCategories()
     {
         return _db.Categories.Select(c => Category.FromDto(c));
@@ -45,5 +57,19 @@ public class CategoryRepository : ICategoryRepository
         await _db.SaveChangesAsync();
 
         return Category.FromDto(c);
+    }
+
+    public async Task Delete(int categoryId)
+    {
+        var c = _db.Categories.FirstOrDefault(c => c.CategoryId == categoryId);
+
+        if (c is null)
+        {
+            throw new Exception("Category not found");
+        }
+
+        _db.Categories.Remove(c);
+
+        await _db.SaveChangesAsync();
     }
 }

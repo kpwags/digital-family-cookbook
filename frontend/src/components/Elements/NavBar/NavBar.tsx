@@ -41,6 +41,12 @@ const NavBar = ({
                         ) : null}
 
                         {hasRole(user, 'ADMINISTRATOR') ? (
+                            <Menu.Item key="manage-categories">
+                                <Link to="/manage-categories">Manage Categories</Link>
+                            </Menu.Item>
+                        ) : null}
+
+                        {hasRole(user, 'ADMINISTRATOR') ? (
                             <Menu.Item key="site-settings">
                                 <Link to="/site-settings">Edit Site Settings</Link>
                             </Menu.Item>

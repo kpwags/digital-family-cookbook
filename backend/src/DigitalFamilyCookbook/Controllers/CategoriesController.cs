@@ -16,6 +16,19 @@ public class CategoriesController : Controller
         _mediatr = mediatr;
     }
 
+    [HttpGet("get")]
+    public async Task<ActionResult<CategoryApiModel>> GetAll(int id, CancellationToken cancellationToken)
+    {
+        var result = await _mediatr.Send(new GetCategoryById.Query { Id = id }, cancellationToken);
+
+        if (!result.IsSuccessful)
+        {
+            return BadRequest(result.ErrorMessage);
+        }
+
+        return Ok(result.Value);
+    }
+
     [HttpGet("getall")]
     public async Task<ActionResult<IReadOnlyCollection<CategoryApiModel>>> GetAll(CancellationToken cancellationToken)
     {
@@ -40,5 +53,18 @@ public class CategoriesController : Controller
         }
 
         return Ok(result.Value);
+    }
+
+    [HttpDelete("delete")]
+    public async Task<IActionResult> Delete(DeleteCategory.Command command, CancellationToken cancellationToken)
+    {
+        var result = await _mediatr.Send(command, cancellationToken);
+
+        if (!result.IsSuccessful)
+        {
+            return BadRequest(result.ErrorMessage);
+        }
+
+        return Ok();
     }
 }

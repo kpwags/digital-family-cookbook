@@ -40,19 +40,11 @@ public class Recipe
 
     public decimal? Cholesterol { get; set; }
 
-    public IEnumerable<Meat> Meats { get; set; } = Enumerable.Empty<Meat>();
-
     public IEnumerable<RecipeMeat> RecipeMeats { get; set; } = Enumerable.Empty<RecipeMeat>();
-
-    public IEnumerable<Category> Categories { get; set; } = Enumerable.Empty<Category>();
 
     public IEnumerable<RecipeCategory> RecipeCategories { get; set; } = Enumerable.Empty<RecipeCategory>();
 
-    public IEnumerable<Ingredient> Ingredients { get; set; } = Enumerable.Empty<Ingredient>();
-
     public IEnumerable<RecipeIngredient> RecipeIngredients { get; set; } = Enumerable.Empty<RecipeIngredient>();
-
-    public IEnumerable<Step> Steps { get; set; } = Enumerable.Empty<Step>();
 
     public IEnumerable<RecipeStep> RecipeSteps { get; set; } = Enumerable.Empty<RecipeStep>();
 

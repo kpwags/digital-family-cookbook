@@ -13,6 +13,7 @@ import Login from '@components/Pages/Login';
 import Roles from '@components/Pages/Roles';
 import Users from '@components/Pages/Users';
 import SiteSettings from '@components/Pages/SiteSettings';
+import ManageCategories from '@components/Pages/ManageCategories';
 
 import './styles/App.less';
 
@@ -45,6 +46,14 @@ const App = (): JSX.Element => (
                             element={(
                                 <ProtectedRoute requiredRoles={['ADMINISTRATOR']}>
                                     <Users />
+                                </ProtectedRoute>
+                            )}
+                        />
+                        <Route
+                            path="/manage-categories"
+                            element={(
+                                <ProtectedRoute requiredRoles={['ADMINISTRATOR']}>
+                                    <ManageCategories />
                                 </ProtectedRoute>
                             )}
                         />
