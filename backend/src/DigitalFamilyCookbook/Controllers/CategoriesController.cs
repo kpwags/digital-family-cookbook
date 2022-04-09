@@ -42,8 +42,23 @@ public class CategoriesController : Controller
         return Ok(result.Value);
     }
 
-    [HttpPost("save")]
-    public async Task<ActionResult<IReadOnlyCollection<CategoryApiModel>>> Save(SaveCategory.Command command, CancellationToken cancellationToken)
+    [HttpPost("create")]
+    [ValidateUser]
+    public async Task<ActionResult<IReadOnlyCollection<CategoryApiModel>>> Create(CreateCategory.Command command, CancellationToken cancellationToken)
+    {
+        var result = await _mediatr.Send(command, cancellationToken);
+
+        if (!result.IsSuccessful)
+        {
+            return BadRequest(result.ErrorMessage);
+        }
+
+        return Ok(result.Value);
+    }
+
+    [HttpPatch("update")]
+    [ValidateUser]
+    public async Task<ActionResult<IReadOnlyCollection<CategoryApiModel>>> Update(UpdateCategory.Command command, CancellationToken cancellationToken)
     {
         var result = await _mediatr.Send(command, cancellationToken);
 
@@ -56,9 +71,10 @@ public class CategoriesController : Controller
     }
 
     [HttpDelete("delete")]
-    public async Task<IActionResult> Delete(DeleteCategory.Command command, CancellationToken cancellationToken)
+    [ValidateUser]
+    public async Task<IActionResult> Delete(int Id, CancellationToken cancellationToken)
     {
-        var result = await _mediatr.Send(command, cancellationToken);
+        var result = await _mediatr.Send(new DeleteCategory.Command { Id = Id }, cancellationToken);
 
         if (!result.IsSuccessful)
         {

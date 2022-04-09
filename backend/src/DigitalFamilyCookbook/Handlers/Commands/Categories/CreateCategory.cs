@@ -1,6 +1,6 @@
 namespace DigitalFamilyCookbook.Handlers.Commands.Categories;
 
-public class SaveCategory
+public class CreateCategory
 {
     public class Handler : IRequestHandler<Command, OperationResult<string>>
     {
@@ -15,21 +15,10 @@ public class SaveCategory
         {
             try
             {
-                if (command.Id == 0)
+                await _categoryRepository.Add(new Category
                 {
-                    await _categoryRepository.Add(new Category
-                    {
-                        Name = command.Name,
-                    });
-                }
-                else
-                {
-                    await _categoryRepository.Update(new Category
-                    {
-                        CategoryId = command.Id,
-                        Name = command.Name,
-                    });
-                }
+                    Name = command.Name,
+                });
             }
             catch (Exception ex)
             {
@@ -42,8 +31,6 @@ public class SaveCategory
 
     public class Command : IRequest<OperationResult<string>>
     {
-        public int Id { get; set; }
-
         public string Name { get; set; } = string.Empty;
     }
 }

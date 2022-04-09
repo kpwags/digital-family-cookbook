@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Layout, Menu } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
@@ -6,6 +6,8 @@ import AppContext from '@contexts/AppContext';
 import { hasRole } from '@utils/UserFunctions';
 
 import './NavBar.less';
+import { Category } from '@models/Category';
+import { Api } from '@utils/api';
 
 const { Header } = Layout;
 const { SubMenu } = Menu;
@@ -17,11 +19,27 @@ type NavBarProps = {
 const NavBar = ({
     selectedItem = '',
 }: NavBarProps): JSX.Element => {
+    const [categories, setCategories] = useState<Category[]>([]);
+
+    const loadCategories = async () => {
+        const [data, error] = await Api.Get<Category[]>('categories/getall');
+
+        if (error || data === null) {
+            return;
+        }
+
+        setCategories(data);
+    };
+
     const {
         siteSettings,
         user,
         logout,
     } = useContext(AppContext);
+
+    useEffect(() => {
+        loadCategories();
+    }, []);
 
     return (
         <Header className="nav">
@@ -30,7 +48,15 @@ const NavBar = ({
             </div>
 
             <Menu theme="dark" mode="horizontal" selectedKeys={[selectedItem]} className="nav-bar-menu">
-                <Menu.Item key="categories">Categories</Menu.Item>
+                <SubMenu key="categories-dropdown" title="Categories">
+                    {categories.length > 0 ? categories.map((c) => (
+                        <Menu.Item key={`categories-${c.categoryId}`}>
+                            <Link to="/">{c.name}</Link>
+                        </Menu.Item>
+                    )) : (
+                        <Menu.Item key="no-categories">No Categories</Menu.Item>
+                    )}
+                </SubMenu>
                 <Menu.Item key="meats">Meats</Menu.Item>
                 {user && user.id !== '' ? (
                     <SubMenu key="user-dropdown" icon={<UserOutlined />} title={user.name}>

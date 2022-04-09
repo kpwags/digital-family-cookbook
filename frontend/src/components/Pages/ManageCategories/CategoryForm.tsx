@@ -55,6 +55,27 @@ const CategoryForm = ({
         setLoadingMessage('');
     };
 
+    const createCategory = async (categoryName: string): Promise<string | null> => {
+        const [, error] = await Api.Post('categories/create', {
+            data: {
+                name: categoryName,
+            },
+        });
+
+        return error;
+    };
+
+    const updateCategory = async (categoryName: string): Promise<string | null> => {
+        const [, error] = await Api.Patch('categories/update', {
+            data: {
+                id,
+                name: categoryName,
+            },
+        });
+
+        return error;
+    };
+
     const submitForm = async (values: FormValues) => {
         setLoadingMessage('Saving...');
 
@@ -64,12 +85,13 @@ const CategoryForm = ({
             return;
         }
 
-        const [, error] = await Api.Post('categories/save', {
-            data: {
-                id,
-                name: values.name,
-            },
-        });
+        let error = null;
+
+        if (id === 0) {
+            error = await createCategory(values.name);
+        } else {
+            error = await updateCategory(values.name);
+        }
 
         if (error) {
             setErrorMessage(error);

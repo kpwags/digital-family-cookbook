@@ -24,8 +24,8 @@ const CategoriesGrid = ({
 }: CategoriesGridProps): JSX.Element => {
     const [errorMessage, setErrorMessage] = useState<string>('');
 
-    const deleteRole = async (id: string) => {
-        const [, error] = await Api.Post('categories/delete', { data: { id }, method: 'DELETE' });
+    const deleteCategory = async (id: number) => {
+        const [, error] = await Api.Delete('categories/delete', { params: { id } });
 
         if (error) {
             setErrorMessage(error);
@@ -49,7 +49,7 @@ const CategoriesGrid = ({
                 <>
                     <Button type="link" onClick={() => onEditCategory(category.categoryId)}>Edit</Button>
                     <ConfirmDialog
-                        onConfirm={() => { deleteRole(category.id); }}
+                        onConfirm={() => { deleteCategory(category.categoryId); }}
                         text={`Are you sure you want to delete ${category.name}?`}
                     >
                         <Button type="link">Delete</Button>

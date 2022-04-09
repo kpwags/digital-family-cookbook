@@ -11,7 +11,7 @@ public class GetSiteSettingsTests
 
         var apiModel = ApiModels.SiteSettingsApiModel.FromDomainModel(siteSettings);
 
-        var systemRepository = new Mock<Data.Repositories.ISystemRepository>();
+        var systemRepository = new Mock<ISystemRepository>();
         systemRepository.Setup(s => s.GetSiteSettings(1)).Returns(siteSettings);
 
         var handler = new GetSiteSettings.Handler(systemRepository.Object);
