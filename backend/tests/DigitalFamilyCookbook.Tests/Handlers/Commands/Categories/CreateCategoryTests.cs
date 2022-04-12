@@ -1,11 +1,11 @@
 using DigitalFamilyCookbook.Handlers.Commands.Categories;
 
-namespace DigitalFamilyCookbook.Tests.Handlers.Queries.System;
+namespace DigitalFamilyCookbook.Tests.Handlers.Commands.Categories;
 
 public class CreateCategtoryTests
 {
     [Fact]
-    public async Task ItSuccessfullyReturnsAnExistingCategory()
+    public async Task ItSuccessfullyAddsACategory()
     {
         var category = MockCategory.GenerateCategory();
 
@@ -19,17 +19,19 @@ public class CreateCategtoryTests
         Assert.True(result.IsSuccessful);
     }
 
-    // [Fact]
-    // public async Task ItErrorsIfCategoryDoesNotExist()
-    // {
-    //     var categoryRepository = new Mock<ICategoryRepository>();
-    //     categoryRepository.Setup(c => c.Get(It.IsAny<int>())).Throws(new Exception("Category not found"));
+    [Fact]
+    public async Task ItErrorsIfCategoryAlreadyExists()
+    {
+        var category = MockCategory.GenerateCategory();
 
-    //     var handler = new GetCategoryById.Handler(categoryRepository.Object);
+        var categoryRepository = new Mock<ICategoryRepository>();
+        categoryRepository.Setup(c => c.Add(It.IsAny<Category>())).Throws(new Exception($"A category with the name \"{category.Name}\" already exists"));
 
-    //     var result = await handler.Handle(new GetCategoryById.Query(), new CancellationToken());
+        var handler = new CreateCategory.Handler(categoryRepository.Object);
 
-    //     Assert.False(result.IsSuccessful);
-    //     Assert.Equal(result.ErrorMessage, "Category not found");
-    // }
+        var result = await handler.Handle(new CreateCategory.Command { Name = category.Name }, new CancellationToken());
+
+        Assert.False(result.IsSuccessful);
+        Assert.Equal($"A category with the name \"{category.Name}\" already exists", result.ErrorMessage);
+    }
 }

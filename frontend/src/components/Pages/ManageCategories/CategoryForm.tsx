@@ -79,7 +79,7 @@ const CategoryForm = ({
     const submitForm = async (values: FormValues) => {
         setLoadingMessage('Saving...');
 
-        if (currentCategories.find((c) => c.name.toUpperCase() === values.name.toUpperCase().trim())) {
+        if (currentCategories.find((c) => c.name.toUpperCase() === values.name.toUpperCase().trim() && c.categoryId !== id)) {
             setErrorMessage(`A cateogry with the name '${values.name}' already exists.`);
             setLoadingMessage('');
             return;
@@ -118,6 +118,7 @@ const CategoryForm = ({
 
     return (
         <FormModal
+            testId="category-form-modal"
             okText="Save"
             visible={visible}
             title={id === 0 ? 'Add Category' : 'Edit Category'}

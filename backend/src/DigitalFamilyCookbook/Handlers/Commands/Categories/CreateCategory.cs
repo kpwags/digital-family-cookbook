@@ -17,7 +17,7 @@ public class CreateCategory
             {
                 await _categoryRepository.Add(new Category
                 {
-                    Name = command.Name,
+                    Name = command.Name.Trim(),
                 });
             }
             catch (Exception ex)

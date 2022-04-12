@@ -23,7 +23,7 @@ public class UpdateCategory
                 await _categoryRepository.Update(new Category
                 {
                     CategoryId = command.Id,
-                    Name = command.Name,
+                    Name = command.Name.Trim(),
                 });
             }
             catch (Exception ex)

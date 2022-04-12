@@ -6,7 +6,6 @@ namespace DigitalFamilyCookbook.Controllers;
 
 [Route("categories")]
 [ApiController]
-[Authorize]
 public class CategoriesController : Controller
 {
     private readonly IMediator _mediatr;

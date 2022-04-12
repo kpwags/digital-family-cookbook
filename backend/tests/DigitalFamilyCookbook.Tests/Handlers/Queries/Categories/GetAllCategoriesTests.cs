@@ -1,6 +1,6 @@
 using DigitalFamilyCookbook.Handlers.Queries.Categories;
 
-namespace DigitalFamilyCookbook.Tests.Handlers.Queries.System;
+namespace DigitalFamilyCookbook.Tests.Handlers.Queries.Categories;
 
 public class GetAllCategoriesTests
 {

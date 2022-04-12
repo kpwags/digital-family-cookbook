@@ -28,6 +28,11 @@ public class CategoryRepository : ICategoryRepository
 
     public async Task<Category> Add(Category category)
     {
+        if (_db.Categories.Any(c => c.Name.ToLower() == c.Name.ToLower()))
+        {
+            throw new Exception($"A category with the name \"{category.Name}\" already exists");
+        }
+
         var dto = new CategoryDto
         {
             Id = Guid.NewGuid().ToString(),
@@ -43,6 +48,11 @@ public class CategoryRepository : ICategoryRepository
 
     public async Task<Category> Update(Category category)
     {
+        if (_db.Categories.Any(c => c.Name.ToLower() == c.Name.ToLower() && c.CategoryId != category.CategoryId))
+        {
+            throw new Exception($"A category with the name \"{category.Name}\" already exists");
+        }
+
         var c = _db.Categories.FirstOrDefault(c => c.CategoryId == category.CategoryId);
 
         if (c is null)

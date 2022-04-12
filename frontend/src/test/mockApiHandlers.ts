@@ -3,6 +3,8 @@ import { rest } from 'msw';
 import { MockAdminUserAccount, MockUserAccount } from '@test/mocks/MockUsers';
 import { AuthResult } from '@models/AuthResult';
 import { MockAdminRole, MockUserRole } from './mocks/MockRoleType';
+import { MockCategoryList } from './mocks/MockCategory';
+import DataGenerator from './DataGenerator';
 
 const mockApiHandlers = [
     // auth controller actions
@@ -104,6 +106,21 @@ const mockApiHandlers = [
 
         return res(ctx.status(200));
     }),
+
+    // category controller actions
+    rest.get('*/categories/getall', (_, res, ctx) => res(
+        ctx.status(200),
+        ctx.json(MockCategoryList()),
+    )),
+
+    rest.get('*/categories/get', (_, res, ctx) => res(
+        ctx.status(200),
+        ctx.json({
+            categoryId: 1,
+            name: 'Meat',
+            id: DataGenerator.GenerateGuid(),
+        }),
+    )),
 ];
 
 export { mockApiHandlers };

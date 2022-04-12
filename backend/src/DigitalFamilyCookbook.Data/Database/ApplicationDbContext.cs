@@ -316,6 +316,11 @@ public class ApplicationDbContext : IdentityDbContext<UserAccountDto, RoleTypeDt
             .HasMaxLength(50)
             .IsRequired();
 
+        modelBuilder.Entity<CategoryDto>()
+            .HasIndex(c => c.Name)
+            .HasDatabaseName("UQ_Recipe_Category_Name")
+            .IsUnique();
+
         #endregion
 
         #region "recipe.RecipeCategory"
