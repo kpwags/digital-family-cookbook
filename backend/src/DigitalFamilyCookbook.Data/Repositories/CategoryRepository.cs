@@ -3,10 +3,12 @@ namespace DigitalFamilyCookbook.Data.Repositories;
 public class CategoryRepository : ICategoryRepository
 {
     private readonly ApplicationDbContext _db;
+    private readonly IRecipeCategoryRepository _recipeCategoryRepository;
 
-    public CategoryRepository(ApplicationDbContext db)
+    public CategoryRepository(ApplicationDbContext db, IRecipeCategoryRepository recipeCategoryRepository)
     {
         _db = db;
+        _recipeCategoryRepository = recipeCategoryRepository;
     }
 
     public Category Get(int categoryId)
@@ -77,6 +79,8 @@ public class CategoryRepository : ICategoryRepository
         {
             throw new Exception("Category not found");
         }
+
+        await _recipeCategoryRepository.DeleteForCategory(categoryId);
 
         _db.Categories.Remove(c);
 
