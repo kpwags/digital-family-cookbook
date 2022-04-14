@@ -2,7 +2,7 @@ import { screen } from '@testing-library/react';
 import { MockAppProvider } from '@test/MockAppProvider';
 import { MockAdminUserAccount, MockUserAccount } from '@test/mocks/MockUsers';
 import { renderWithRouter } from '@test/renderWithRouter';
-import ProtectedRoute from '.';
+import ProtectedRoute from '@components/ProtectedRoute';
 
 describe('<ProtectedRoute />', () => {
     test('It allows the user in when they are logged in when no roles are specified', async () => {

@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react';
+import { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { Layout, Menu } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
@@ -6,8 +6,6 @@ import AppContext from '@contexts/AppContext';
 import { hasRole } from '@utils/UserFunctions';
 
 import './NavBar.less';
-import { Category } from '@models/Category';
-import { Api } from '@utils/api';
 
 const { Header } = Layout;
 const { SubMenu } = Menu;
@@ -19,27 +17,12 @@ type NavBarProps = {
 const NavBar = ({
     selectedItem = '',
 }: NavBarProps): JSX.Element => {
-    const [categories, setCategories] = useState<Category[]>([]);
-
-    const loadCategories = async () => {
-        const [data, error] = await Api.Get<Category[]>('categories/getall');
-
-        if (error || data === null) {
-            return;
-        }
-
-        setCategories(data);
-    };
-
     const {
         siteSettings,
+        categories,
         user,
         logout,
     } = useContext(AppContext);
-
-    useEffect(() => {
-        loadCategories();
-    }, []);
 
     return (
         <Header className="nav">

@@ -116,6 +116,18 @@ const CategoryForm = ({
         }
     }, [visible, id]);
 
+    useEffect(() => {
+        if (visible) {
+            if (id !== 0) {
+                getCategory(id);
+            } else {
+                form.setFieldsValue({
+                    name: '',
+                });
+            }
+        }
+    }, []);
+
     return (
         <FormModal
             testId="category-form-modal"

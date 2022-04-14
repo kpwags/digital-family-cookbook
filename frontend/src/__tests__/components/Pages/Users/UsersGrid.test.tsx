@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event';
 import { MockAppProvider } from '@test/MockAppProvider';
 import { MockAdminUserAccount } from '@test/mocks/MockUsers';
 import { renderWithRouter } from '@test/renderWithRouter';
-import UsersGrid from './UsersGrid';
+import UsersGrid from '@components/Pages/Users/UsersGrid';
 
 describe('<UsersGrid />', () => {
     test('It renders the grid', async () => {

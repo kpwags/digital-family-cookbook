@@ -43,7 +43,7 @@ public class CategoriesController : Controller
 
     [HttpPost("create")]
     [ValidateUser]
-    public async Task<ActionResult<IReadOnlyCollection<CategoryApiModel>>> Create(CreateCategory.Command command, CancellationToken cancellationToken)
+    public async Task<IActionResult> Create(CreateCategory.Command command, CancellationToken cancellationToken)
     {
         var result = await _mediatr.Send(command, cancellationToken);
 
@@ -52,12 +52,12 @@ public class CategoriesController : Controller
             return BadRequest(result.ErrorMessage);
         }
 
-        return Ok(result.Value);
+        return Ok();
     }
 
     [HttpPatch("update")]
     [ValidateUser]
-    public async Task<ActionResult<IReadOnlyCollection<CategoryApiModel>>> Update(UpdateCategory.Command command, CancellationToken cancellationToken)
+    public async Task<IActionResult> Update(UpdateCategory.Command command, CancellationToken cancellationToken)
     {
         var result = await _mediatr.Send(command, cancellationToken);
 
@@ -66,7 +66,7 @@ public class CategoriesController : Controller
             return BadRequest(result.ErrorMessage);
         }
 
-        return Ok(result.Value);
+        return Ok();
     }
 
     [HttpDelete("delete")]

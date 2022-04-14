@@ -121,6 +121,14 @@ const mockApiHandlers = [
             id: DataGenerator.GenerateGuid(),
         }),
     )),
+
+    rest.post('*/categories/create', (_, res, ctx) => res(
+        ctx.status(200),
+    )),
+
+    rest.patch('*/categories/update', (_, res, ctx) => res(
+        ctx.status(200),
+    )),
 ];
 
 export { mockApiHandlers };

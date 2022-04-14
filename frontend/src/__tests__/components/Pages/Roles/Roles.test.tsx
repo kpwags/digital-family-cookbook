@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event';
 import { MockAppProvider } from '@test/MockAppProvider';
 import { MockAdminUserAccount } from '@test/mocks/MockUsers';
 import { renderWithRouter } from '@test/renderWithRouter';
-import Roles from '.';
+import Roles from '@components/Pages/Roles';
 
 describe('<Roles />', () => {
     test('It renders the grid for roles', async () => {
