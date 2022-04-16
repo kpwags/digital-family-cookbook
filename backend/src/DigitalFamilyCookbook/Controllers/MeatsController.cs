@@ -6,19 +6,19 @@ namespace DigitalFamilyCookbook.Controllers;
 
 [Route("categories")]
 [ApiController]
-public class CategoriesController : Controller
+public class MeatsController : Controller
 {
     private readonly IMediator _mediatr;
 
-    public CategoriesController(IMediator mediatr)
+    public MeatsController(IMediator mediatr)
     {
         _mediatr = mediatr;
     }
 
     [HttpGet("get")]
-    public async Task<ActionResult<CategoryApiModel>> Get(int id, CancellationToken cancellationToken)
+    public async Task<ActionResult<MeatApiModel>> Get(int id, CancellationToken cancellationToken)
     {
-        var result = await _mediatr.Send(new GetCategoryById.Query { Id = id }, cancellationToken);
+        var result = await _mediatr.Send(new GetMeatById.Query { Id = id }, cancellationToken);
 
         if (!result.IsSuccessful)
         {
@@ -29,9 +29,9 @@ public class CategoriesController : Controller
     }
 
     [HttpGet("getall")]
-    public async Task<ActionResult<IReadOnlyCollection<CategoryApiModel>>> GetAll(CancellationToken cancellationToken)
+    public async Task<ActionResult<IReadOnlyCollection<MeatApiModel>>> GetAll(CancellationToken cancellationToken)
     {
-        var result = await _mediatr.Send(new GetAllCategories.Query(), cancellationToken);
+        var result = await _mediatr.Send(new GetAllMeats.Query(), cancellationToken);
 
         if (!result.IsSuccessful)
         {
@@ -43,7 +43,7 @@ public class CategoriesController : Controller
 
     [HttpPost("create")]
     [ValidateUser]
-    public async Task<IActionResult> Create(CreateCategory.Command command, CancellationToken cancellationToken)
+    public async Task<IActionResult> Create(CreateMeat.Command command, CancellationToken cancellationToken)
     {
         var result = await _mediatr.Send(command, cancellationToken);
 
@@ -57,7 +57,7 @@ public class CategoriesController : Controller
 
     [HttpPatch("update")]
     [ValidateUser]
-    public async Task<IActionResult> Update(UpdateCategory.Command command, CancellationToken cancellationToken)
+    public async Task<IActionResult> Update(UpdateMeat.Command command, CancellationToken cancellationToken)
     {
         var result = await _mediatr.Send(command, cancellationToken);
 
@@ -73,7 +73,7 @@ public class CategoriesController : Controller
     [ValidateUser]
     public async Task<IActionResult> Delete(int Id, CancellationToken cancellationToken)
     {
-        var result = await _mediatr.Send(new DeleteCategory.Command { Id = Id }, cancellationToken);
+        var result = await _mediatr.Send(new DeleteMeat.Command { Id = Id }, cancellationToken);
 
         if (!result.IsSuccessful)
         {
