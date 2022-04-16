@@ -26,16 +26,12 @@ public class RecipeType : ObjectGraphType<Recipe>
         Field(r => r.Fiber, type: typeof(FloatGraphType)).Description("The amount of fiber (per serving) of the recipe");
         Field(r => r.Cholesterol, type: typeof(FloatGraphType)).Description("The amount of cholesterol (per serving) of the recipe");
 
-        Field(r => r.Ingredients, type: typeof(ListGraphType<IngredientType>)).Description("The ingredients in the recipe");
         Field(r => r.RecipeIngredients, type: typeof(ListGraphType<RecipeIngredientType>)).Description("The collection of RecipeIngredients");
 
-        Field(r => r.Steps, type: typeof(ListGraphType<StepType>)).Description("The steps in the recipe");
         Field(r => r.RecipeSteps, type: typeof(ListGraphType<RecipeStepType>)).Description("The collection of RecipeSteps");
 
-        Field(r => r.Meats, type: typeof(ListGraphType<MeatType>)).Description("The meats in the recipe");
         Field(r => r.RecipeMeats, type: typeof(ListGraphType<RecipeMeatType>)).Description("The collection of RecipeMeats");
 
-        Field(r => r.Categories, type: typeof(ListGraphType<CategoryType>)).Description("The categories of the recipe");
         Field(r => r.RecipeCategories, type: typeof(ListGraphType<RecipeCategoryType>)).Description("The collection of RecipeCategories");
 
         Field(r => r.UserAccount, type: typeof(UserAccountType)).Description("The user account of the user who created the recipe");

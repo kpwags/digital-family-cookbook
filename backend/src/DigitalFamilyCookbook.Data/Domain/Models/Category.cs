@@ -8,8 +8,6 @@ public class Category
 
     public string Name { get; set; } = string.Empty;
 
-    public Recipe Recipe { get; set; } = Recipe.None();
-
     public IEnumerable<RecipeCategory> RecipeCategories { get; set; } = Enumerable.Empty<RecipeCategory>();
 
     public static Category None() => new Category();
@@ -21,7 +19,6 @@ public class Category
             Id = dto.Id,
             CategoryId = dto.CategoryId,
             Name = dto.Name,
-            Recipe = Recipe.FromDto(dto.Recipe),
             RecipeCategories = dto.RecipeCategories.Select(rc => RecipeCategory.FromDto(rc)),
         };
     }

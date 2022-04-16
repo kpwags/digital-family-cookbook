@@ -7,6 +7,7 @@ namespace DigitalFamilyCookbook.Configuration
     {
         public static void AddRepositories(this IServiceCollection services)
         {
+            services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<ISystemRepository, SystemRepository>();
             services.AddScoped<IUserAccountRepository, UserAccountRepository>();
         }

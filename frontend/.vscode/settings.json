@@ -3,5 +3,17 @@
     "editor.codeActionsOnSave": {
         "source.fixAll.eslint": true
     },
-    "eslint.validate": ["javascript"]
+    "eslint.validate": ["javascript"],
+    "workbench.colorCustomizations": {
+        "titleBar.activeBackground": "#006400",
+        "titleBar.inactiveBackground": "#006400",
+        "activityBar.activeBackground": "#009b00",
+        "activityBarBadge.background": "#ff0000",
+        "activityBar.inactiveForeground": "#ffffff",
+        "activityBar.background": "#006400",
+        "activityBar.foreground": "#ffffff",
+        "statusBar.background": "#006400",
+        "statusBar.border": "#006400",
+        "statusBar.foreground": "#ffffff"
+    },
 }

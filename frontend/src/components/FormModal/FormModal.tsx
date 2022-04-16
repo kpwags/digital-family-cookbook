@@ -6,6 +6,7 @@ import {
 
 export interface FormModalProps extends ModalProps {
     key?: string
+    testId?: string
     children: ReactNode
 }
 
@@ -13,6 +14,7 @@ const FormModal = ({
     key = '',
     visible = false,
     title = '',
+    testId,
     onOk = () => { /* Do nothing by default */ },
     onCancel = () => { /* Do nothing by default */ },
     children,
@@ -31,6 +33,7 @@ const FormModal = ({
         cancelText={cancelText}
         onCancel={onCancel}
         cancelButtonProps={cancelButtonProps}
+        data-testid={testId}
     >
         {children}
     </Modal>

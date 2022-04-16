@@ -1,4 +1,4 @@
-namespace DigitalFamilyCookbook.Data.Repositories;
+namespace DigitalFamilyCookbook.Data.Interfaces;
 
 public interface ISystemRepository
 {

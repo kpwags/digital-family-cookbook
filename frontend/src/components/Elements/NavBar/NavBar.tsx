@@ -19,6 +19,7 @@ const NavBar = ({
 }: NavBarProps): JSX.Element => {
     const {
         siteSettings,
+        categories,
         user,
         logout,
     } = useContext(AppContext);
@@ -30,13 +31,27 @@ const NavBar = ({
             </div>
 
             <Menu theme="dark" mode="horizontal" selectedKeys={[selectedItem]} className="nav-bar-menu">
-                <Menu.Item key="categories">Categories</Menu.Item>
+                <SubMenu key="categories-dropdown" title="Categories">
+                    {categories.length > 0 ? categories.map((c) => (
+                        <Menu.Item key={`categories-${c.categoryId}`}>
+                            <Link to="/">{c.name}</Link>
+                        </Menu.Item>
+                    )) : (
+                        <Menu.Item key="no-categories">No Categories</Menu.Item>
+                    )}
+                </SubMenu>
                 <Menu.Item key="meats">Meats</Menu.Item>
                 {user && user.id !== '' ? (
                     <SubMenu key="user-dropdown" icon={<UserOutlined />} title={user.name}>
                         {hasRole(user, 'ADMINISTRATOR') ? (
                             <Menu.Item key="manage-users">
                                 <Link to="/manage-users">Manage Users</Link>
+                            </Menu.Item>
+                        ) : null}
+
+                        {hasRole(user, 'ADMINISTRATOR') ? (
+                            <Menu.Item key="manage-categories">
+                                <Link to="/manage-categories">Manage Categories</Link>
                             </Menu.Item>
                         ) : null}
 

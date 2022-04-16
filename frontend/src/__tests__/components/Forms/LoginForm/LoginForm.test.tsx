@@ -6,7 +6,7 @@ import {
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MockAppProvider } from '@test/MockAppProvider';
-import LoginForm from '.';
+import LoginForm from '@components/Forms/LoginForm';
 
 describe('<LoginForm />', () => {
     test('It renders the login form', async () => {

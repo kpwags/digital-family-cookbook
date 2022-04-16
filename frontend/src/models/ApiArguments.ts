@@ -5,4 +5,5 @@ export interface ApiArguments {
     params?: any,
     contentType?: string,
     fileUpload?: boolean,
+    method?: string
 }

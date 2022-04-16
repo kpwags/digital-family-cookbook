@@ -7,6 +7,7 @@ async function client(endpoint: string, {
     data = null,
     contentType = 'application/json',
     fileUpload = false,
+    method = undefined,
     ...customConfig
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 }: ApiArguments = {}) : Promise<any> {
@@ -27,8 +28,13 @@ async function client(endpoint: string, {
         body = (fileUpload ? data : JSON.stringify(data));
     }
 
+    let clientMethod = data ? 'POST' : 'GET';
+    if (method) {
+        clientMethod = method;
+    }
+
     const config: RequestInit = {
-        method: data ? 'POST' : 'GET',
+        method: clientMethod,
         body,
         headers,
         ...customConfig,
