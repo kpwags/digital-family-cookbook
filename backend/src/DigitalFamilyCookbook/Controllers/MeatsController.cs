@@ -1,10 +1,10 @@
-using DigitalFamilyCookbook.Handlers.Commands.Categories;
-using DigitalFamilyCookbook.Handlers.Queries.Categories;
+using DigitalFamilyCookbook.Handlers.Commands.Meats;
+using DigitalFamilyCookbook.Handlers.Queries.Meats;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DigitalFamilyCookbook.Controllers;
 
-[Route("categories")]
+[Route("meats")]
 [ApiController]
 public class MeatsController : Controller
 {

@@ -1,4 +1,4 @@
-namespace DigitalFamilyCookbook.Handlers.Commands.Categories;
+namespace DigitalFamilyCookbook.Handlers.Commands.Meats;
 
 public class CreateMeat
 {

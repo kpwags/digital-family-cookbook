@@ -30,7 +30,7 @@ public class CategoryRepository : ICategoryRepository
 
     public async Task<Category> Add(Category category)
     {
-        if (_db.Categories.Any(c => c.Name.ToLower() == c.Name.ToLower()))
+        if (_db.Categories.Any(c => c.Name.ToLower() == category.Name.ToLower()))
         {
             throw new Exception($"A category with the name \"{category.Name}\" already exists");
         }
@@ -50,7 +50,7 @@ public class CategoryRepository : ICategoryRepository
 
     public async Task<Category> Update(Category category)
     {
-        if (_db.Categories.Any(c => c.Name.ToLower() == c.Name.ToLower() && c.CategoryId != category.CategoryId))
+        if (_db.Categories.Any(c => c.Name.ToLower() == category.Name.ToLower() && c.CategoryId != category.CategoryId))
         {
             throw new Exception($"A category with the name \"{category.Name}\" already exists");
         }

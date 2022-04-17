@@ -30,7 +30,7 @@ public class MeatRepository : IMeatRepository
 
     public async Task<Meat> Add(Meat meat)
     {
-        if (_db.Meats.Any(m => m.Name.ToLower() == m.Name.ToLower()))
+        if (_db.Meats.Any(m => m.Name.ToLower() == meat.Name.ToLower()))
         {
             throw new Exception($"A meat with the name \"{meat.Name}\" already exists");
         }
@@ -50,7 +50,7 @@ public class MeatRepository : IMeatRepository
 
     public async Task<Meat> Update(Meat meat)
     {
-        if (_db.Meats.Any(m => m.Name.ToLower() == m.Name.ToLower() && m.MeatId != meat.MeatId))
+        if (_db.Meats.Any(m => m.Name.ToLower() == meat.Name.ToLower() && m.MeatId != meat.MeatId))
         {
             throw new Exception($"A meat with the name \"{meat.Name}\" already exists");
         }

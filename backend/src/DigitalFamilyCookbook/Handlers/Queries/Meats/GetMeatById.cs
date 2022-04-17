@@ -1,4 +1,4 @@
-namespace DigitalFamilyCookbook.Handlers.Queries.Categories;
+namespace DigitalFamilyCookbook.Handlers.Queries.Meats;
 
 public class GetMeatById
 {

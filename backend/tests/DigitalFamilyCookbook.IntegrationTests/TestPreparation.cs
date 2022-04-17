@@ -9,6 +9,8 @@ public static class TestPreparation
         SeedSiteSettings(db);
         SeedRoles(db);
         SeedUsers(db);
+        SeedCategories(db);
+        SeedMeats(db);
         db.SaveChanges();
     }
 
@@ -162,5 +164,81 @@ public static class TestPreparation
                 UserAccountRoleTypeId = MockDataGenerator.RandomId()
             });
         }
+    }
+
+    public static void SeedCategories(ApplicationDbContext db)
+    {
+        db.Categories.Add(new CategoryDto
+        {
+            CategoryId = 1,
+            Id = MockDataGenerator.RandomId(),
+            Name = "Italian",
+        });
+
+        db.Categories.Add(new CategoryDto
+        {
+            CategoryId = 2,
+            Id = MockDataGenerator.RandomId(),
+            Name = "Grilled",
+        });
+
+        db.Categories.Add(new CategoryDto
+        {
+            CategoryId = 3,
+            Id = MockDataGenerator.RandomId(),
+            Name = "Mexican",
+        });
+
+        db.Categories.Add(new CategoryDto
+        {
+            CategoryId = 4,
+            Id = MockDataGenerator.RandomId(),
+            Name = "Slow Cooker",
+        });
+
+        db.Categories.Add(new CategoryDto
+        {
+            CategoryId = 5,
+            Id = MockDataGenerator.RandomId(),
+            Name = "Asian",
+        });
+    }
+
+    public static void SeedMeats(ApplicationDbContext db)
+    {
+        db.Meats.Add(new MeatDto
+        {
+            MeatId = 1,
+            Id = MockDataGenerator.RandomId(),
+            Name = "Beef",
+        });
+
+        db.Meats.Add(new MeatDto
+        {
+            MeatId = 2,
+            Id = MockDataGenerator.RandomId(),
+            Name = "Chicken",
+        });
+
+        db.Meats.Add(new MeatDto
+        {
+            MeatId = 3,
+            Id = MockDataGenerator.RandomId(),
+            Name = "Pork",
+        });
+
+        db.Meats.Add(new MeatDto
+        {
+            MeatId = 4,
+            Id = MockDataGenerator.RandomId(),
+            Name = "Fish",
+        });
+
+        db.Meats.Add(new MeatDto
+        {
+            MeatId = 5,
+            Id = MockDataGenerator.RandomId(),
+            Name = "Vegetarian",
+        });
     }
 }
