@@ -3,13 +3,13 @@ import userEvent from '@testing-library/user-event';
 import { MockAppProvider } from '@test/MockAppProvider';
 import { MockAdminUserAccount } from '@test/mocks/MockUsers';
 import { renderWithRouter } from '@test/renderWithRouter';
-import CategoryForm from '@components/Pages/ManageCategories/CategoryForm';
+import MeatForm from '@components/Pages/ManageMeats/MeatForm';
 
-describe('<CategoryForm />', () => {
-    test('It validates a new category', async () => {
+describe('<MeatForm />', () => {
+    test('It validates a new meat', async () => {
         renderWithRouter(
             <MockAppProvider user={MockAdminUserAccount}>
-                <CategoryForm
+                <MeatForm
                     visible
                     onSave={() => jest.fn()}
                     onClose={() => jest.fn()}
@@ -24,16 +24,16 @@ describe('<CategoryForm />', () => {
         await screen.findByText(/Name is required/);
     });
 
-    test("It validates a new category to ensure it does't already exist", async () => {
+    test("It validates a new meat to ensure it does't already exist", async () => {
         renderWithRouter(
             <MockAppProvider user={MockAdminUserAccount}>
-                <CategoryForm
+                <MeatForm
                     visible
-                    currentCategories={[
+                    currentMeats={[
                         {
                             id: '123',
                             name: 'meat',
-                            categoryId: 1,
+                            meatId: 1,
                         },
                     ]}
                     onSave={() => jest.fn()}
@@ -50,15 +50,15 @@ describe('<CategoryForm />', () => {
             await userEvent.click(screen.getByRole('button', { name: /Save/ }));
         });
 
-        expect(screen.queryByText("A category with the name 'meat' already exists.")).toBeInTheDocument();
+        expect(screen.queryByText("A meat with the name 'meat' already exists.")).toBeInTheDocument();
     });
 
-    test('It saves a new category', async () => {
+    test('It saves a new meat', async () => {
         const mockOnSave = jest.fn();
 
         renderWithRouter(
             <MockAppProvider user={MockAdminUserAccount}>
-                <CategoryForm
+                <MeatForm
                     visible
                     onSave={mockOnSave}
                     onClose={() => jest.fn()}
@@ -66,9 +66,9 @@ describe('<CategoryForm />', () => {
             </MockAppProvider>,
         );
 
-        const nameField = await screen.findByLabelText(/Name/) as HTMLInputElement;
+        const nameField = screen.getByLabelText(/Name/) as HTMLInputElement;
 
-        const saveButton = await screen.findByRole('button', { name: /Save/ });
+        const saveButton = screen.getByRole('button', { name: /Save/ });
 
         userEvent.clear(nameField);
         userEvent.type(nameField, 'Fake Meat');
@@ -82,10 +82,10 @@ describe('<CategoryForm />', () => {
         expect(mockOnSave).toBeCalledTimes(1);
     });
 
-    test('It loads an existing category', async () => {
+    test('It loads an existing meat', async () => {
         renderWithRouter(
             <MockAppProvider user={MockAdminUserAccount}>
-                <CategoryForm
+                <MeatForm
                     id={1}
                     visible
                     onSave={() => jest.fn()}
@@ -96,15 +96,15 @@ describe('<CategoryForm />', () => {
 
         await waitForElementToBeRemoved(() => screen.queryByText(/Loading.../));
 
-        const nameField = await screen.findByLabelText(/Name/) as HTMLInputElement;
+        const nameField = screen.getByLabelText(/Name/) as HTMLInputElement;
 
         expect(nameField.value).toBe('Meat');
     });
 
-    test('It validates an existing category', async () => {
+    test('It validates an existing meat', async () => {
         renderWithRouter(
             <MockAppProvider user={MockAdminUserAccount}>
-                <CategoryForm
+                <MeatForm
                     id={1}
                     visible
                     onSave={() => jest.fn()}
@@ -125,12 +125,12 @@ describe('<CategoryForm />', () => {
         await screen.findByText(/Name is required/);
     });
 
-    test('It saves an existing category', async () => {
+    test('It saves an existing meat', async () => {
         const mockOnSave = jest.fn();
 
         renderWithRouter(
             <MockAppProvider user={MockAdminUserAccount}>
-                <CategoryForm
+                <MeatForm
                     id={1}
                     visible
                     onSave={mockOnSave}
@@ -141,9 +141,9 @@ describe('<CategoryForm />', () => {
 
         await waitForElementToBeRemoved(() => screen.queryByText(/Loading.../));
 
-        const nameField = await screen.findByLabelText(/Name/) as HTMLInputElement;
+        const nameField = screen.getByLabelText(/Name/) as HTMLInputElement;
 
-        const saveButton = await screen.findByRole('button', { name: /Save/ });
+        const saveButton = screen.getByRole('button', { name: /Save/ });
 
         userEvent.clear(nameField);
         userEvent.type(nameField, 'Real Meat');

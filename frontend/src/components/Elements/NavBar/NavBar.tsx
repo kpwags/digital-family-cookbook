@@ -20,6 +20,7 @@ const NavBar = ({
     const {
         siteSettings,
         categories,
+        meats,
         user,
         logout,
     } = useContext(AppContext);
@@ -40,7 +41,15 @@ const NavBar = ({
                         <Menu.Item key="no-categories">No Categories</Menu.Item>
                     )}
                 </SubMenu>
-                <Menu.Item key="meats">Meats</Menu.Item>
+                <SubMenu key="meats-dropdown" title="Meats">
+                    {meats.length > 0 ? meats.map((m) => (
+                        <Menu.Item key={`meats-${m.meatId}`}>
+                            <Link to="/">{m.name}</Link>
+                        </Menu.Item>
+                    )) : (
+                        <Menu.Item key="no-meats">No Meats</Menu.Item>
+                    )}
+                </SubMenu>
                 {user && user.id !== '' ? (
                     <SubMenu key="user-dropdown" icon={<UserOutlined />} title={user.name}>
                         {hasRole(user, 'ADMINISTRATOR') ? (
@@ -52,6 +61,12 @@ const NavBar = ({
                         {hasRole(user, 'ADMINISTRATOR') ? (
                             <Menu.Item key="manage-categories">
                                 <Link to="/manage-categories">Manage Categories</Link>
+                            </Menu.Item>
+                        ) : null}
+
+                        {hasRole(user, 'ADMINISTRATOR') ? (
+                            <Menu.Item key="manage-meats">
+                                <Link to="/manage-meats">Manage Meats</Link>
                             </Menu.Item>
                         ) : null}
 

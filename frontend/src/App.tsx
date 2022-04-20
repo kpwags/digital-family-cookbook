@@ -16,6 +16,7 @@ import SiteSettings from '@components/Pages/SiteSettings';
 import ManageCategories from '@components/Pages/ManageCategories';
 
 import './styles/App.less';
+import ManageMeats from '@components/Pages/ManageMeats';
 
 const Home = () => (
     <>
@@ -54,6 +55,14 @@ const App = (): JSX.Element => (
                             element={(
                                 <ProtectedRoute requiredRoles={['ADMINISTRATOR']}>
                                     <ManageCategories />
+                                </ProtectedRoute>
+                            )}
+                        />
+                        <Route
+                            path="/manage-meats"
+                            element={(
+                                <ProtectedRoute requiredRoles={['ADMINISTRATOR']}>
+                                    <ManageMeats />
                                 </ProtectedRoute>
                             )}
                         />
