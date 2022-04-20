@@ -4,6 +4,7 @@ using DigitalFamilyCookbook.Data.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DigitalFamilyCookbook.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220420231505_CorrectedNotesIdLength")]
+    partial class CorrectedNotesIdLength
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -120,9 +122,9 @@ namespace DigitalFamilyCookbook.Migrations
 
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasMaxLength(36)
-                        .HasColumnType("nvarchar(36)")
-                        .HasDefaultValue("588969b3-e164-44ca-a456-c6f843935bda");
+                        .HasMaxLength(40)
+                        .HasColumnType("nvarchar(40)")
+                        .HasDefaultValue("3b3b0140-b53f-4953-aa17-df375eb6ae81");
 
                     b.Property<string>("NoteText")
                         .IsRequired()
@@ -329,9 +331,9 @@ namespace DigitalFamilyCookbook.Migrations
 
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasMaxLength(36)
-                        .HasColumnType("nvarchar(36)")
-                        .HasDefaultValue("cce0c4fc-dd1e-4e20-92c3-084cf770677f");
+                        .HasMaxLength(40)
+                        .HasColumnType("nvarchar(40)")
+                        .HasDefaultValue("3ce9b7f3-5047-40e8-90ef-f3f929b64fc1");
 
                     b.Property<int>("NoteId")
                         .HasColumnType("int");
@@ -460,7 +462,7 @@ namespace DigitalFamilyCookbook.Migrations
                         .IsRequired()
                         .ValueGeneratedOnAdd()
                         .HasColumnType("nvarchar(max)")
-                        .HasDefaultValue("c1f74e33-c1a4-486b-89c9-b6e22abcd16c");
+                        .HasDefaultValue("7e8f666c-19e6-45c7-800e-37a1260542e6");
 
                     b.Property<bool>("IsPublic")
                         .ValueGeneratedOnAdd()

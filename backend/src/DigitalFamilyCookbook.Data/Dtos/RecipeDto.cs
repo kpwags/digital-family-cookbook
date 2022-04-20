@@ -12,8 +12,6 @@ public class RecipeDto
 
     public bool IsPublic { get; set; }
 
-    public string? Notes { get; set; } = string.Empty;
-
     public string? Source { get; set; } = string.Empty;
 
     public string? SourceUrl { get; set; } = string.Empty;
@@ -47,6 +45,8 @@ public class RecipeDto
     public IEnumerable<RecipeIngredientDto> RecipeIngredients { get; set; } = Enumerable.Empty<RecipeIngredientDto>();
 
     public IEnumerable<RecipeStepDto> RecipeSteps { get; set; } = Enumerable.Empty<RecipeStepDto>();
+
+    public IEnumerable<RecipeNoteDto> RecipeNotes { get; set; } = Enumerable.Empty<RecipeNoteDto>();
 
     public UserAccountDto UserAccount { get; set; } = UserAccountDto.None();
 
