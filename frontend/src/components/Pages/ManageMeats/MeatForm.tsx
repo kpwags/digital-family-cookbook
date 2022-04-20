@@ -6,7 +6,7 @@ import {
     Alert,
 } from 'antd';
 import { Api } from '@utils/api';
-import { Category } from '@models/Category';
+import { Meat } from '@models/Meat';
 import FormModal from '@components/FormModal';
 
 type FormValues = {
@@ -16,15 +16,15 @@ type FormValues = {
 type RoleFormProps = {
     id?: number
     visible: boolean
-    currentCategories?: Category[]
+    currentMeats?: Meat[]
     onSave: () => void
     onClose: () => void
 }
 
-const CategoryForm = ({
+const MeatForm = ({
     id = 0,
     visible = false,
-    currentCategories = [],
+    currentMeats = [],
     onSave,
     onClose,
 }: RoleFormProps): JSX.Element => {
@@ -37,10 +37,10 @@ const CategoryForm = ({
         setErrorMessage('');
     };
 
-    const getCategory = async (id: number) => {
+    const getMeat = async (id: number) => {
         setLoadingMessage('Loading...');
 
-        const [data, error] = await Api.Get<Category>('categories/get', { params: { id } });
+        const [data, error] = await Api.Get<Meat>('meats/get', { params: { id } });
 
         if (error) {
             setErrorMessage(error);
@@ -55,8 +55,8 @@ const CategoryForm = ({
         setLoadingMessage('');
     };
 
-    const createCategory = async (categoryName: string): Promise<string | null> => {
-        const [, error] = await Api.Post('categories/create', {
+    const createMeat = async (categoryName: string): Promise<string | null> => {
+        const [, error] = await Api.Post('meats/create', {
             data: {
                 name: categoryName,
             },
@@ -65,8 +65,8 @@ const CategoryForm = ({
         return error;
     };
 
-    const updateCategory = async (categoryName: string): Promise<string | null> => {
-        const [, error] = await Api.Patch('categories/update', {
+    const updateMeat = async (categoryName: string): Promise<string | null> => {
+        const [, error] = await Api.Patch('meats/update', {
             data: {
                 id,
                 name: categoryName,
@@ -79,8 +79,8 @@ const CategoryForm = ({
     const submitForm = async (values: FormValues) => {
         setLoadingMessage('Saving...');
 
-        if (currentCategories.find((c) => c.name.toUpperCase() === values.name.toUpperCase().trim() && c.categoryId !== id)) {
-            setErrorMessage(`A category with the name '${values.name}' already exists.`);
+        if (currentMeats.find((m) => m.name.toUpperCase() === values.name.toUpperCase().trim() && m.meatId !== id)) {
+            setErrorMessage(`A meat with the name '${values.name}' already exists.`);
             setLoadingMessage('');
             return;
         }
@@ -88,9 +88,9 @@ const CategoryForm = ({
         let error = null;
 
         if (id === 0) {
-            error = await createCategory(values.name);
+            error = await createMeat(values.name);
         } else {
-            error = await updateCategory(values.name);
+            error = await updateMeat(values.name);
         }
 
         if (error) {
@@ -107,7 +107,7 @@ const CategoryForm = ({
     useEffect(() => {
         if (visible) {
             if (id !== 0) {
-                getCategory(id);
+                getMeat(id);
             } else {
                 form.setFieldsValue({
                     name: '',
@@ -119,7 +119,7 @@ const CategoryForm = ({
     useEffect(() => {
         if (visible) {
             if (id !== 0) {
-                getCategory(id);
+                getMeat(id);
             } else {
                 form.setFieldsValue({
                     name: '',
@@ -130,10 +130,10 @@ const CategoryForm = ({
 
     return (
         <FormModal
-            testId="category-form-modal"
+            testId="meat-form-modal"
             okText="Save"
             visible={visible}
-            title={id === 0 ? 'Add Category' : 'Edit Category'}
+            title={id === 0 ? 'Add Meat' : 'Edit Meat'}
             onOk={() => {
                 form.submit();
             }}
@@ -182,4 +182,4 @@ const CategoryForm = ({
     );
 };
 
-export default CategoryForm;
+export default MeatForm;

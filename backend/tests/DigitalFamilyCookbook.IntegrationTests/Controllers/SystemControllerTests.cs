@@ -2,14 +2,12 @@
 
 namespace DigitalFamilyCookbook.IntegrationTests.Controllers;
 
-public class SystemControllerTests : BaseServerTest<BaseWebApplicationFactory>
+public class SystemControllerTests
 {
-    public SystemControllerTests(BaseWebApplicationFactory factory, ITestOutputHelper output) : base(factory, output) { }
-
     [Fact]
     public async Task ItRequiresAuthentication()
     {
-        var client = CreateClient();
+        var client = ApplicationFactory.CreateClient();
 
         var response = await client.GetAsync("/system/getroles");
 
@@ -30,7 +28,7 @@ public class SystemControllerTests : BaseServerTest<BaseWebApplicationFactory>
     [Fact]
     public async Task ItSavesANewRole()
     {
-        var client = CreateClient(Mocks.User.MockAdmin);
+        var client = ApplicationFactory.CreateClient(Mocks.User.MockAdmin);
 
         var payload = PayloadBuilder.Build(new SaveRoleType.Command
         {
@@ -46,7 +44,7 @@ public class SystemControllerTests : BaseServerTest<BaseWebApplicationFactory>
     [Fact]
     public async Task ItUpdatesAnExistingRole()
     {
-        var client = CreateClient(Mocks.User.MockAdmin);
+        var client = ApplicationFactory.CreateClient(Mocks.User.MockAdmin);
 
         var payload = PayloadBuilder.Build(new SaveRoleType.Command
         {
@@ -62,7 +60,7 @@ public class SystemControllerTests : BaseServerTest<BaseWebApplicationFactory>
     [Fact]
     public async Task ItReturnsRoles()
     {
-        var client = CreateClient(Mocks.User.MockAdmin);
+        var client = ApplicationFactory.CreateClient(Mocks.User.MockAdmin);
 
         var response = await client.GetAsync("/system/getroles");
 
@@ -77,7 +75,7 @@ public class SystemControllerTests : BaseServerTest<BaseWebApplicationFactory>
     [Fact]
     public async Task ItReturnsTheSpecifiedRole()
     {
-        var client = CreateClient(Mocks.User.MockAdmin);
+        var client = ApplicationFactory.CreateClient(Mocks.User.MockAdmin);
 
         var response = await client.GetAsync("/system/getrolebyid?id=USERROLEID");
 
@@ -87,7 +85,7 @@ public class SystemControllerTests : BaseServerTest<BaseWebApplicationFactory>
     [Fact]
     public async Task ItErrorsWhenGettingARoleThatDoesNotExist()
     {
-        var client = CreateClient(Mocks.User.MockAdmin);
+        var client = ApplicationFactory.CreateClient(Mocks.User.MockAdmin);
 
         var response = await client.GetAsync("/system/getrolebyid?id=WTF");
 
@@ -97,7 +95,7 @@ public class SystemControllerTests : BaseServerTest<BaseWebApplicationFactory>
     [Fact]
     public async Task ItDeletesARole()
     {
-        var client = CreateClient(Mocks.User.MockAdmin);
+        var client = ApplicationFactory.CreateClient(Mocks.User.MockAdmin);
 
         var payload = PayloadBuilder.Build(new DeleteRoleType.Command
         {
@@ -110,26 +108,9 @@ public class SystemControllerTests : BaseServerTest<BaseWebApplicationFactory>
     }
 
     [Fact]
-    public async Task ItGetsSiteSettings()
-    {
-        var client = CreateClient();
-
-        var response = await client.GetAsync("/system/getsitesettings");
-
-        response.EnsureSuccessStatusCode();
-
-        var responseString = await response.Content.ReadAsStringAsync();
-
-        var siteSettings = ResponseReader.Read<SiteSettingsApiModel>(responseString);
-
-        Assert.NotNull(siteSettings);
-        Assert.Equal("Digital Family Cookbook", siteSettings?.Title);
-    }
-
-    [Fact]
     public async Task ItSavesSiteSettings()
     {
-        var client = CreateClient(Mocks.User.MockAdmin);
+        var client = ApplicationFactory.CreateClient(Mocks.User.MockAdmin);
 
         var payload = PayloadBuilder.Build(new SaveSiteSettings.Command
         {
@@ -146,7 +127,7 @@ public class SystemControllerTests : BaseServerTest<BaseWebApplicationFactory>
     [Fact]
     public async Task ItRefreshesTheInvitationCode()
     {
-        var client = CreateClient(Mocks.User.MockAdmin);
+        var client = ApplicationFactory.CreateClient(Mocks.User.MockAdmin);
 
         var response = await client.PostAsync("/system/refreshinvitationcode", null);
 

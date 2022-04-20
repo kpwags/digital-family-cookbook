@@ -14,7 +14,7 @@ public class GetCategoryByIdTests
 
         var handler = new GetCategoryById.Handler(categoryRepository.Object);
 
-        var result = await handler.Handle(new GetCategoryById.Query(), new CancellationToken());
+        var result = await handler.Handle(new GetCategoryById.Query { Id = category.CategoryId }, new CancellationToken());
 
         Assert.True(result.IsSuccessful);
         Assert.Equal(category.Name, result.Value?.Name);
@@ -28,9 +28,9 @@ public class GetCategoryByIdTests
 
         var handler = new GetCategoryById.Handler(categoryRepository.Object);
 
-        var result = await handler.Handle(new GetCategoryById.Query(), new CancellationToken());
+        var result = await handler.Handle(new GetCategoryById.Query { Id = 99 }, new CancellationToken());
 
         Assert.False(result.IsSuccessful);
-        Assert.Equal(result.ErrorMessage, "Category not found");
+        Assert.Equal("Category not found", result.ErrorMessage);
     }
 }

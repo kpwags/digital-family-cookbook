@@ -2,80 +2,80 @@ import { useContext, useEffect, useState } from 'react';
 import { Typography, Space, Button } from 'antd';
 import AppContext from '@contexts/AppContext';
 import { Api } from '@utils/api';
-import { Category } from '@models/Category';
-import CategoriesGrid from './CategoriesGrid';
-import CategoryForm from './CategoryForm';
+import { Meat } from '@models/Meat';
+import MeatsGrid from './MeatsGrid';
+import MeatForm from './MeatForm';
 
 const { Title } = Typography;
 
 const ManageCategories = (): JSX.Element => {
     const [loadingMessage, setLoadingMessage] = useState<string>('Loading...');
     const [formOpen, setFormOpen] = useState<boolean>(false);
-    const [categories, setCategories] = useState<Category[]>([]);
-    const [categoryToEditId, setCategoryToEditId] = useState<number>(0);
+    const [meats, setMeats] = useState<Meat[]>([]);
+    const [meatToEditId, setMeatToEditId] = useState<number>(0);
 
-    const { siteSettings, updateCategories } = useContext(AppContext);
+    const { siteSettings, updateMeats } = useContext(AppContext);
 
-    const loadCategories = async (doUpdateCategories = false) => {
+    const loadMeats = async (doUpdateMeats = false) => {
         setLoadingMessage('Loading...');
 
-        const [data, error] = await Api.Get<Category[]>('categories/getall');
+        const [data, error] = await Api.Get<Meat[]>('meats/getall');
 
         if (error || data === null) {
             setLoadingMessage('');
             return;
         }
 
-        setCategories(data);
+        setMeats(data);
         setLoadingMessage('');
 
-        if (doUpdateCategories) {
-            updateCategories(data);
+        if (doUpdateMeats) {
+            updateMeats(data);
         }
     };
 
     useEffect(() => {
-        document.title = `Manage Categories - ${siteSettings.title}`;
+        document.title = `Manage Meats - ${siteSettings.title}`;
 
-        loadCategories();
+        loadMeats();
     }, []);
 
     return (
         <>
-            <Title level={1}>Categories</Title>
+            <Title level={1}>Meats</Title>
 
             <Space direction="vertical" size={24} className="full-width">
                 <Button
                     type="primary"
                     onClick={() => setFormOpen(true)}
                 >
-                    Add Category
+                    Add Meat
                 </Button>
 
-                <CategoriesGrid
-                    categories={categories}
+                <MeatsGrid
+                    meats={meats}
                     loadingMessage={loadingMessage}
-                    onCategoryChanged={() => loadCategories()}
-                    onEditCategory={(id) => {
-                        setCategoryToEditId(id);
+                    onMeatChanged={() => loadMeats()}
+                    onEditMeat={(id) => {
+                        setMeatToEditId(id);
                         setFormOpen(true);
                     }}
                 />
             </Space>
 
-            <CategoryForm
+            <MeatForm
                 onSave={() => {
-                    loadCategories();
+                    loadMeats(true);
                     setFormOpen(false);
-                    setCategoryToEditId(0);
+                    setMeatToEditId(0);
                 }}
                 onClose={() => {
                     setFormOpen(false);
-                    setCategoryToEditId(0);
+                    setMeatToEditId(0);
                 }}
-                currentCategories={categories}
+                currentMeats={meats}
                 visible={formOpen}
-                id={categoryToEditId}
+                id={meatToEditId}
             />
         </>
     );

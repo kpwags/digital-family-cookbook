@@ -11,6 +11,7 @@ import { defaultSiteSettings } from '@utils/defaults';
 import { SiteSettings } from '@models/SiteSettings';
 import { UserAccount } from '@models/UserAccount';
 import { Category } from '@models/Category';
+import { Meat } from '@models/Meat';
 
 const MainApp = ({ children }: { children: ReactNode }): JSX.Element => {
     const [siteSettings, setSiteSettings] = useState<SiteSettings>(defaultSiteSettings);
@@ -19,6 +20,7 @@ const MainApp = ({ children }: { children: ReactNode }): JSX.Element => {
     const [pageState, setPageState] = useState<PageState>(PageState.Loading);
     const [cookies, setCookie, removeCookie] = useCookies(['dfcuser']);
     const [categories, setCategories] = useState<Category[]>([]);
+    const [meats, setMeats] = useState<Meat[]>([]);
 
     const loadUser = async () => {
         const [data, error] = await Api.Get<UserAccount>('auth/getuser');
@@ -42,18 +44,21 @@ const MainApp = ({ children }: { children: ReactNode }): JSX.Element => {
         const [
             [siteSettingsData, siteSettingsError],
             [categoriesData, categoriesError],
+            [meatsData, meatsError],
         ] = await Promise.all([
             Api.Get<SiteSettings>('public/getsitesettings'),
             Api.Get<Category[]>('categories/getall'),
+            Api.Get<Meat[]>('meats/getall'),
         ]);
 
-        if (siteSettingsError || categoriesError || !siteSettingsData || !categoriesData) {
-            setPageError(siteSettingsError || categoriesError || 'An error has occured');
+        if (siteSettingsError || categoriesError || meatsError || !siteSettingsData || !categoriesData || !meatsData) {
+            setPageError(siteSettingsError || categoriesError || meatsError || 'An error has occured');
             setPageState(PageState.Error);
             return;
         }
 
         setCategories(categoriesData);
+        setMeats(meatsData);
 
         if (cookies.dfcuser) {
             loadUser();
@@ -96,6 +101,7 @@ const MainApp = ({ children }: { children: ReactNode }): JSX.Element => {
                 token: cookies.dfcuser,
                 user,
                 categories,
+                meats,
                 logout,
                 refreshUser,
                 loginUser,
@@ -104,6 +110,9 @@ const MainApp = ({ children }: { children: ReactNode }): JSX.Element => {
                 },
                 updateCategories: (c) => {
                     setCategories(c);
+                },
+                updateMeats: (m) => {
+                    setMeats(m);
                 },
             }}
         >

@@ -5,6 +5,7 @@ import { AuthResult } from '@models/AuthResult';
 import { MockAdminRole, MockUserRole } from './mocks/MockRoleType';
 import { MockCategoryList } from './mocks/MockCategory';
 import DataGenerator from './DataGenerator';
+import { MockMeatList } from './mocks/MockMeat';
 
 const mockApiHandlers = [
     // auth controller actions
@@ -127,6 +128,29 @@ const mockApiHandlers = [
     )),
 
     rest.patch('*/categories/update', (_, res, ctx) => res(
+        ctx.status(200),
+    )),
+
+    // meat controller actions
+    rest.get('*/meats/getall', (_, res, ctx) => res(
+        ctx.status(200),
+        ctx.json(MockMeatList()),
+    )),
+
+    rest.get('*/meats/get', (_, res, ctx) => res(
+        ctx.status(200),
+        ctx.json({
+            meatId: 1,
+            name: 'Meat',
+            id: DataGenerator.GenerateGuid(),
+        }),
+    )),
+
+    rest.post('*/meats/create', (_, res, ctx) => res(
+        ctx.status(200),
+    )),
+
+    rest.patch('*/meats/update', (_, res, ctx) => res(
         ctx.status(200),
     )),
 ];

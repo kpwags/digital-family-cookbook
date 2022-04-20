@@ -8,8 +8,6 @@ public class MeatDto
 
     public string Name { get; set; } = string.Empty;
 
-    public RecipeDto Recipe { get; set; } = RecipeDto.None();
-
     public IEnumerable<RecipeMeatDto> RecipeMeats { get; set; } = Enumerable.Empty<RecipeMeatDto>();
 
     public static MeatDto None() => new MeatDto();
