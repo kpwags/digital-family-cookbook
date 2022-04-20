@@ -141,9 +141,9 @@ describe('<MeatForm />', () => {
 
         await waitForElementToBeRemoved(() => screen.queryByText(/Loading.../));
 
-        const nameField = screen.getByLabelText(/Name/) as HTMLInputElement;
+        const nameField = await screen.findByLabelText(/Name/) as HTMLInputElement;
 
-        const saveButton = screen.getByRole('button', { name: /Save/ });
+        const saveButton = await screen.findByRole('button', { name: /Save/ });
 
         userEvent.clear(nameField);
         userEvent.type(nameField, 'Real Meat');
