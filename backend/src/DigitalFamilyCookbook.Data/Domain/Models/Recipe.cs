@@ -48,6 +48,8 @@ public class Recipe
 
     public IEnumerable<RecipeStep> RecipeSteps { get; set; } = Enumerable.Empty<RecipeStep>();
 
+    public IEnumerable<RecipeNote> RecipeNotes { get; set; } = Enumerable.Empty<RecipeNote>();
+
     public UserAccount UserAccount { get; set; } = UserAccount.None();
 
     public static Recipe None() => new Recipe();
