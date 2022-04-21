@@ -1,6 +1,6 @@
 namespace DigitalFamilyCookbook.Data.Domain.Models;
 
-public class Recipe
+public class Recipe : BaseDomainModel
 {
     public string Id { get; set; } = string.Empty;
 

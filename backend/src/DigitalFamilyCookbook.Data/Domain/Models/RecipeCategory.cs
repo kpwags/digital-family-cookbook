@@ -1,6 +1,6 @@
 namespace DigitalFamilyCookbook.Data.Domain.Models;
 
-public class RecipeCategory
+public class RecipeCategory : BaseDomainModel
 {
     public string Id { get; set; } = string.Empty;
 
@@ -26,6 +26,8 @@ public class RecipeCategory
             Recipe = Recipe.FromDto(dto.Recipe),
             CategoryId = dto.CategoryId,
             Category = Category.FromDto(dto.Category),
+            DateCreated = dto.DateCreated,
+            DateUpdated = dto.DateUpdated,
         };
     }
 }

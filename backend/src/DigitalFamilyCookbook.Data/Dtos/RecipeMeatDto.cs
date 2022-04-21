@@ -1,6 +1,6 @@
 namespace DigitalFamilyCookbook.Data.Dtos;
 
-public class RecipeMeatDto
+public class RecipeMeatDto : BaseDto
 {
     public string Id { get; set; } = string.Empty;
 
