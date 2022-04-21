@@ -1,6 +1,6 @@
 namespace DigitalFamilyCookbook.Data.Domain.Models;
 
-public class RecipeStep
+public class RecipeStep : BaseDomainModel
 {
     public string Id { get; set; } = string.Empty;
 
@@ -25,6 +25,8 @@ public class RecipeStep
             Recipe = Recipe.FromDto(dto.Recipe),
             StepId = dto.StepId,
             Step = Step.FromDto(dto.Step),
+            DateCreated = dto.DateCreated,
+            DateUpdated = dto.DateUpdated,
         };
     }
 }
