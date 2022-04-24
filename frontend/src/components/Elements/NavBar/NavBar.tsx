@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { Layout, Menu } from 'antd';
-import { UserOutlined } from '@ant-design/icons';
+import { FileAddOutlined, UserOutlined } from '@ant-design/icons';
 import AppContext from '@contexts/AppContext';
 import { hasRole } from '@utils/UserFunctions';
 
@@ -32,6 +32,9 @@ const NavBar = ({
             </div>
 
             <Menu theme="dark" mode="horizontal" selectedKeys={[selectedItem]} className="nav-bar-menu">
+                <Menu.Item key="add-recipe" icon={<FileAddOutlined />}>
+                    <Link to="/recipes/add">New Recipe</Link>
+                </Menu.Item>
                 <SubMenu key="categories-dropdown" title="Categories">
                     {categories.length > 0 ? categories.map((c) => (
                         <Menu.Item key={`categories-${c.categoryId}`}>

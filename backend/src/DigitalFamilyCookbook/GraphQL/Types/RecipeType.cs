@@ -11,7 +11,6 @@ public class RecipeType : ObjectGraphType<Recipe>
         Field(r => r.Name, type: typeof(StringGraphType)).Description("The name of the recipe");
         Field(r => r.Description, type: typeof(StringGraphType)).Description("The description of the recipe");
         Field(r => r.IsPublic, type: typeof(BooleanGraphType)).Description("Flag indicating whether the recipe is public");
-        Field(r => r.Notes, type: typeof(StringGraphType)).Description("Notes about the recipe");
         Field(r => r.Source, type: typeof(StringGraphType)).Description("Where the recipe was found");
         Field(r => r.SourceUrl, type: typeof(StringGraphType)).Description("The URL of the source (if applicable)");
         Field(r => r.Time, type: typeof(IntGraphType)).Description("The time (in minutes) it takes to cook");

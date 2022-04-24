@@ -14,6 +14,7 @@ import Roles from '@components/Pages/Roles';
 import Users from '@components/Pages/Users';
 import SiteSettings from '@components/Pages/SiteSettings';
 import ManageCategories from '@components/Pages/ManageCategories';
+import AddRecipe from '@components/Pages/AddRecipe';
 
 import './styles/App.less';
 import ManageMeats from '@components/Pages/ManageMeats';
@@ -31,7 +32,6 @@ const App = (): JSX.Element => (
             <MainApp>
                 <BaseLayout>
                     <Routes>
-                        <Route path="/" element={<Home />} />
                         <Route path="/register" element={<Register />} />
                         <Route path="/login" element={<Login />} />
                         <Route
@@ -74,6 +74,15 @@ const App = (): JSX.Element => (
                                 </ProtectedRoute>
                             )}
                         />
+                        <Route
+                            path="/recipes/add"
+                            element={(
+                                <ProtectedRoute requiredRoles={['ADMINISTRATOR', 'USER']}>
+                                    <AddRecipe />
+                                </ProtectedRoute>
+                            )}
+                        />
+                        <Route path="/" element={<Home />} />
                     </Routes>
                 </BaseLayout>
             </MainApp>

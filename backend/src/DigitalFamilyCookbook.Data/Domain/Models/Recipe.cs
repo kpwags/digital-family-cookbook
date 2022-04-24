@@ -12,8 +12,6 @@ public class Recipe : BaseDomainModel
 
     public bool IsPublic { get; set; }
 
-    public string? Notes { get; set; } = string.Empty;
-
     public string? Source { get; set; } = string.Empty;
 
     public string? SourceUrl { get; set; } = string.Empty;
