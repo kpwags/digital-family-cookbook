@@ -9,7 +9,10 @@ type TextInputProps = {
     label: string
     inputType?: string
     required?: boolean
+    width?: number | string
     rules?: Rule[]
+    mode?: 'numeric' | 'string'
+    value?: string | number
 }
 
 const TextInput = ({
@@ -18,6 +21,9 @@ const TextInput = ({
     inputType = 'text',
     required = false,
     rules = [],
+    width = '100%',
+    mode = 'string',
+    value = mode === 'numeric' ? 0 : '',
 }: TextInputProps): JSX.Element => (
     <Form.Item
         name={name}
@@ -25,7 +31,13 @@ const TextInput = ({
         rules={rules}
         required={required}
     >
-        <Input type={inputType} />
+        <Input
+            type={inputType}
+            style={{ width }}
+            pattern={mode === 'numeric' ? '[0-9]*' : undefined}
+            inputMode={mode === 'numeric' ? 'numeric' : undefined}
+            value={value}
+        />
     </Form.Item>
 );
 
