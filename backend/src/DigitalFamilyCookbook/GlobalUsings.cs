@@ -13,6 +13,7 @@ global using GraphQL;
 global using GraphQL.Types;
 global using MediatR;
 global using Microsoft.AspNetCore.Authorization;
+global using Microsoft.AspNetCore.Http;
 global using System;
 global using System.Collections.Generic;
 global using System.Linq;

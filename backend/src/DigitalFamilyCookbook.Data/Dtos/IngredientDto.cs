@@ -10,7 +10,7 @@ public class IngredientDto : BaseDto
 
     public int? SortOrder { get; set; }
 
-    public IEnumerable<RecipeIngredientDto> RecipeIngredients { get; set; } = Enumerable.Empty<RecipeIngredientDto>();
+    public int RecipeId { get; set; }
 
     public RecipeDto Recipe { get; set; } = RecipeDto.None();
 

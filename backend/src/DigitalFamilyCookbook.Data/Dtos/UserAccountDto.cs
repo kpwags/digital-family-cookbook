@@ -11,7 +11,7 @@ public class UserAccountDto : IdentityUser
     public string Name { get; set; } = string.Empty;
 
     [PersonalData]
-    public IEnumerable<RecipeDto> Recipes { get; set; } = Enumerable.Empty<RecipeDto>();
+    public List<RecipeDto> Recipes { get; set; } = new List<RecipeDto>();
 
     public static UserAccountDto None() => new UserAccountDto();
 }

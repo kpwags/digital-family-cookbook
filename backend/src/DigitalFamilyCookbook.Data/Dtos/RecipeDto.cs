@@ -12,6 +12,8 @@ public class RecipeDto : BaseDto
 
     public bool IsPublic { get; set; }
 
+    public int Servings { get; set; }
+
     public string? Source { get; set; } = string.Empty;
 
     public string? SourceUrl { get; set; } = string.Empty;
@@ -38,15 +40,15 @@ public class RecipeDto : BaseDto
 
     public decimal? Cholesterol { get; set; }
 
-    public IEnumerable<RecipeMeatDto> RecipeMeats { get; set; } = Enumerable.Empty<RecipeMeatDto>();
+    public List<RecipeMeatDto> RecipeMeats { get; set; } = new List<RecipeMeatDto>();
 
-    public IEnumerable<RecipeCategoryDto> RecipeCategories { get; set; } = Enumerable.Empty<RecipeCategoryDto>();
+    public List<RecipeCategoryDto> RecipeCategories { get; set; } = new List<RecipeCategoryDto>();
 
-    public IEnumerable<RecipeIngredientDto> RecipeIngredients { get; set; } = Enumerable.Empty<RecipeIngredientDto>();
+    public List<IngredientDto> Ingredients { get; set; } = new List<IngredientDto>();
 
-    public IEnumerable<RecipeStepDto> RecipeSteps { get; set; } = Enumerable.Empty<RecipeStepDto>();
+    public List<StepDto> Steps { get; set; } = new List<StepDto>();
 
-    public IEnumerable<RecipeNoteDto> RecipeNotes { get; set; } = Enumerable.Empty<RecipeNoteDto>();
+    public List<RecipeNoteDto> RecipeNotes { get; set; } = new List<RecipeNoteDto>();
 
     public UserAccountDto UserAccount { get; set; } = UserAccountDto.None();
 

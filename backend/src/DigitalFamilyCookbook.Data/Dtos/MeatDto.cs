@@ -8,7 +8,7 @@ public class MeatDto : BaseDto
 
     public string Name { get; set; } = string.Empty;
 
-    public IEnumerable<RecipeMeatDto> RecipeMeats { get; set; } = Enumerable.Empty<RecipeMeatDto>();
+    public List<RecipeMeatDto> RecipeMeats { get; set; } = new List<RecipeMeatDto>();
 
     public static MeatDto None() => new MeatDto();
 }

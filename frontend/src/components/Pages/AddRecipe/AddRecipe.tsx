@@ -1,6 +1,7 @@
 import RecipeForm from '@components/Forms/RecipeForm';
 import {
     Typography,
+    message,
 } from 'antd';
 import { useContext, useEffect } from 'react';
 import AppContext from '@contexts/AppContext';
@@ -19,7 +20,7 @@ const CreateRecipe = (): JSX.Element => {
             <Title level={1}>Add Recipe</Title>
 
             <RecipeForm
-                onSave={() => { /* todo */ }}
+                onSave={() => { message.success('Recipe created successfully'); }}
             />
         </>
     );

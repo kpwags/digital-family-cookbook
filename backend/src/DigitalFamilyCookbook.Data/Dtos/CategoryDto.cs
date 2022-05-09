@@ -8,7 +8,7 @@ public class CategoryDto : BaseDto
 
     public string Name { get; set; } = string.Empty;
 
-    public IEnumerable<RecipeCategoryDto> RecipeCategories { get; set; } = Enumerable.Empty<RecipeCategoryDto>();
+    public List<RecipeCategoryDto> RecipeCategories { get; set; } = new List<RecipeCategoryDto>();
 
     public static CategoryDto None() => new CategoryDto();
 }

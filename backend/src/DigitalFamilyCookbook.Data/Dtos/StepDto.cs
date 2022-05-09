@@ -10,7 +10,7 @@ public class StepDto : BaseDto
 
     public int SortOrder { get; set; }
 
-    public IEnumerable<RecipeStepDto> RecipeSteps { get; set; } = Enumerable.Empty<RecipeStepDto>();
+    public int RecipeId { get; set; }
 
     public RecipeDto Recipe { get; set; } = RecipeDto.None();
 

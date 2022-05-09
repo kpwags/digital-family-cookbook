@@ -10,6 +10,7 @@ interface Recipe {
     name: string
     description?: string
     isPublic: boolean
+    servings: number
     source?: string
     sourceUrl?: string
     time?: number
