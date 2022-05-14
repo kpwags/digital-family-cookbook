@@ -13,6 +13,7 @@ type TextInputProps = {
     rules?: Rule[]
     mode?: 'numeric' | 'string'
     value?: string | number
+    extra?: string
 }
 
 const TextInput = ({
@@ -24,12 +25,15 @@ const TextInput = ({
     width = '100%',
     mode = 'string',
     value = mode === 'numeric' ? 0 : '',
+    extra,
 }: TextInputProps): JSX.Element => (
     <Form.Item
         name={name}
         label={label}
         rules={rules}
         required={required}
+        extra={extra}
+        className={extra ? 'has-extra' : ''}
     >
         <Input
             type={inputType}

@@ -1,41 +1,44 @@
 import { DeleteOutlined } from '@ant-design/icons';
 import {
-    Space, Input, Button, Form,
+    Space,
+    Input,
+    Button,
+    Form,
 } from 'antd';
+import IngredientStep from '@models/IngredientStep';
 
 type RecipeIngredientProps = {
     ingredientCount: number
-    ingredient: string
-    sortOrder: number
-    onChange: (idx: number, val: string) => void
-    onRemove: (idx: number) => void
+    ingredient: IngredientStep
+    onChange: (id: number, val: string) => void
+    onRemove: (id: number) => void
 }
 
 const RecipeIngredient = ({
     ingredientCount,
     ingredient,
-    sortOrder,
     onChange,
     onRemove,
 }: RecipeIngredientProps): JSX.Element => (
     <Space direction="horizontal" size={2} className="ingredients">
         <Form.Item
             label=" "
-            name={`ingredient-${sortOrder}`}
+            name={`ingredient-${ingredient.id}`}
         >
             <Input
-                id={`ingredient-${sortOrder}`}
-                value={ingredient}
+                id={`ingredient-${ingredient.id}`}
+                value={ingredient.name}
                 onChange={(e) => {
                     e.preventDefault();
-                    onChange(sortOrder, e.target.value);
+                    onChange(ingredient.id, e.target.value);
                 }}
             />
         </Form.Item>
         <Button
             type="link"
+            className="delete-ingredient-step"
             hidden={ingredientCount <= 1}
-            onClick={() => onRemove(sortOrder)}
+            onClick={() => onRemove(ingredient.id)}
         >
             <DeleteOutlined style={{ fill: '#ff000' }} />
         </Button>

@@ -67,4 +67,13 @@ public class RoleTypeApiModel
     }
 
     public override int GetHashCode() => (Id, RoleTypeId, Name, NormalizedName).GetHashCode();
+
+    public RoleType ToDomainModel() => new RoleType
+    {
+        RoleTypeId = this.RoleTypeId,
+        Name = this.Name,
+        NormalizedName = this.NormalizedName,
+        ConcurrencyStamp = this.ConcurrencyStamp,
+        Id = this.Id,
+    };
 }

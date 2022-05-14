@@ -51,6 +51,8 @@ public class RecipeApiModel : BaseApiModel
     // Todo: integrate notes
     // public IReadOnlyCollection<Note> Notes { get; set; } = Array.Empty<Note>();
 
+    public string UserAccountId { get; set; } = string.Empty;
+
     public UserAccountApiModel UserAccount { get; set; } = UserAccountApiModel.None();
 
     public static RecipeApiModel None() => new RecipeApiModel();
@@ -80,5 +82,7 @@ public class RecipeApiModel : BaseApiModel
         Meats = recipe.Meats.Select(rm => MeatApiModel.FromDomainModel(rm)).ToList(),
         Ingredients = recipe.Ingredients.Select(ri => IngredientApiModel.FromDomainModel(ri)).ToList(),
         Steps = recipe.Steps.Select(rs => StepApiModel.FromDomainModel(rs)).ToList(),
+        UserAccount = UserAccountApiModel.FromDomainModel(recipe.UserAccount),
+        UserAccountId = recipe.UserAccountId,
     };
 }

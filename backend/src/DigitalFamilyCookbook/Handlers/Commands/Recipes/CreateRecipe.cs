@@ -47,13 +47,7 @@ public class CreateRecipe
                     Meats = command.Meats.Select(m => new Meat { MeatId = m }),
                     Ingredients = command.Ingredients.Select(i => new Ingredient { Name = i.Name, SortOrder = i.SortOrder }),
                     Steps = command.Steps.Select(i => new Step { Direction = i.Name, SortOrder = i.SortOrder }),
-                    UserAccount = new UserAccount
-                    {
-                        UserId = user.UserId,
-                        Id = user.Id,
-                        UserName = user.Email,
-                        Email = user.Email,
-                    },
+                    UserAccount = user.ToDomainModel(),
                 });
 
                 return new OperationResult<RecipeApiModel>(RecipeApiModel.FromDomainModel(recipe));

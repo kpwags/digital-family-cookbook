@@ -63,12 +63,14 @@ public class RecipeRepository : IRecipeRepository
             RecipeCategories = recipe.Categories.Select(c => new RecipeCategoryDto
             {
                 Id = Guid.NewGuid().ToString(),
-                CategoryId = c.CategoryId
+                CategoryId = c.CategoryId,
+                Category = _db.Categories.First(dbc => dbc.CategoryId == c.CategoryId)
             }).ToList(),
             RecipeMeats = recipe.Meats.Select(m => new RecipeMeatDto
             {
                 Id = Guid.NewGuid().ToString(),
-                MeatId = m.MeatId
+                MeatId = m.MeatId,
+                Meat = _db.Meats.First(dbm => dbm.MeatId == m.MeatId),
             }).ToList(),
             Ingredients = recipe.Ingredients.Select(i => new IngredientDto
             {
@@ -81,7 +83,9 @@ public class RecipeRepository : IRecipeRepository
                 Id = Guid.NewGuid().ToString(),
                 Direction = s.Direction,
                 SortOrder = s.SortOrder,
-            }).ToList()
+            }).ToList(),
+            UserAccountId = recipe.UserAccountId,
+            UserAccount = _db.UserAccounts.First(dbu => dbu.Id == recipe.UserAccount.Id),
         };
 
         _db.Recipes.Add(dto);

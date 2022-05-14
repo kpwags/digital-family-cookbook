@@ -9,6 +9,7 @@ import {
     Typography,
     Space,
 } from 'antd';
+import { DropResult } from 'react-beautiful-dnd';
 import { Api } from '@utils/api';
 import AppContext from '@contexts/AppContext';
 import Recipe from '@models/Recipe';
@@ -16,18 +17,14 @@ import TextInput from '@components/FormControls/TextInput';
 import HtmlEditor from '@components/FormControls/HtmlEditor';
 import Switch from '@components/FormControls/Switch';
 import getMaxValue from '@utils/getMaxValue';
+import IngredientStep from '@models/IngredientStep';
 import Multiselect from '@components/FormControls/Multiselect/Multiselect';
-import RecipeIngredient from './RecipeIngredient';
-import RecipeDirection from './RecipeDirection';
 
 import './RecipeForm.less';
+import Ingredients from './Ingredients';
+import Directions from './Directions';
 
 const { Title } = Typography;
-
-type IngredientStep = {
-    name: string
-    sortOrder: number
-}
 
 type FormValues = {
     recipeId: number
@@ -66,13 +63,30 @@ const RecipeForm = ({
     const [errorMessage, setErrorMessage] = useState<string>('');
     const [isReciepPublic, setIsRecipePublic] = useState<boolean>(false);
     const [recipeIngredients, setRecipeIngredients] = useState<IngredientStep[]>([{
+        id: 1,
         name: '',
         sortOrder: 1,
     }]);
     const [recipeSteps, setRecipeSteps] = useState<IngredientStep[]>([{
+        id: 1,
         name: '',
         sortOrder: 1,
     }]);
+
+    const resetForm = () => {
+        form.resetFields();
+        setIsRecipePublic(false);
+        setRecipeIngredients([{
+            id: 1,
+            name: '',
+            sortOrder: 1,
+        }]);
+        setRecipeSteps([{
+            id: 1,
+            name: '',
+            sortOrder: 1,
+        }]);
+    };
 
     const submitForm = async (values: FormValues) => {
         setLoadingMessage('Logging In...');
@@ -98,10 +112,15 @@ const RecipeForm = ({
 
     const addIngredient = () => {
         const maxSortOrder = getMaxValue(recipeIngredients.map((i) => i.sortOrder));
+        const maxId = getMaxValue(recipeIngredients.map((i) => i.id));
 
         setRecipeIngredients([
             ...recipeIngredients,
-            { name: '', sortOrder: maxSortOrder + 1 },
+            {
+                id: maxId + 1,
+                name: '',
+                sortOrder: maxSortOrder + 1,
+            },
         ]);
     };
 
@@ -113,11 +132,12 @@ const RecipeForm = ({
         setRecipeIngredients(newIngredients);
     };
 
-    const removeIngredient = (sortOrder: number) => {
-        const newIngredients = recipeIngredients.filter((i) => i.sortOrder !== sortOrder);
+    const removeIngredient = (id: number) => {
+        const newIngredients = recipeIngredients.filter((i) => i.id !== id);
 
         if (newIngredients.length === 1) {
             setRecipeIngredients([{
+                id: 1,
                 name: newIngredients[0].name,
                 sortOrder: 1,
             }]);
@@ -128,32 +148,91 @@ const RecipeForm = ({
 
     const addDirection = () => {
         const maxSortOrder = getMaxValue(recipeSteps.map((i) => i.sortOrder));
+        const maxId = getMaxValue(recipeSteps.map((i) => i.id));
 
         setRecipeSteps([
             ...recipeSteps,
-            { name: '', sortOrder: maxSortOrder + 1 },
+            {
+                id: maxId + 1,
+                name: '',
+                sortOrder: maxSortOrder + 1,
+            },
         ]);
     };
 
-    const updateDirection = (idx: number, val: string) => {
+    const updateDirection = (id: number, val: string) => {
         const newDirections = [...recipeSteps];
 
-        newDirections.filter((d) => d.sortOrder === idx)[0].name = val;
+        newDirections.filter((d) => d.id === id)[0].name = val;
 
         setRecipeSteps(newDirections);
     };
 
-    const removeDirection = (sortOrder: number) => {
-        const newDirections = recipeSteps.filter((i) => i.sortOrder !== sortOrder);
+    const removeDirection = (id: number) => {
+        const newDirections = recipeSteps.filter((i) => i.id !== id);
 
         if (newDirections.length === 1) {
             setRecipeSteps([{
+                id: 1,
                 name: newDirections[0].name,
                 sortOrder: 1,
             }]);
         } else {
             setRecipeSteps(newDirections);
         }
+    };
+
+    const updateSort = (list: IngredientStep[]): IngredientStep[] => {
+        const items: IngredientStep[] = [];
+        let sortOrder = 1;
+
+        list.forEach((i) => {
+            items.push({
+                id: i.id,
+                name: i.name,
+                sortOrder,
+            });
+
+            sortOrder += 1;
+        });
+
+        return items;
+    };
+
+    const reorder = (list: IngredientStep[], startIndex: number, endIndex: number) => {
+        const result = Array.from(list);
+        const [removed] = result.splice(startIndex, 1);
+        result.splice(endIndex, 0, removed);
+
+        return updateSort(result);
+    };
+
+    const onDragIngredientEnd = (result: DropResult) => {
+        if (!result.destination) {
+            return;
+        }
+
+        const items = reorder(
+            recipeIngredients,
+            result.source.index,
+            result.destination.index,
+        );
+
+        setRecipeIngredients(items);
+    };
+
+    const onDragDirectionEnd = (result: DropResult) => {
+        if (!result.destination) {
+            return;
+        }
+
+        const items = reorder(
+            recipeIngredients,
+            result.source.index,
+            result.destination.index,
+        );
+
+        setRecipeSteps(items);
     };
 
     return (
@@ -229,6 +308,7 @@ const RecipeForm = ({
                                 <TextInput
                                     label="Web Address"
                                     name="sourceUrl"
+                                    extra="If you got this from a website, put the URL here"
                                 />
                             </Col>
                         </Row>
@@ -239,6 +319,7 @@ const RecipeForm = ({
                                     label="Time"
                                     name="time"
                                     mode="numeric"
+                                    extra="Time to cook in minutes"
                                 />
                             </Col>
                             <Col xs={24} md={12}>
@@ -246,6 +327,7 @@ const RecipeForm = ({
                                     label="Active Time"
                                     name="activeTime"
                                     mode="numeric"
+                                    extra="Active time spent cooking in minutes"
                                 />
                             </Col>
                         </Row>
@@ -253,54 +335,47 @@ const RecipeForm = ({
                         <Row className="ingredients-steps-nutrition">
                             <Col xs={24} md={16}>
                                 <Title level={3}>Ingredients</Title>
-                                <Space direction="vertical">
-                                    <>
-                                        {recipeIngredients.map((ri) => (
-                                            <RecipeIngredient
-                                                ingredientCount={recipeIngredients.length}
-                                                key={ri.sortOrder}
-                                                ingredient={ri.name}
-                                                sortOrder={ri.sortOrder}
-                                                onChange={(idx, val) => updateIngredient(idx, val)}
-                                                onRemove={(idx) => removeIngredient(idx)}
-                                            />
-                                        ))}
-                                    </>
-                                    <div className="add-button-block">
-                                        <Button
-                                            type="ghost"
-                                            onClick={addIngredient}
-                                        >
-                                            Add Ingredient
-                                        </Button>
-                                    </div>
-                                </Space>
+                                <div className="ingredients-column">
+                                    <Space direction="vertical">
+                                        <Ingredients
+                                            ingredients={recipeIngredients}
+                                            onDragEnd={onDragIngredientEnd}
+                                            onIngredientUpdate={updateIngredient}
+                                            onIngredientRemove={removeIngredient}
+                                        />
+                                        <div className="add-button-block">
+                                            <Button
+                                                type="ghost"
+                                                onClick={addIngredient}
+                                            >
+                                                Add Ingredient
+                                            </Button>
+                                        </div>
+                                    </Space>
+                                </div>
 
                                 <Title level={3}>Directions</Title>
-                                <Space direction="vertical">
-                                    <>
-                                        {recipeSteps.map((rs) => (
-                                            <RecipeDirection
-                                                directionCount={recipeSteps.length}
-                                                key={rs.sortOrder}
-                                                direction={rs.name}
-                                                sortOrder={rs.sortOrder}
-                                                onChange={(idx, val) => updateDirection(idx, val)}
-                                                onRemove={(idx) => removeDirection(idx)}
-                                            />
-                                        ))}
-                                    </>
-                                    <div className="add-button-block">
-                                        <Button
-                                            type="ghost"
-                                            onClick={addDirection}
-                                        >
-                                            Add Step
-                                        </Button>
-                                    </div>
-                                </Space>
+                                <div className="ingredients-column">
+                                    <Space direction="vertical">
+                                        <Directions
+                                            directions={recipeSteps}
+                                            onDragEnd={onDragDirectionEnd}
+                                            onDirectionUpdate={updateDirection}
+                                            onDirectionRemove={removeDirection}
+                                        />
+                                        <div className="add-button-block">
+                                            <Button
+                                                type="ghost"
+                                                onClick={addDirection}
+                                            >
+                                                Add Step
+                                            </Button>
+                                        </div>
+                                    </Space>
+                                </div>
                             </Col>
                             <Col xs={24} md={8}>
+                                <Title level={4}>Nutrition (per serving)</Title>
                                 <TextInput
                                     label="Calories"
                                     name="calories"
@@ -354,12 +429,22 @@ const RecipeForm = ({
                         <Form.Item
                             className="action-area"
                         >
-                            <Button
-                                type="primary"
-                                htmlType="submit"
-                            >
-                                Save Recipe
-                            </Button>
+                            <Space direction="horizontal" size={12}>
+                                <Button
+                                    type="primary"
+                                    htmlType="submit"
+                                >
+                                    Save Recipe
+                                </Button>
+                                <Button
+                                    type="ghost"
+                                    htmlType="button"
+                                    className="clear-form"
+                                    onClick={() => resetForm()}
+                                >
+                                    Clear Form
+                                </Button>
+                            </Space>
                         </Form.Item>
 
                     </Form>

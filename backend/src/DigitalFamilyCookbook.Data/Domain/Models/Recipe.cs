@@ -50,6 +50,8 @@ public class Recipe : BaseDomainModel
 
     public IEnumerable<Note> Notes { get; set; } = Enumerable.Empty<Note>();
 
+    public string UserAccountId { get; set; } = string.Empty;
+
     public UserAccount UserAccount { get; set; } = UserAccount.None();
 
     public static Recipe None() => new Recipe();
@@ -79,5 +81,7 @@ public class Recipe : BaseDomainModel
         Meats = dto.RecipeMeats.Select(rm => Meat.FromDto(rm.Meat)),
         Ingredients = dto.Ingredients.Select(i => Ingredient.FromDto(i)),
         Steps = dto.Steps.Select(s => Step.FromDto(s)),
+        UserAccountId = dto.UserAccountId,
+        UserAccount = UserAccount.FromDto(dto.UserAccount),
     };
 }

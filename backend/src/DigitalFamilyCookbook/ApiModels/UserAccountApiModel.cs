@@ -67,4 +67,13 @@ public class UserAccountApiModel
     }
 
     public override int GetHashCode() => (Id, UserId, Name, Email).GetHashCode();
+
+    public UserAccount ToDomainModel() => new UserAccount
+    {
+        Id = this.Id,
+        UserId = this.UserId,
+        Name = this.Name,
+        Email = this.Email,
+        RoleTypes = this.Roles.Select(r => r.ToDomainModel()).ToList(),
+    };
 }
