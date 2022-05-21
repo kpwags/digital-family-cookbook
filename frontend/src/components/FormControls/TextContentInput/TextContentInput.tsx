@@ -31,6 +31,7 @@ const TextContentInput = ({
     >
         <TextArea
             rows={rows}
+            data-testid={name}
             placeholder={placeholder}
         />
     </Form.Item>

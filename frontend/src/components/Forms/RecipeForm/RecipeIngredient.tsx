@@ -27,6 +27,7 @@ const RecipeIngredient = ({
         >
             <Input
                 id={`ingredient-${ingredient.id}`}
+                data-testid={`ingredient-${ingredient.id}`}
                 value={ingredient.name}
                 onChange={(e) => {
                     e.preventDefault();
@@ -37,6 +38,7 @@ const RecipeIngredient = ({
         <Button
             type="link"
             className="delete-ingredient-step"
+            data-testid={`delete-ingredient-${ingredient.id}`}
             hidden={ingredientCount <= 1}
             onClick={() => onRemove(ingredient.id)}
         >

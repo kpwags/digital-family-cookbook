@@ -27,6 +27,7 @@ const RecipeIngredient = ({
             <TextArea
                 id={`direction-${direction.id}`}
                 value={direction.name}
+                data-testid={`direction-${direction.id}`}
                 onChange={(e) => {
                     e.preventDefault();
                     onChange(direction.id, e.target.value);
@@ -37,6 +38,7 @@ const RecipeIngredient = ({
             type="link"
             className="delete-ingredient-step"
             hidden={directionCount <= 1}
+            data-testid={`delete-step-${direction.id}`}
             onClick={() => onRemove(direction.id)}
         >
             <DeleteOutlined style={{ fill: '#ff000' }} />

@@ -38,6 +38,7 @@ const TextInput = ({
         <Input
             type={inputType}
             style={{ width }}
+            data-testid={name}
             pattern={mode === 'numeric' ? '[0-9]*' : undefined}
             inputMode={mode === 'numeric' ? 'numeric' : undefined}
             value={value}

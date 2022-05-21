@@ -3,17 +3,12 @@ import {
     Typography,
     message,
 } from 'antd';
-import { useContext, useEffect } from 'react';
-import AppContext from '@contexts/AppContext';
+import useDocumentTitle from '@hooks/useDocumentTitle';
 
 const { Title } = Typography;
 
 const CreateRecipe = (): JSX.Element => {
-    const { siteSettings } = useContext(AppContext);
-
-    useEffect(() => {
-        document.title = `Add Recipe - ${siteSettings.title}`;
-    }, []);
+    useDocumentTitle('Add Recipe');
 
     return (
         <>
