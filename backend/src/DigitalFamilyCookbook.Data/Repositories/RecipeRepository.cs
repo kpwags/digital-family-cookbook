@@ -40,19 +40,24 @@ public class RecipeRepository : IRecipeRepository
 
     public async Task<Recipe> Add(Recipe recipe)
     {
+        if (_db.Recipes.Any(r => r.Name.ToLower() == recipe.Name.ToLower()))
+        {
+            throw new Exception($"A recipe with the name '{recipe.Name}' already exists");
+        }
+
         var dto = new RecipeDto
         {
             Id = Guid.NewGuid().ToString(),
-            Name = recipe.Name,
-            Description = recipe.Description,
+            Name = recipe.Name.Trim(),
+            Description = (recipe.Description ?? "").Trim(),
             IsPublic = recipe.IsPublic,
             Servings = recipe.Servings,
-            Source = recipe.Source,
-            SourceUrl = recipe.SourceUrl,
+            Source = (recipe.Source ?? "").Trim(),
+            SourceUrl = (recipe.SourceUrl ?? "").Trim(),
             Time = recipe.Time,
             ActiveTime = recipe.ActiveTime,
-            ImageUrl = recipe.ImageUrl,
-            ImageUrlLarge = recipe.ImageUrlLarge,
+            ImageUrl = (recipe.ImageUrl ?? "").Trim(),
+            ImageUrlLarge = (recipe.ImageUrlLarge ?? "").Trim(),
             Calories = recipe.Calories,
             Carbohydrates = recipe.Carbohydrates,
             Sugar = recipe.Sugar,
@@ -75,13 +80,13 @@ public class RecipeRepository : IRecipeRepository
             Ingredients = recipe.Ingredients.Select(i => new IngredientDto
             {
                 Id = Guid.NewGuid().ToString(),
-                Name = i.Name,
+                Name = i.Name.Trim(),
                 SortOrder = i.SortOrder,
             }).ToList(),
             Steps = recipe.Steps.Select(s => new StepDto
             {
                 Id = Guid.NewGuid().ToString(),
-                Direction = s.Direction,
+                Direction = s.Direction.Trim(),
                 SortOrder = s.SortOrder,
             }).ToList(),
             UserAccountId = recipe.UserAccountId,
@@ -97,6 +102,12 @@ public class RecipeRepository : IRecipeRepository
 
     public async Task Update(Recipe recipe)
     {
+
+        if (_db.Recipes.Any(r => r.Name.ToLower() == recipe.Name.ToLower() && r.RecipeId != recipe.RecipeId))
+        {
+            throw new Exception($"A recipe with the name '{recipe.Name}' already exists");
+        }
+
         var dto = _db.Recipes.FirstOrDefault(r => r.RecipeId == recipe.RecipeId);
 
         if (dto is null)
@@ -104,16 +115,16 @@ public class RecipeRepository : IRecipeRepository
             throw new Exception("Recipe not found");
         }
 
-        dto.Name = recipe.Name;
-        dto.Description = recipe.Description;
+        dto.Name = recipe.Name.Trim();
+        dto.Description = (recipe.Description ?? "").Trim();
         dto.IsPublic = recipe.IsPublic;
         dto.Servings = recipe.Servings;
-        dto.Source = recipe.Source;
-        dto.SourceUrl = recipe.SourceUrl;
+        dto.Source = (recipe.Source ?? "").Trim();
+        dto.SourceUrl = (recipe.SourceUrl ?? "").Trim();
         dto.Time = recipe.Time;
         dto.ActiveTime = recipe.ActiveTime;
-        dto.ImageUrl = recipe.ImageUrl;
-        dto.ImageUrlLarge = recipe.ImageUrlLarge;
+        dto.ImageUrl = (recipe.ImageUrl ?? "").Trim();
+        dto.ImageUrlLarge = (recipe.ImageUrlLarge ?? "").Trim();
         dto.Calories = recipe.Calories;
         dto.Carbohydrates = recipe.Carbohydrates;
         dto.Sugar = recipe.Sugar;
