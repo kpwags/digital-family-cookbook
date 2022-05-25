@@ -16,13 +16,16 @@ import Recipe from '@models/Recipe';
 import TextInput from '@components/FormControls/TextInput';
 import HtmlEditor from '@components/FormControls/HtmlEditor';
 import Switch from '@components/FormControls/Switch';
+import Uploader from '@components/FormControls/Uploader';
 import getMaxValue from '@utils/getMaxValue';
 import IngredientStep from '@models/IngredientStep';
+import ImageUploadResponse from '@models/ImageUploadResponse';
 import Multiselect from '@components/FormControls/Multiselect/Multiselect';
-
-import './RecipeForm.less';
+import { RcFile } from 'antd/lib/upload/interface';
 import Ingredients from './Ingredients';
 import Directions from './Directions';
+
+import './RecipeForm.less';
 
 const { Title } = Typography;
 
@@ -72,6 +75,7 @@ const RecipeForm = ({
         name: '',
         sortOrder: 1,
     }]);
+    const [imageRootFilename, setImageRootFilename] = useState<string>('');
 
     const resetForm = () => {
         form.resetFields();
@@ -86,6 +90,7 @@ const RecipeForm = ({
             name: '',
             sortOrder: 1,
         }]);
+        setImageRootFilename('');
     };
 
     const submitForm = async (values: FormValues) => {
@@ -96,6 +101,7 @@ const RecipeForm = ({
                 isPublic: isReciepPublic,
                 ingredients: recipeIngredients,
                 steps: recipeSteps,
+                imageFilename: imageRootFilename,
                 ...values,
             },
         });
@@ -233,6 +239,36 @@ const RecipeForm = ({
         );
 
         setRecipeSteps(items);
+    };
+
+    const uploadImage = async (file?: RcFile): Promise<{ isSuccessful: boolean, response?: ImageUploadResponse, error?: string }> => {
+        if (!file) {
+            return {
+                isSuccessful: false,
+                error: 'No file selected',
+            };
+        }
+
+        const formData = new FormData();
+        formData.append('image', file);
+
+        const [imageData, uploadError] = await Api.PostWithUpload<ImageUploadResponse>('recipes/uploadimage', {
+            data: formData,
+        });
+
+        if (uploadError) {
+            return {
+                isSuccessful: false,
+                error: uploadError,
+            };
+        }
+
+        setImageRootFilename(imageData?.filename || '');
+
+        return {
+            isSuccessful: true,
+            response: imageData as ImageUploadResponse,
+        };
     };
 
     return (
@@ -424,6 +460,13 @@ const RecipeForm = ({
                             name="meats"
                             label="Meats"
                             options={meats.map((m) => ({ value: m.meatId, text: m.name }))}
+                        />
+
+                        <Uploader
+                            label="Image"
+                            extra="PNG,JPG,GIF allowed. Must be < 4 MB"
+                            name="recipeImage"
+                            onUpload={uploadImage}
                         />
 
                         <Form.Item

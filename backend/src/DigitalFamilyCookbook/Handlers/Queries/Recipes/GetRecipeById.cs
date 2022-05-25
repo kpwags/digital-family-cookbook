@@ -15,9 +15,9 @@ public class GetRecipeById
         {
             try
             {
-                var meat = await Task.FromResult(_recipeRepository.GetById(request.Id));
+                var recipe = await Task.FromResult(_recipeRepository.GetById(request.Id));
 
-                return new OperationResult<RecipeApiModel>(RecipeApiModel.FromDomainModel(meat));
+                return new OperationResult<RecipeApiModel>(RecipeApiModel.FromDomainModel(recipe));
             }
             catch (Exception ex)
             {

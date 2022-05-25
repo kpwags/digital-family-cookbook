@@ -41,6 +41,19 @@ public class RecipesController : Controller
         return Ok(result.Value);
     }
 
+    [HttpGet("getimage")]
+    public async Task<ActionResult<string>> GetImage(string filename, CancellationToken cancellationToken)
+    {
+        var result = await _mediatr.Send(new GetRecipeImage.Query { Filename = filename }, cancellationToken);
+
+        if (!result.IsSuccessful)
+        {
+            return BadRequest(result.ErrorMessage);
+        }
+
+        return Ok(result.Value);
+    }
+
     [HttpPost("create")]
     [ValidateUser]
     public async Task<ActionResult<RecipeApiModel>> Create(CreateRecipe.Command command, CancellationToken cancellationToken)
@@ -81,5 +94,19 @@ public class RecipesController : Controller
         }
 
         return Ok();
+    }
+
+    [HttpPost("uploadimage")]
+    [ValidateUser]
+    public async Task<ActionResult<ImageUploadResponseApiModel>> UploadImage([FromForm] UploadRecipeImage.Command command, CancellationToken cancellationToken)
+    {
+        var result = await _mediatr.Send(command, cancellationToken);
+
+        if (!result.IsSuccessful)
+        {
+            return BadRequest(result.ErrorMessage);
+        }
+
+        return Ok(result.Value);
     }
 }

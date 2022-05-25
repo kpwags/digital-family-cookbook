@@ -4,7 +4,13 @@ namespace DigitalFamilyCookbook.Core.Interfaces;
 
 public interface IImageService
 {
-    public Image Resize(Image src, int newWidth, int maxHeight);
+    Task<byte[]> ResizeImage(Stream stream, int? desiredWidth = null, int? desiredHeight = null);
 
-    public Image ResizeAndRatio(Image src, int newWidth, int newHeight);
+    Task SaveImage(byte[] img, string path);
+
+    Task SaveImage(Stream stream, string path);
+
+    string ConvertToBase64(byte[] img);
+
+    string ConvertToBase64(string filepath);
 }

@@ -1,9 +1,6 @@
 using DigitalFamilyCookbook.Core.Configuration;
 using Microsoft.AspNetCore.Http;
-using System.Drawing;
-using System.Drawing.Imaging;
-using System;
-using System.IO;
+using Microsoft.Extensions.Hosting;
 
 namespace DigitalFamilyCookbook.Core.Services;
 
@@ -11,48 +8,46 @@ public class FileService : IFileService
 {
     private readonly UploadDirectoriesConfiguration _uploadDirectoriesConfiguration;
     private readonly IImageService _imageService;
+    private readonly IHostEnvironment _hostEnvironment;
 
-    public FileService(DigitalFamilyCookbookConfiguration configuration, IImageService imageService)
+    public FileService(DigitalFamilyCookbookConfiguration configuration, IImageService imageService, IHostEnvironment hostEnvironment)
     {
         _uploadDirectoriesConfiguration = configuration.UploadDirectories;
         _imageService = imageService;
+        _hostEnvironment = hostEnvironment;
     }
 
-    public async Task<(string filename, byte[] image, byte[] largeImage)> SaveRecipeImage(IFormFile image)
+    public async Task<(string Filename, byte[] Image, byte[] LargeImage)> SaveRecipeImage(IFormFile image)
     {
         var rootFilename = Guid.NewGuid().ToString();
 
-        var filename = $"{_uploadDirectoriesConfiguration.Recipe}{rootFilename}_sm.jpg";
-        var largeFilename = $"{_uploadDirectoriesConfiguration.Recipe}{rootFilename}.jpg";
+        var filename = Path.Combine(_hostEnvironment.ContentRootPath, $"{_uploadDirectoriesConfiguration.Recipe}{rootFilename}_sm.jpg");
+        var largeFilename = Path.Combine(_hostEnvironment.ContentRootPath, $"{_uploadDirectoriesConfiguration.Recipe}{rootFilename}.jpg");
 
         using var memoryStream = new MemoryStream();
 
         await image.CopyToAsync(memoryStream);
 
-        Bitmap img = (Bitmap)Bitmap.FromStream(memoryStream);
+        var originalImage = new byte[memoryStream.Length];
+        memoryStream.Read(originalImage, 0, (int)memoryStream.Length);
 
-        byte[] largeImageData = SaveImageToDisk(img, largeFilename);
+        memoryStream.Seek(0, SeekOrigin.Begin);
 
-        var resizedImage = _imageService.Resize(img, 400, 300);
+        await _imageService.SaveImage(memoryStream, largeFilename);
 
-        byte[] imageData = SaveImageToDisk(resizedImage, largeFilename);
+        memoryStream.Seek(0, SeekOrigin.Begin);
 
-        return (rootFilename, imageData, largeImageData);
+        var resizedImage = await _imageService.ResizeImage(memoryStream, 400);
+
+        await _imageService.SaveImage(resizedImage, filename);
+
+        return (rootFilename, resizedImage, originalImage);
     }
 
-    private byte[] SaveImageToDisk(Image image, string destination)
+    public string GetRecipeImage(string filename)
     {
-        using var ms = new MemoryStream();
+        var imageFilename = $"{_uploadDirectoriesConfiguration.Recipe}{filename}";
 
-        image.Save(ms, ImageFormat.Jpeg);
-
-        var data = new byte[ms.Length];
-        ms.Read(data, 0, (int)ms.Length);
-
-        using var stream = new FileStream(destination, FileMode.Create);
-
-        ms.WriteTo(stream);
-
-        return data;
+        return _imageService.ConvertToBase64(imageFilename);
     }
 }

@@ -184,6 +184,11 @@ public class ApplicationDbContext : IdentityDbContext<UserAccountDto, RoleTypeDt
             .IsRequired();
 
         modelBuilder.Entity<RecipeDto>()
+            .HasIndex(r => r.Name)
+            .HasDatabaseName("UQ_Recipe_Recipe_Name")
+            .IsUnique();
+
+        modelBuilder.Entity<RecipeDto>()
             .Property(r => r.Description)
             .HasMaxLength(2000);
 

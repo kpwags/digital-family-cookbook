@@ -34,8 +34,8 @@ public class CreateRecipe
                     SourceUrl = command.SourceUrl,
                     Time = command.Time,
                     ActiveTime = command.ActiveTime,
-                    ImageUrl = command.ImageUrl,
-                    ImageUrlLarge = command.ImageUrlLarge,
+                    ImageUrl = $"{command.ImageFilename}_sm.jpg",
+                    ImageUrlLarge = $"{command.ImageFilename}.jpg",
                     Calories = command.Calories,
                     Carbohydrates = command.Carbohydrates,
                     Sugar = command.Sugar,
@@ -77,10 +77,6 @@ public class CreateRecipe
 
         public int? ActiveTime { get; set; }
 
-        public string? ImageUrl { get; set; }
-
-        public string? ImageUrlLarge { get; set; }
-
         public decimal? Calories { get; set; }
 
         public decimal? Carbohydrates { get; set; }
@@ -94,6 +90,8 @@ public class CreateRecipe
         public decimal? Fiber { get; set; }
 
         public decimal? Cholesterol { get; set; }
+
+        public string ImageFilename { get; set; } = string.Empty;
 
         public List<int> Categories { get; set; } = new List<int>();
 

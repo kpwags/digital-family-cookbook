@@ -23,6 +23,8 @@ public static class MockRecipe
         Sugar = MockDataGenerator.RandomInteger(1, 15),
         Ingredients = MockIngredient.GenerateForRecipeDto(5),
         Steps = MockStep.GenerateForRecipeDto(5),
+        ImageUrl = $"{Guid.NewGuid().ToString()}_sm.jpg",
+        ImageUrlLarge = $"{Guid.NewGuid().ToString()}.jpg",
     };
 
     public static Recipe GenerateDomainModel() => Recipe.FromDto(GenerateDto());
