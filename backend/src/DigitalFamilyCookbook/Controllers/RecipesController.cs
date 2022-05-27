@@ -109,4 +109,18 @@ public class RecipesController : Controller
 
         return Ok(result.Value);
     }
+
+    [HttpPost("deleteimage")]
+    [ValidateUser]
+    public async Task<ActionResult<ImageUploadResponseApiModel>> DeleteImage(DeleteRecipeImage.Command command, CancellationToken cancellationToken)
+    {
+        var result = await _mediatr.Send(command, cancellationToken);
+
+        if (!result.IsSuccessful)
+        {
+            return BadRequest(result.ErrorMessage);
+        }
+
+        return Ok();
+    }
 }

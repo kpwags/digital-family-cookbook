@@ -1,4 +1,5 @@
 import {
+    act,
     render,
     screen,
 } from '@testing-library/react';
@@ -102,5 +103,56 @@ describe('<RecipeForm />', () => {
         expect(screen.queryByTestId(/^direction-1/)).toBeInTheDocument();
         expect(screen.queryByTestId(/^direction-2/)).not.toBeInTheDocument();
         expect(screen.queryByTestId(/^direction-3/)).toBeInTheDocument();
+    });
+
+    test('It validates the recipe has a name', async () => {
+        render(
+            <MockAppProvider user={MockAdminUserAccount}>
+                <RecipeForm onSave={jest.fn()} />
+            </MockAppProvider>,
+        );
+
+        act(() => {
+            const submitButton = screen.getByRole('button', { name: 'Save Recipe' });
+            userEvent.click(submitButton);
+        });
+
+        await screen.findByText(/Name is required/);
+    });
+
+    test('It validates there is at least 1 ingredient', async () => {
+        render(
+            <MockAppProvider user={MockAdminUserAccount}>
+                <RecipeForm onSave={jest.fn()} />
+            </MockAppProvider>,
+        );
+
+        const nameField = screen.getByLabelText('Name');
+        userEvent.type(nameField, 'Delicious Recipe');
+
+        act(() => {
+            const submitButton = screen.getByRole('button', { name: 'Save Recipe' });
+            userEvent.click(submitButton);
+        });
+
+        await screen.findByText(/Please enter an ingredient/);
+    });
+
+    test('It validates there is at least 1 step', async () => {
+        render(
+            <MockAppProvider user={MockAdminUserAccount}>
+                <RecipeForm onSave={jest.fn()} />
+            </MockAppProvider>,
+        );
+
+        const nameField = screen.getByLabelText('Name');
+        userEvent.type(nameField, 'Delicious Recipe');
+
+        act(() => {
+            const submitButton = screen.getByRole('button', { name: 'Save Recipe' });
+            userEvent.click(submitButton);
+        });
+
+        await screen.findByText(/Please enter a step/);
     });
 });

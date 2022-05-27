@@ -21,6 +21,11 @@
         }
     }
 
+    .ingredients-error,
+    .directions-error {
+        padding-left: 40px;
+    }
+
     .ingredients-steps-nutrition {
         margin-bottom: 20px;
     }
@@ -99,6 +104,21 @@
 
         svg path {
             fill: hsl(0, 0%, 100%);
+        }
+    }
+
+    .recipe-image {
+        margin-left: 150px;
+        margin-bottom: 20px;
+
+        button {
+            border-color: @color-red-01;
+            color: @color-red-01;
+
+            &:hover {
+                border-color: @color-red-02;
+                color: @color-red-02;
+            }
         }
     }
 }

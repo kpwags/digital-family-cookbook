@@ -1,30 +1,30 @@
 import {
     Form,
-    Input,
+    InputNumber,
 } from 'antd';
 import { Rule } from 'antd/lib/form';
 
-type TextInputProps = {
+type NumericInputProps = {
     name: string
     label: string
     inputType?: string
     required?: boolean
     width?: number | string
     rules?: Rule[]
-    value?: string
+    value?: number
     extra?: string
 }
 
-const TextInput = ({
+const NumericInput = ({
     name,
     label,
     inputType = 'text',
     required = false,
     rules = [],
     width = '100%',
-    value = '',
+    value,
     extra,
-}: TextInputProps): JSX.Element => (
+}: NumericInputProps): JSX.Element => (
     <Form.Item
         name={name}
         label={label}
@@ -33,7 +33,7 @@ const TextInput = ({
         extra={extra}
         className={extra ? 'has-extra' : ''}
     >
-        <Input
+        <InputNumber
             type={inputType}
             style={{ width }}
             data-testid={name}
@@ -42,4 +42,4 @@ const TextInput = ({
     </Form.Item>
 );
 
-export default TextInput;
+export default NumericInput;

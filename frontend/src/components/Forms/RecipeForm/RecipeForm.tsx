@@ -8,12 +8,14 @@ import {
     Col,
     Typography,
     Space,
+    message,
 } from 'antd';
 import { DropResult } from 'react-beautiful-dnd';
 import { Api } from '@utils/api';
 import AppContext from '@contexts/AppContext';
 import Recipe from '@models/Recipe';
 import TextInput from '@components/FormControls/TextInput';
+import NumericInput from '@components/FormControls/NumericInput';
 import HtmlEditor from '@components/FormControls/HtmlEditor';
 import Switch from '@components/FormControls/Switch';
 import Uploader from '@components/FormControls/Uploader';
@@ -27,7 +29,7 @@ import Directions from './Directions';
 
 import './RecipeForm.less';
 
-const { Title } = Typography;
+const { Title, Paragraph } = Typography;
 
 type FormValues = {
     recipeId: number
@@ -75,7 +77,9 @@ const RecipeForm = ({
         name: '',
         sortOrder: 1,
     }]);
-    const [imageRootFilename, setImageRootFilename] = useState<string>('');
+    const [ingredientsError, setIngredientsError] = useState<string>('');
+    const [directionsError, setDirectionsError] = useState<string>('');
+    const [recipeImage, setRecipeImage] = useState<{ rootName: string, data: string }>({ rootName: '', data: '' });
 
     const resetForm = () => {
         form.resetFields();
@@ -90,28 +94,52 @@ const RecipeForm = ({
             name: '',
             sortOrder: 1,
         }]);
-        setImageRootFilename('');
+        setRecipeImage({ rootName: '', data: '' });
     };
 
+    const getActualIngredientCount = (): number => recipeIngredients.filter((i) => i.name.trim() !== '').length;
+
+    const getActualStepCount = (): number => recipeSteps.filter((s) => s.name.trim() !== '').length;
+
     const submitForm = async (values: FormValues) => {
-        setLoadingMessage('Logging In...');
+        window.scrollTo(0, 0);
+
+        setIngredientsError('');
+        setDirectionsError('');
+
+        const ingredientCount = getActualIngredientCount();
+        const stepCount = getActualStepCount();
+
+        if (ingredientCount <= 0 || stepCount <= 0) {
+            if (ingredientCount <= 0) {
+                setIngredientsError('Please enter an ingredient');
+            }
+
+            if (stepCount <= 0) {
+                setDirectionsError('Please enter a step');
+            }
+            return;
+        }
+
+        setLoadingMessage('Saving...');
 
         const [data, error] = await Api.Post<Recipe>('recipes/create', {
             data: {
                 isPublic: isReciepPublic,
-                ingredients: recipeIngredients,
-                steps: recipeSteps,
-                imageFilename: imageRootFilename,
+                ingredients: recipeIngredients.filter((i) => i.name.trim() !== ''),
+                steps: recipeSteps.filter((i) => i.name.trim() !== ''),
+                imageFilename: recipeImage.rootName,
                 ...values,
             },
         });
 
         if (error || data === null) {
-            setErrorMessage(error || 'Error logging in');
+            setErrorMessage(error || 'Error saving');
             setLoadingMessage('');
             return;
         }
 
+        resetForm();
         setLoadingMessage('');
         onSave(data);
     };
@@ -241,12 +269,10 @@ const RecipeForm = ({
         setRecipeSteps(items);
     };
 
-    const uploadImage = async (file?: RcFile): Promise<{ isSuccessful: boolean, response?: ImageUploadResponse, error?: string }> => {
+    const uploadImage = async (file?: RcFile): Promise<boolean> => {
         if (!file) {
-            return {
-                isSuccessful: false,
-                error: 'No file selected',
-            };
+            message.error('No file selected');
+            return false;
         }
 
         const formData = new FormData();
@@ -257,18 +283,35 @@ const RecipeForm = ({
         });
 
         if (uploadError) {
-            return {
-                isSuccessful: false,
-                error: uploadError,
-            };
+            message.error(uploadError);
+            return false;
         }
 
-        setImageRootFilename(imageData?.filename || '');
+        setRecipeImage({
+            rootName: imageData?.filename || '',
+            data: `data:image/jpg;base64,${imageData?.imageData}`,
+        });
 
-        return {
-            isSuccessful: true,
-            response: imageData as ImageUploadResponse,
-        };
+        return true;
+    };
+
+    const deleteImage = async () => {
+        setLoadingMessage('Delete Image...');
+
+        const [data, error] = await Api.Post<Recipe>('recipes/deleteimage', {
+            data: {
+                imageFilename: recipeImage.rootName,
+            },
+        });
+
+        if (error || data === null) {
+            setErrorMessage(error || 'Error deleting image');
+            setLoadingMessage('');
+            return;
+        }
+
+        setLoadingMessage('');
+        setRecipeImage({ rootName: '', data: '' });
     };
 
     return (
@@ -325,10 +368,9 @@ const RecipeForm = ({
 
                         <Row>
                             <Col xs={24} md={12}>
-                                <TextInput
+                                <NumericInput
                                     label="Servings"
                                     name="servings"
-                                    mode="numeric"
                                 />
                             </Col>
                         </Row>
@@ -351,18 +393,16 @@ const RecipeForm = ({
 
                         <Row>
                             <Col xs={24} md={12}>
-                                <TextInput
+                                <NumericInput
                                     label="Time"
                                     name="time"
-                                    mode="numeric"
                                     extra="Time to cook in minutes"
                                 />
                             </Col>
                             <Col xs={24} md={12}>
-                                <TextInput
+                                <NumericInput
                                     label="Active Time"
                                     name="activeTime"
-                                    mode="numeric"
                                     extra="Active time spent cooking in minutes"
                                 />
                             </Col>
@@ -371,6 +411,9 @@ const RecipeForm = ({
                         <Row className="ingredients-steps-nutrition">
                             <Col xs={24} md={16}>
                                 <Title level={3}>Ingredients</Title>
+                                {ingredientsError !== '' ? (
+                                    <Paragraph type="danger" className="ingredients-error">{ingredientsError}</Paragraph>
+                                ) : null}
                                 <div className="ingredients-column">
                                     <Space direction="vertical">
                                         <Ingredients
@@ -391,6 +434,9 @@ const RecipeForm = ({
                                 </div>
 
                                 <Title level={3}>Directions</Title>
+                                {directionsError !== '' ? (
+                                    <Paragraph type="danger" className="directions-error">{directionsError}</Paragraph>
+                                ) : null}
                                 <div className="ingredients-column">
                                     <Space direction="vertical">
                                         <Directions
@@ -412,40 +458,33 @@ const RecipeForm = ({
                             </Col>
                             <Col xs={24} md={8}>
                                 <Title level={4}>Nutrition (per serving)</Title>
-                                <TextInput
+                                <NumericInput
                                     label="Calories"
                                     name="calories"
-                                    mode="numeric"
                                 />
-                                <TextInput
+                                <NumericInput
                                     label="Protein"
                                     name="protein"
-                                    mode="numeric"
                                 />
-                                <TextInput
+                                <NumericInput
                                     label="Carbohydrates"
                                     name="carbohydrates"
-                                    mode="numeric"
                                 />
-                                <TextInput
+                                <NumericInput
                                     label="Fat"
                                     name="fat"
-                                    mode="numeric"
                                 />
-                                <TextInput
+                                <NumericInput
                                     label="Sugar"
                                     name="sugar"
-                                    mode="numeric"
                                 />
-                                <TextInput
+                                <NumericInput
                                     label="Cholesterol"
                                     name="cholesterol"
-                                    mode="numeric"
                                 />
-                                <TextInput
+                                <NumericInput
                                     label="Fiber"
                                     name="fiber"
-                                    mode="numeric"
                                 />
                             </Col>
                         </Row>
@@ -467,7 +506,18 @@ const RecipeForm = ({
                             extra="PNG,JPG,GIF allowed. Must be < 4 MB"
                             name="recipeImage"
                             onUpload={uploadImage}
+                            hidden={recipeImage.rootName !== ''}
                         />
+
+                        <Space
+                            direction="vertical"
+                            size={8}
+                            className="recipe-image"
+                            hidden={recipeImage.rootName === ''}
+                        >
+                            <img src={recipeImage.data} alt="Recipe" />
+                            <Button type="ghost" onClick={() => deleteImage()}>Delete</Button>
+                        </Space>
 
                         <Form.Item
                             className="action-area"
@@ -476,6 +526,7 @@ const RecipeForm = ({
                                 <Button
                                     type="primary"
                                     htmlType="submit"
+                                    disabled={loadingMessage !== ''}
                                 >
                                     Save Recipe
                                 </Button>
@@ -483,6 +534,7 @@ const RecipeForm = ({
                                     type="ghost"
                                     htmlType="button"
                                     className="clear-form"
+                                    disabled={loadingMessage !== ''}
                                     onClick={() => resetForm()}
                                 >
                                     Clear Form

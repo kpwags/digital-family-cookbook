@@ -50,4 +50,20 @@ public class FileService : IFileService
 
         return _imageService.ConvertToBase64(imageFilename);
     }
+
+    public void DeleteRecipeImage(string filename)
+    {
+        var thumbnailPath = Path.Combine(_hostEnvironment.ContentRootPath, $"{_uploadDirectoriesConfiguration.Recipe}{filename}_sm.jpg");
+        var imagePath = Path.Combine(_hostEnvironment.ContentRootPath, $"{_uploadDirectoriesConfiguration.Recipe}{filename}.jpg");
+
+        if (File.Exists(thumbnailPath))
+        {
+            File.Delete(thumbnailPath);
+        }
+
+        if (File.Exists(imagePath))
+        {
+            File.Delete(imagePath);
+        }
+    }
 }
