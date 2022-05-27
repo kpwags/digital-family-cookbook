@@ -10,7 +10,7 @@ public class Ingredient : BaseDomainModel
 
     public int? SortOrder { get; set; }
 
-    public IEnumerable<RecipeIngredient> RecipeIngredients { get; set; } = Enumerable.Empty<RecipeIngredient>();
+    public int RecipeId { get; set; }
 
     public Recipe Recipe { get; set; } = Recipe.None();
 
@@ -24,7 +24,7 @@ public class Ingredient : BaseDomainModel
             IngredientId = dto.IngredientId,
             Name = dto.Name,
             SortOrder = dto.SortOrder,
-            RecipeIngredients = dto.RecipeIngredients.Select(ri => RecipeIngredient.FromDto(ri)),
+            RecipeId = dto.RecipeId,
             Recipe = Recipe.FromDto(dto.Recipe),
             DateCreated = dto.DateCreated,
             DateUpdated = dto.DateUpdated,

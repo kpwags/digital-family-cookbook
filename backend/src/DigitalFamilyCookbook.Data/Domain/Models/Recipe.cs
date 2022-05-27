@@ -12,7 +12,7 @@ public class Recipe : BaseDomainModel
 
     public bool IsPublic { get; set; }
 
-    public string? Notes { get; set; } = string.Empty;
+    public int Servings { get; set; }
 
     public string? Source { get; set; } = string.Empty;
 
@@ -40,25 +40,48 @@ public class Recipe : BaseDomainModel
 
     public decimal? Cholesterol { get; set; }
 
-    public IEnumerable<RecipeMeat> RecipeMeats { get; set; } = Enumerable.Empty<RecipeMeat>();
+    public IEnumerable<Meat> Meats { get; set; } = Enumerable.Empty<Meat>();
 
-    public IEnumerable<RecipeCategory> RecipeCategories { get; set; } = Enumerable.Empty<RecipeCategory>();
+    public IEnumerable<Category> Categories { get; set; } = Enumerable.Empty<Category>();
 
-    public IEnumerable<RecipeIngredient> RecipeIngredients { get; set; } = Enumerable.Empty<RecipeIngredient>();
+    public IEnumerable<Ingredient> Ingredients { get; set; } = Enumerable.Empty<Ingredient>();
 
-    public IEnumerable<RecipeStep> RecipeSteps { get; set; } = Enumerable.Empty<RecipeStep>();
+    public IEnumerable<Step> Steps { get; set; } = Enumerable.Empty<Step>();
 
-    public IEnumerable<RecipeNote> RecipeNotes { get; set; } = Enumerable.Empty<RecipeNote>();
+    public IEnumerable<Note> Notes { get; set; } = Enumerable.Empty<Note>();
+
+    public string UserAccountId { get; set; } = string.Empty;
 
     public UserAccount UserAccount { get; set; } = UserAccount.None();
 
     public static Recipe None() => new Recipe();
 
-    public static Recipe FromDto(RecipeDto dto)
+    public static Recipe FromDto(RecipeDto dto) => new Recipe
     {
-        return new Recipe
-        {
-
-        };
-    }
+        RecipeId = dto.RecipeId,
+        Id = dto.Id,
+        Name = dto.Name,
+        Description = dto.Description,
+        IsPublic = dto.IsPublic,
+        Servings = dto.Servings,
+        Source = dto.Source,
+        SourceUrl = dto.SourceUrl,
+        Time = dto.Time,
+        ActiveTime = dto.ActiveTime,
+        ImageUrl = dto.ImageUrl,
+        ImageUrlLarge = dto.ImageUrlLarge,
+        Calories = dto.Calories,
+        Carbohydrates = dto.Carbohydrates,
+        Sugar = dto.Sugar,
+        Fat = dto.Fat,
+        Protein = dto.Protein,
+        Fiber = dto.Fiber,
+        Cholesterol = dto.Cholesterol,
+        Categories = dto.RecipeCategories.Select(rc => Category.FromDto(rc.Category)),
+        Meats = dto.RecipeMeats.Select(rm => Meat.FromDto(rm.Meat)),
+        Ingredients = dto.Ingredients.Select(i => Ingredient.FromDto(i)),
+        Steps = dto.Steps.Select(s => Step.FromDto(s)),
+        UserAccountId = dto.UserAccountId,
+        UserAccount = UserAccount.FromDto(dto.UserAccount),
+    };
 }

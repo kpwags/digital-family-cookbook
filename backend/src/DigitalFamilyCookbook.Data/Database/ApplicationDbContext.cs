@@ -19,11 +19,7 @@ public class ApplicationDbContext : IdentityDbContext<UserAccountDto, RoleTypeDt
 
     public DbSet<RecipeCategoryDto> RecipeCategories { get; set; }
 
-    public DbSet<RecipeIngredientDto> RecipeIngredients { get; set; }
-
     public DbSet<RecipeMeatDto> RecipeMeats { get; set; }
-
-    public DbSet<RecipeStepDto> RecipeSteps { get; set; }
 
     public DbSet<RoleTypeClaimDto> RoleTypeClaims { get; set; }
 
@@ -188,12 +184,21 @@ public class ApplicationDbContext : IdentityDbContext<UserAccountDto, RoleTypeDt
             .IsRequired();
 
         modelBuilder.Entity<RecipeDto>()
+            .HasIndex(r => r.Name)
+            .HasDatabaseName("UQ_Recipe_Recipe_Name")
+            .IsUnique();
+
+        modelBuilder.Entity<RecipeDto>()
             .Property(r => r.Description)
             .HasMaxLength(2000);
 
         modelBuilder.Entity<RecipeDto>()
             .Property(r => r.IsPublic)
             .HasDefaultValue(false);
+
+        modelBuilder.Entity<RecipeDto>()
+            .Property(r => r.Servings)
+            .HasDefaultValue(1);
 
         modelBuilder.Entity<RecipeDto>()
             .Property(r => r.Source)
@@ -250,6 +255,14 @@ public class ApplicationDbContext : IdentityDbContext<UserAccountDto, RoleTypeDt
             .ValueGeneratedOnAdd();
 
         modelBuilder.Entity<RecipeDto>()
+            .HasMany(r => r.Ingredients)
+            .WithOne(i => i.Recipe);
+
+        modelBuilder.Entity<RecipeDto>()
+            .HasMany(r => r.Steps)
+            .WithOne(s => s.Recipe);
+
+        modelBuilder.Entity<RecipeDto>()
             .Property(r => r.DateCreated)
             .HasDefaultValueSql("GETDATE()")
             .ValueGeneratedOnAdd();
@@ -282,55 +295,16 @@ public class ApplicationDbContext : IdentityDbContext<UserAccountDto, RoleTypeDt
             .ValueGeneratedOnAdd();
 
         modelBuilder.Entity<IngredientDto>()
+            .HasOne(i => i.Recipe)
+            .WithMany(r => r.Ingredients);
+
+        modelBuilder.Entity<IngredientDto>()
             .Property(i => i.DateCreated)
             .HasDefaultValueSql("GETDATE()")
             .ValueGeneratedOnAdd();
 
         modelBuilder.Entity<IngredientDto>()
             .Property(i => i.DateUpdated)
-            .HasDefaultValueSql("GETDATE()")
-            .ValueGeneratedOnAddOrUpdate();
-
-        #endregion
-
-        #region "recipe.RecipeIngredient"
-
-        modelBuilder.Entity<RecipeIngredientDto>()
-            .ToTable("RecipeIngredient", schema: "recipe");
-
-        modelBuilder.Entity<RecipeIngredientDto>()
-            .HasKey(ri => ri.RecipeIngredientId)
-            .HasName("PK_Recipe_RecipeIngredient_RecipeIngredientId");
-
-        modelBuilder.Entity<RecipeIngredientDto>()
-            .HasIndex(ri => new { ri.RecipeId, ri.IngredientId })
-            .HasDatabaseName("UQ_Recipe_RecipeIngredient_RecipeId_IngredientId")
-            .IsUnique();
-
-        modelBuilder.Entity<RecipeIngredientDto>()
-            .HasOne(ri => ri.Recipe)
-            .WithMany(r => r.RecipeIngredients)
-            .HasForeignKey(ri => ri.RecipeId)
-            .OnDelete(DeleteBehavior.Restrict);
-
-        modelBuilder.Entity<RecipeIngredientDto>()
-            .HasOne(ri => ri.Ingredient)
-            .WithMany(i => i.RecipeIngredients)
-            .OnDelete(DeleteBehavior.Restrict);
-
-        modelBuilder.Entity<RecipeIngredientDto>()
-            .Property(ri => ri.Id)
-            .HasMaxLength(36)
-            .HasDefaultValue(Guid.NewGuid().ToString())
-            .ValueGeneratedOnAdd();
-
-        modelBuilder.Entity<RecipeIngredientDto>()
-            .Property(ri => ri.DateCreated)
-            .HasDefaultValueSql("GETDATE()")
-            .ValueGeneratedOnAdd();
-
-        modelBuilder.Entity<RecipeIngredientDto>()
-            .Property(ri => ri.DateUpdated)
             .HasDefaultValueSql("GETDATE()")
             .ValueGeneratedOnAddOrUpdate();
 
@@ -357,56 +331,16 @@ public class ApplicationDbContext : IdentityDbContext<UserAccountDto, RoleTypeDt
             .ValueGeneratedOnAdd();
 
         modelBuilder.Entity<StepDto>()
+            .HasOne(s => s.Recipe)
+            .WithMany(r => r.Steps);
+
+        modelBuilder.Entity<StepDto>()
             .Property(s => s.DateCreated)
             .HasDefaultValueSql("GETDATE()")
             .ValueGeneratedOnAdd();
 
         modelBuilder.Entity<StepDto>()
             .Property(s => s.DateUpdated)
-            .HasDefaultValueSql("GETDATE()")
-            .ValueGeneratedOnAddOrUpdate();
-
-        #endregion
-
-        #region "recipe.RecipeStep"
-
-        modelBuilder.Entity<RecipeStepDto>()
-            .ToTable("RecipeStep", schema: "recipe");
-
-        modelBuilder.Entity<RecipeStepDto>()
-            .HasKey(rs => rs.RecipeStepId)
-            .HasName("PK_Recipe_RecipeStep_RecipeStepId");
-
-        modelBuilder.Entity<RecipeStepDto>()
-            .HasIndex(rs => new { rs.RecipeId, rs.StepId })
-            .HasDatabaseName("UQ_Recipe_RecipeStep_RecipeId_StepId")
-            .IsUnique();
-
-        modelBuilder.Entity<RecipeStepDto>()
-            .HasOne(rs => rs.Recipe)
-            .WithMany(r => r.RecipeSteps)
-            .HasForeignKey(rs => rs.RecipeId)
-            .OnDelete(DeleteBehavior.Restrict);
-
-        modelBuilder.Entity<RecipeStepDto>()
-            .HasOne(rs => rs.Step)
-            .WithMany(s => s.RecipeSteps)
-            .HasForeignKey(rs => rs.StepId)
-            .OnDelete(DeleteBehavior.Restrict);
-
-        modelBuilder.Entity<RecipeStepDto>()
-            .Property(rs => rs.Id)
-            .HasMaxLength(36)
-            .HasDefaultValue(Guid.NewGuid().ToString())
-            .ValueGeneratedOnAdd();
-
-        modelBuilder.Entity<RecipeStepDto>()
-            .Property(rs => rs.DateCreated)
-            .HasDefaultValueSql("GETDATE()")
-            .ValueGeneratedOnAdd();
-
-        modelBuilder.Entity<RecipeStepDto>()
-            .Property(rs => rs.DateUpdated)
             .HasDefaultValueSql("GETDATE()")
             .ValueGeneratedOnAddOrUpdate();
 
@@ -430,6 +364,10 @@ public class ApplicationDbContext : IdentityDbContext<UserAccountDto, RoleTypeDt
             .HasIndex(c => c.Name)
             .HasDatabaseName("UQ_Recipe_Category_Name")
             .IsUnique();
+
+        modelBuilder.Entity<CategoryDto>()
+            .HasMany(c => c.RecipeCategories)
+            .WithOne(rc => rc.Category);
 
         modelBuilder.Entity<CategoryDto>()
             .Property(c => c.Id)
@@ -512,6 +450,10 @@ public class ApplicationDbContext : IdentityDbContext<UserAccountDto, RoleTypeDt
             .HasMaxLength(36)
             .HasDefaultValue(Guid.NewGuid().ToString())
             .ValueGeneratedOnAdd();
+
+        modelBuilder.Entity<MeatDto>()
+            .HasMany(m => m.RecipeMeats)
+            .WithOne(rm => rm.Meat);
 
         modelBuilder.Entity<MeatDto>()
             .Property(m => m.DateCreated)

@@ -1,4 +1,3 @@
-using DigitalFamilyCookbook.Core.Services;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace DigitalFamilyCookbook.Configuration
@@ -9,6 +8,8 @@ namespace DigitalFamilyCookbook.Configuration
         {
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IRoleService, RoleService>();
+            services.AddScoped<IFileService, FileService>();
+            services.AddScoped<IImageService, ImageService>();
         }
     }
 }

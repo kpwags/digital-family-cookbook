@@ -1,4 +1,5 @@
 global using DigitalFamilyCookbook.ApiModels;
+global using DigitalFamilyCookbook.Core.Interfaces;
 global using DigitalFamilyCookbook.Core.Services;
 global using DigitalFamilyCookbook.Data.Domain.Models;
 global using DigitalFamilyCookbook.Data.Dtos;
@@ -9,10 +10,12 @@ global using DigitalFamilyCookbook.Extensions;
 global using DigitalFamilyCookbook.GraphQL;
 global using DigitalFamilyCookbook.GraphQL.Queries;
 global using DigitalFamilyCookbook.GraphQL.Types;
+global using DigitalFamilyCookbook.Models;
 global using GraphQL;
 global using GraphQL.Types;
 global using MediatR;
 global using Microsoft.AspNetCore.Authorization;
+global using Microsoft.AspNetCore.Http;
 global using System;
 global using System.Collections.Generic;
 global using System.Linq;

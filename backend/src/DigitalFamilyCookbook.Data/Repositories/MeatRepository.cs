@@ -77,7 +77,7 @@ public class MeatRepository : IMeatRepository
 
         if (m is null)
         {
-            throw new Exception("Category not found");
+            throw new Exception("Meat not found");
         }
 
         await _recipeMeatRepository.DeleteForMeat(meatId);

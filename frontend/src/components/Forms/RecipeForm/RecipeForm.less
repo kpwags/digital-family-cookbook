@@ -1,0 +1,124 @@
+@import (reference) '../../../styles/Theme.less';
+
+.recipe-form {
+    margin: 25px 0;
+
+    label {
+        width: 150px;
+        font-weight: bold;
+
+        @media screen and (max-width: 1024px) {
+            width: auto;
+        }
+    }
+
+    h3 {
+        margin-top: 2rem;
+        padding-left: 40px;
+
+        @media screen and (max-width: 1024px) {
+            padding-left: 0;
+        }
+    }
+
+    .ingredients-error,
+    .directions-error {
+        padding-left: 40px;
+    }
+
+    .ingredients-steps-nutrition {
+        margin-bottom: 20px;
+    }
+
+    .recipe-ingredient {
+        margin-bottom: 20px;
+        align-items: center;
+        display: flex;
+
+        .dragger {
+            margin-right: 5px;
+        }
+    }
+
+    .recipe-step {
+        margin-bottom: 20px;
+        align-items: flex-start;
+        display: flex;
+
+        .dragger {
+            margin-top: 5px;
+            margin-right: 5px;
+        }
+    }
+
+    .ingredients-column {
+        margin-left: 150px;
+    }
+
+    .ingredients {
+        label {
+            width: 0;
+        }
+
+        input[type="text"] {
+            width: 460px;
+        }
+
+        .ant-form-item {
+            margin: 0;
+        }
+    }
+
+    .directions {
+        label {
+            width: 0;
+        }
+
+        textarea {
+            width: 460px;
+            height: 120px;
+        }
+
+        .ant-form-item {
+            margin: 0;
+        }
+    }
+
+    .action-area {
+        margin-left: 150px;
+    }
+
+    button.ant-btn-ghost.clear-form {
+        padding: 8px 25px;
+        font-size: 1.1rem;
+        height: auto;
+    }
+
+    button.delete-ingredient-step svg path {
+        fill: @color-red-01;
+    }
+
+    button.delete-ingredient-step:hover {
+        border-radius: 6px;
+        background-color: @color-red-01;
+
+        svg path {
+            fill: hsl(0, 0%, 100%);
+        }
+    }
+
+    .recipe-image {
+        margin-left: 150px;
+        margin-bottom: 20px;
+
+        button {
+            border-color: @color-red-01;
+            color: @color-red-01;
+
+            &:hover {
+                border-color: @color-red-02;
+                color: @color-red-02;
+            }
+        }
+    }
+}

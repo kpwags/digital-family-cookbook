@@ -10,7 +10,7 @@ public class Step : BaseDomainModel
 
     public int SortOrder { get; set; }
 
-    public IEnumerable<RecipeStep> RecipeSteps { get; set; } = Enumerable.Empty<RecipeStep>();
+    public int RecipeId { get; set; }
 
     public Recipe Recipe { get; set; } = Recipe.None();
 
@@ -24,7 +24,7 @@ public class Step : BaseDomainModel
             StepId = dto.StepId,
             Direction = dto.Direction,
             SortOrder = dto.SortOrder,
-            RecipeSteps = dto.RecipeSteps.Select(rs => RecipeStep.FromDto(rs)),
+            RecipeId = dto.RecipeId,
             Recipe = Recipe.FromDto(dto.Recipe),
             DateCreated = dto.DateCreated,
             DateUpdated = dto.DateUpdated,

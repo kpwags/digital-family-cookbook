@@ -11,7 +11,7 @@ public class RecipeType : ObjectGraphType<Recipe>
         Field(r => r.Name, type: typeof(StringGraphType)).Description("The name of the recipe");
         Field(r => r.Description, type: typeof(StringGraphType)).Description("The description of the recipe");
         Field(r => r.IsPublic, type: typeof(BooleanGraphType)).Description("Flag indicating whether the recipe is public");
-        Field(r => r.Notes, type: typeof(StringGraphType)).Description("Notes about the recipe");
+        Field(r => r.Servings, type: typeof(IntGraphType)).Description("Number of servings the recipe makes");
         Field(r => r.Source, type: typeof(StringGraphType)).Description("Where the recipe was found");
         Field(r => r.SourceUrl, type: typeof(StringGraphType)).Description("The URL of the source (if applicable)");
         Field(r => r.Time, type: typeof(IntGraphType)).Description("The time (in minutes) it takes to cook");
@@ -26,13 +26,13 @@ public class RecipeType : ObjectGraphType<Recipe>
         Field(r => r.Fiber, type: typeof(FloatGraphType)).Description("The amount of fiber (per serving) of the recipe");
         Field(r => r.Cholesterol, type: typeof(FloatGraphType)).Description("The amount of cholesterol (per serving) of the recipe");
 
-        Field(r => r.RecipeIngredients, type: typeof(ListGraphType<RecipeIngredientType>)).Description("The collection of RecipeIngredients");
+        Field(r => r.Ingredients, type: typeof(ListGraphType<IngredientType>)).Description("The collection of Ingredients");
 
-        Field(r => r.RecipeSteps, type: typeof(ListGraphType<RecipeStepType>)).Description("The collection of RecipeSteps");
+        Field(r => r.Steps, type: typeof(ListGraphType<StepType>)).Description("The collection of Steps");
 
-        Field(r => r.RecipeMeats, type: typeof(ListGraphType<RecipeMeatType>)).Description("The collection of RecipeMeats");
+        Field(r => r.Meats, type: typeof(ListGraphType<MeatType>)).Description("The collection of Meats");
 
-        Field(r => r.RecipeCategories, type: typeof(ListGraphType<RecipeCategoryType>)).Description("The collection of RecipeCategories");
+        Field(r => r.Categories, type: typeof(ListGraphType<CategoryType>)).Description("The collection of Categories");
 
         Field(r => r.UserAccount, type: typeof(UserAccountType)).Description("The user account of the user who created the recipe");
     }

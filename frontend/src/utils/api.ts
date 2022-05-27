@@ -14,6 +14,20 @@ class Api {
         );
     }
 
+    static PostWithUpload<T>(endpoint: string, config: ApiArguments = {}) : Promise<[T | null, string | null]> {
+        const apiConfig: ApiArguments = {
+            method: 'POST',
+            ...config,
+            contentType: null,
+            fileUpload: true,
+        };
+
+        return client(endpoint, apiConfig).then(
+            (data) => [data, null],
+            (error) => [null, handleApiError(error)],
+        );
+    }
+
     static Get<T>(endpoint: string, config: ApiArguments = { params: {} }) : Promise<[T | null, string | null]> {
         let url = `${endpoint}?`;
 

@@ -66,4 +66,9 @@ public static class MockDataGenerator
         rnd.NextBytes(b);
         return b;
     }
+
+    public static string RandomUrl()
+    {
+        return $"https://www.{RandomString(8, false)}.com";
+    }
 }

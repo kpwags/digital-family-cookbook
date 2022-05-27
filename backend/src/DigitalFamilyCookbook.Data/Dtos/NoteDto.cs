@@ -8,7 +8,7 @@ public class NoteDto : BaseDto
 
     public string NoteText { get; set; } = string.Empty;
 
-    public IEnumerable<RecipeNoteDto> RecipeNotes { get; set; } = Enumerable.Empty<RecipeNoteDto>();
+    public List<RecipeNoteDto> RecipeNotes { get; set; } = new List<RecipeNoteDto>();
 
     public static NoteDto None() => new NoteDto();
 }
