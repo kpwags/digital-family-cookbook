@@ -15,8 +15,6 @@ public class DeleteRecipeImage
         {
             try
             {
-                Console.WriteLine($"IMAGE NAME: {command.ImageFilename}");
-
                 await Task.Run(() =>
                 {
                     _fileService.DeleteRecipeImage(command.ImageFilename);
