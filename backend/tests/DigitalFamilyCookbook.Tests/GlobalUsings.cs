@@ -1,4 +1,5 @@
 global using DigitalFamilyCookbook.ApiModels;
+global using DigitalFamilyCookbook.Core.Interfaces;
 global using DigitalFamilyCookbook.Core.Services;
 global using DigitalFamilyCookbook.Data.Domain.Models;
 global using DigitalFamilyCookbook.Data.Interfaces;

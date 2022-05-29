@@ -11,4 +11,6 @@ public interface IRecipeRepository
     Task Update(Recipe recipe);
 
     Task Delete(int recipeId);
+
+    Task DeleteRecipeImage(int recipeId);
 }

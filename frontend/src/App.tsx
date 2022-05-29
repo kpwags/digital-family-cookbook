@@ -15,6 +15,7 @@ import Users from '@components/Pages/Users';
 import SiteSettings from '@components/Pages/SiteSettings';
 import ManageCategories from '@components/Pages/ManageCategories';
 import AddRecipe from '@components/Pages/AddRecipe';
+import EditRecipe from '@components/Pages/EditRecipe';
 
 import './styles/App.less';
 import ManageMeats from '@components/Pages/ManageMeats';
@@ -79,6 +80,14 @@ const App = (): JSX.Element => (
                             element={(
                                 <ProtectedRoute requiredRoles={['ADMINISTRATOR', 'USER']}>
                                     <AddRecipe />
+                                </ProtectedRoute>
+                            )}
+                        />
+                        <Route
+                            path="/recipes/edit/:id"
+                            element={(
+                                <ProtectedRoute requiredRoles={['ADMINISTRATOR', 'USER']}>
+                                    <EditRecipe />
                                 </ProtectedRoute>
                             )}
                         />

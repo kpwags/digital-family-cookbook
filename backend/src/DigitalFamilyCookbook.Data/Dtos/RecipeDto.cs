@@ -14,17 +14,17 @@ public class RecipeDto : BaseDto
 
     public int Servings { get; set; }
 
-    public string? Source { get; set; } = string.Empty;
+    public string Source { get; set; } = string.Empty;
 
-    public string? SourceUrl { get; set; } = string.Empty;
+    public string SourceUrl { get; set; } = string.Empty;
 
     public int? Time { get; set; }
 
     public int? ActiveTime { get; set; }
 
-    public string? ImageUrl { get; set; }
+    public string ImageUrl { get; set; } = string.Empty;
 
-    public string? ImageUrlLarge { get; set; }
+    public string ImageUrlLarge { get; set; } = string.Empty;
 
     public decimal? Calories { get; set; }
 

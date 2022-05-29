@@ -11,4 +11,6 @@ public interface ICategoryRepository
     Task<Category> Update(Category category);
 
     Task Delete(int categoryId);
+
+    IEnumerable<Category> GetForRecipe(int recipeId);
 }

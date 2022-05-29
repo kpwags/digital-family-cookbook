@@ -34,8 +34,8 @@ public class CreateRecipe
                     SourceUrl = command.SourceUrl,
                     Time = command.Time,
                     ActiveTime = command.ActiveTime,
-                    ImageUrl = $"{command.ImageFilename}_sm.jpg",
-                    ImageUrlLarge = $"{command.ImageFilename}.jpg",
+                    ImageUrl = command.ImageFilename != "" ? $"{command.ImageFilename}_sm.jpg" : string.Empty,
+                    ImageUrlLarge = command.ImageFilename != "" ? $"{command.ImageFilename}.jpg" : string.Empty,
                     Calories = command.Calories,
                     Carbohydrates = command.Carbohydrates,
                     Sugar = command.Sugar,
@@ -69,9 +69,9 @@ public class CreateRecipe
 
         public int Servings { get; set; }
 
-        public string? Source { get; set; } = string.Empty;
+        public string Source { get; set; } = string.Empty;
 
-        public string? SourceUrl { get; set; } = string.Empty;
+        public string SourceUrl { get; set; } = string.Empty;
 
         public int? Time { get; set; }
 
