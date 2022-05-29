@@ -11,4 +11,6 @@ public interface IMeatRepository
     Task<Meat> Update(Meat meat);
 
     Task Delete(int meatId);
+
+    IEnumerable<Meat> GetForRecipe(int recipeId);
 }

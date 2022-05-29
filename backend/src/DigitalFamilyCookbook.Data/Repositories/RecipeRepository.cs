@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore;
+
 namespace DigitalFamilyCookbook.Data.Repositories;
 
 public class RecipeRepository : IRecipeRepository
@@ -28,7 +30,11 @@ public class RecipeRepository : IRecipeRepository
 
     public Recipe GetById(int recipeId)
     {
-        var recipe = _db.Recipes.FirstOrDefault(r => r.RecipeId == recipeId);
+        var recipe = _db.Recipes
+            .AsSplitQuery()
+            .Include(r => r.Ingredients)
+            .Include(r => r.Steps)
+            .FirstOrDefault(r => r.RecipeId == recipeId);
 
         if (recipe is null)
         {
@@ -115,16 +121,21 @@ public class RecipeRepository : IRecipeRepository
             throw new Exception("Recipe not found");
         }
 
+        await _ingredientRepository.DeleteForRecipe(recipe.RecipeId);
+        await _stepRepository.DeleteForRecipe(recipe.RecipeId);
+        await _recipeCategoryRepository.DeleteForRecipe(recipe.RecipeId);
+        await _recipeMeatRepository.DeleteForRecipe(recipe.RecipeId);
+
         dto.Name = recipe.Name.Trim();
         dto.Description = (recipe.Description ?? "").Trim();
         dto.IsPublic = recipe.IsPublic;
         dto.Servings = recipe.Servings;
-        dto.Source = (recipe.Source ?? "").Trim();
-        dto.SourceUrl = (recipe.SourceUrl ?? "").Trim();
+        dto.Source = recipe.Source.Trim();
+        dto.SourceUrl = recipe.SourceUrl.Trim();
         dto.Time = recipe.Time;
         dto.ActiveTime = recipe.ActiveTime;
-        dto.ImageUrl = (recipe.ImageUrl ?? "").Trim();
-        dto.ImageUrlLarge = (recipe.ImageUrlLarge ?? "").Trim();
+        dto.ImageUrl = recipe.ImageUrl.Trim();
+        dto.ImageUrlLarge = recipe.ImageUrlLarge.Trim();
         dto.Calories = recipe.Calories;
         dto.Carbohydrates = recipe.Carbohydrates;
         dto.Sugar = recipe.Sugar;
@@ -132,20 +143,34 @@ public class RecipeRepository : IRecipeRepository
         dto.Protein = recipe.Protein;
         dto.Fiber = recipe.Fiber;
         dto.Cholesterol = recipe.Cholesterol;
+        dto.RecipeCategories = recipe.Categories.Select(c => new RecipeCategoryDto
+        {
+            Id = Guid.NewGuid().ToString(),
+            CategoryId = c.CategoryId,
+            Category = _db.Categories.First(dbc => dbc.CategoryId == c.CategoryId)
+        }).ToList();
+        dto.RecipeMeats = recipe.Meats.Select(m => new RecipeMeatDto
+        {
+            Id = Guid.NewGuid().ToString(),
+            MeatId = m.MeatId,
+            Meat = _db.Meats.First(dbm => dbm.MeatId == m.MeatId),
+        }).ToList();
+        dto.Ingredients = recipe.Ingredients.Select(i => new IngredientDto
+        {
+            Id = Guid.NewGuid().ToString(),
+            Name = i.Name.Trim(),
+            SortOrder = i.SortOrder,
+        }).ToList();
+        dto.Steps = recipe.Steps.Select(s => new StepDto
+        {
+            Id = Guid.NewGuid().ToString(),
+            Direction = s.Direction.Trim(),
+            SortOrder = s.SortOrder,
+        }).ToList();
 
         _db.Recipes.Update(dto);
 
         await _db.SaveChangesAsync();
-
-        await _ingredientRepository.DeleteForRecipe(recipe.RecipeId);
-        await _stepRepository.DeleteForRecipe(recipe.RecipeId);
-        await _recipeCategoryRepository.DeleteForRecipe(recipe.RecipeId);
-        await _recipeMeatRepository.DeleteForMeat(recipe.RecipeId);
-
-        await _recipeCategoryRepository.AddForRecipe(dto.RecipeId, recipe.Categories.Select(c => c.CategoryId).ToList());
-        await _recipeMeatRepository.AddForRecipe(dto.RecipeId, recipe.Meats.Select(m => m.MeatId).ToList());
-        await AddIngredients(dto.RecipeId, recipe.Ingredients);
-        await AddSteps(dto.RecipeId, recipe.Steps);
     }
 
     public async Task Delete(int recipeId)
@@ -163,6 +188,23 @@ public class RecipeRepository : IRecipeRepository
         await _recipeMeatRepository.DeleteForMeat(recipeId);
 
         _db.Recipes.Remove(recipe);
+
+        await _db.SaveChangesAsync();
+    }
+
+    public async Task DeleteRecipeImage(int recipeId)
+    {
+        var recipe = _db.Recipes.FirstOrDefault(r => r.RecipeId == recipeId);
+
+        if (recipe is null)
+        {
+            throw new Exception("Recipe not found");
+        }
+
+        recipe.ImageUrl = "";
+        recipe.ImageUrlLarge = "";
+
+        _db.Recipes.Update(recipe);
 
         await _db.SaveChangesAsync();
     }

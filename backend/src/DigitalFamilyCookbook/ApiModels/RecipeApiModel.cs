@@ -14,17 +14,21 @@ public class RecipeApiModel : BaseApiModel
 
     public int Servings { get; set; }
 
-    public string? Source { get; set; } = string.Empty;
+    public string Source { get; set; } = string.Empty;
 
-    public string? SourceUrl { get; set; } = string.Empty;
+    public string SourceUrl { get; set; } = string.Empty;
 
     public int? Time { get; set; }
 
     public int? ActiveTime { get; set; }
 
-    public string? ImageUrl { get; set; }
+    public string ImageUrl { get; set; } = string.Empty;
 
-    public string? ImageUrlLarge { get; set; }
+    public string ImageUrlLarge { get; set; } = string.Empty;
+
+    public string ImageData { get; set; } = string.Empty;
+
+    public string LargeImageData { get; set; } = string.Empty;
 
     public decimal? Calories { get; set; }
 
@@ -71,6 +75,8 @@ public class RecipeApiModel : BaseApiModel
         ActiveTime = recipe.ActiveTime,
         ImageUrl = recipe.ImageUrl,
         ImageUrlLarge = recipe.ImageUrlLarge,
+        ImageData = recipe.ImageData,
+        LargeImageData = recipe.LargeImageData,
         Calories = recipe.Calories,
         Carbohydrates = recipe.Carbohydrates,
         Sugar = recipe.Sugar,

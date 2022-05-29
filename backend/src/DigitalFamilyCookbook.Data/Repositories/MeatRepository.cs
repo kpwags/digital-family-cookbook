@@ -86,4 +86,11 @@ public class MeatRepository : IMeatRepository
 
         await _db.SaveChangesAsync();
     }
+
+    public IEnumerable<Meat> GetForRecipe(int recipeId)
+    {
+        return _db.RecipeMeats
+            .Where(rm => rm.RecipeId == recipeId)
+            .Select(rm => Meat.FromDto(rm.Meat));
+    }
 }

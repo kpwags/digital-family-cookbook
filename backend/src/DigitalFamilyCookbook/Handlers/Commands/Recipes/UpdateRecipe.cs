@@ -26,8 +26,8 @@ public class UpdateRecipe
                     SourceUrl = command.SourceUrl,
                     Time = command.Time,
                     ActiveTime = command.ActiveTime,
-                    ImageUrl = command.ImageUrl,
-                    ImageUrlLarge = command.ImageUrlLarge,
+                    ImageUrl = command.ImageFilename != "" ? $"{command.ImageFilename}_sm.jpg" : string.Empty,
+                    ImageUrlLarge = command.ImageFilename != "" ? $"{command.ImageFilename}.jpg" : string.Empty,
                     Calories = command.Calories,
                     Carbohydrates = command.Carbohydrates,
                     Sugar = command.Sugar,
@@ -35,8 +35,8 @@ public class UpdateRecipe
                     Protein = command.Protein,
                     Fiber = command.Fiber,
                     Cholesterol = command.Cholesterol,
-                    Categories = command.CategoryIds.Select(c => new Category { CategoryId = c }),
-                    Meats = command.MeatIds.Select(m => new Meat { MeatId = m }),
+                    Categories = command.Categories.Select(c => new Category { CategoryId = c }),
+                    Meats = command.Meats.Select(m => new Meat { MeatId = m }),
                     Ingredients = command.Ingredients.Select(i => new Ingredient { Name = i.Name, SortOrder = i.SortOrder }),
                     Steps = command.Steps.Select(i => new Step { Direction = i.Name, SortOrder = i.SortOrder }),
                 });
@@ -62,17 +62,15 @@ public class UpdateRecipe
 
         public int Servings { get; set; }
 
-        public string? Source { get; set; } = string.Empty;
+        public string Source { get; set; } = string.Empty;
 
-        public string? SourceUrl { get; set; } = string.Empty;
+        public string SourceUrl { get; set; } = string.Empty;
 
         public int? Time { get; set; }
 
         public int? ActiveTime { get; set; }
 
-        public string? ImageUrl { get; set; }
-
-        public string? ImageUrlLarge { get; set; }
+        public string ImageFilename { get; set; } = string.Empty;
 
         public decimal? Calories { get; set; }
 
@@ -88,12 +86,12 @@ public class UpdateRecipe
 
         public decimal? Cholesterol { get; set; }
 
-        public List<int> CategoryIds { get; set; } = new List<int>();
+        public List<int> Categories { get; set; } = new List<int>();
 
-        public List<int> MeatIds { get; set; } = new List<int>();
+        public List<int> Meats { get; set; } = new List<int>();
 
-        public List<(string Name, int SortOrder)> Ingredients { get; set; } = new List<(string Name, int SortOrder)>();
+        public List<DigitalFamilyCookbook.Models.RecipeStep> Ingredients { get; set; } = new List<DigitalFamilyCookbook.Models.RecipeStep>();
 
-        public List<(string Name, int SortOrder)> Steps { get; set; } = new List<(string Name, int SortOrder)>();
+        public List<DigitalFamilyCookbook.Models.RecipeStep> Steps { get; set; } = new List<DigitalFamilyCookbook.Models.RecipeStep>();
     }
 }

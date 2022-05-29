@@ -86,4 +86,11 @@ public class CategoryRepository : ICategoryRepository
 
         await _db.SaveChangesAsync();
     }
+
+    public IEnumerable<Category> GetForRecipe(int recipeId)
+    {
+        return _db.RecipeCategories
+            .Where(rc => rc.RecipeId == recipeId)
+            .Select(rc => Category.FromDto(rc.Category));
+    }
 }

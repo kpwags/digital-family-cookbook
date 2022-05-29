@@ -15,8 +15,10 @@ interface Recipe {
     sourceUrl?: string
     time?: number
     activeTime?: number
-    imageUrl?: string
-    imageUrlLarge?: string
+    imageUrl: string
+    imageData: string
+    imageUrlLarge: string
+    largeImageData: string
     calories?: number
     carbohydrates?: number
     sugar?: number

@@ -4,12 +4,10 @@ public class UploadRecipeImage
 {
     public class Handler : IRequestHandler<Command, OperationResult<ImageUploadResponseApiModel>>
     {
-        private readonly IRecipeRepository _recipeRepository;
         private readonly IFileService _fileService;
 
-        public Handler(IRecipeRepository recipeRepository, IFileService fileService)
+        public Handler(IFileService fileService)
         {
-            _recipeRepository = recipeRepository;
             _fileService = fileService;
         }
 

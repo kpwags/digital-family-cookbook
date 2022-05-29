@@ -1,4 +1,4 @@
-import { useState, useContext } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import {
     Form,
     Button,
@@ -22,6 +22,7 @@ import Uploader from '@components/FormControls/Uploader';
 import getMaxValue from '@utils/getMaxValue';
 import IngredientStep from '@models/IngredientStep';
 import ImageUploadResponse from '@models/ImageUploadResponse';
+import ConfirmDialog from '@components/ConfirmDialog';
 import Multiselect from '@components/FormControls/Multiselect/Multiselect';
 import { RcFile } from 'antd/lib/upload/interface';
 import Ingredients from './Ingredients';
@@ -32,9 +33,9 @@ import './RecipeForm.less';
 const { Title, Paragraph } = Typography;
 
 type FormValues = {
-    recipeId: number
     id: string
     name: string
+    servings: number
     description?: string
     source?: string
     sourceUrl?: string
@@ -54,10 +55,12 @@ type FormValues = {
 }
 
 type RecipeFormProps = {
+    recipe?: Recipe | null
     onSave: (recipe: Recipe) => void
 }
 
 const RecipeForm = ({
+    recipe = null,
     onSave,
 }: RecipeFormProps): JSX.Element => {
     const [form] = Form.useForm<FormValues>();
@@ -101,28 +104,55 @@ const RecipeForm = ({
 
     const getActualStepCount = (): number => recipeSteps.filter((s) => s.name.trim() !== '').length;
 
-    const submitForm = async (values: FormValues) => {
-        window.scrollTo(0, 0);
+    const getValuesForRequest = (values: FormValues): Partial<FormValues> => {
+        const requestValues: Partial<FormValues> = {
+            name: values.name,
+            description: values.description || '',
+            servings: values.servings,
+            source: values.source || '',
+            sourceUrl: values.sourceUrl || '',
+        };
 
-        setIngredientsError('');
-        setDirectionsError('');
-
-        const ingredientCount = getActualIngredientCount();
-        const stepCount = getActualStepCount();
-
-        if (ingredientCount <= 0 || stepCount <= 0) {
-            if (ingredientCount <= 0) {
-                setIngredientsError('Please enter an ingredient');
-            }
-
-            if (stepCount <= 0) {
-                setDirectionsError('Please enter a step');
-            }
-            return;
+        if (values.activeTime) {
+            requestValues.activeTime = values.activeTime;
         }
 
-        setLoadingMessage('Saving...');
+        if (values.calories) {
+            requestValues.calories = values.calories;
+        }
 
+        if (values.carbohydrates) {
+            requestValues.carbohydrates = values.carbohydrates;
+        }
+
+        if (values.cholesterol) {
+            requestValues.cholesterol = values.cholesterol;
+        }
+
+        if (values.fat) {
+            requestValues.fat = values.fat;
+        }
+
+        if (values.fiber) {
+            requestValues.fiber = values.fiber;
+        }
+
+        if (values.protein) {
+            requestValues.protein = values.protein;
+        }
+
+        if (values.sugar) {
+            requestValues.sugar = values.sugar;
+        }
+
+        if (values.time) {
+            requestValues.time = values.time;
+        }
+
+        return requestValues;
+    };
+
+    const saveNewRecipe = async (values: Partial<FormValues>) => {
         const [data, error] = await Api.Post<Recipe>('recipes/create', {
             data: {
                 isPublic: isReciepPublic,
@@ -142,6 +172,61 @@ const RecipeForm = ({
         resetForm();
         setLoadingMessage('');
         onSave(data);
+    };
+
+    const updateRecipe = async (values: Partial<FormValues>) => {
+        const [, error] = await Api.Patch('recipes/update', {
+            data: {
+                recipeId: recipe?.recipeId,
+                isPublic: isReciepPublic,
+                ingredients: recipeIngredients.filter((i) => i.name.trim() !== ''),
+                steps: recipeSteps.filter((i) => i.name.trim() !== ''),
+                imageFilename: recipeImage.rootName,
+                ...values,
+            },
+        });
+
+        if (error) {
+            setErrorMessage(error);
+            setLoadingMessage('');
+            return;
+        }
+
+        message.success('Recipe Updated');
+        setLoadingMessage('');
+    };
+
+    const submitForm = async (values: FormValues) => {
+        window.scrollTo(0, 0);
+
+        setErrorMessage('');
+        setIngredientsError('');
+        setDirectionsError('');
+
+        const ingredientCount = getActualIngredientCount();
+        const stepCount = getActualStepCount();
+
+        if (ingredientCount <= 0 || stepCount <= 0) {
+            if (ingredientCount <= 0) {
+                setIngredientsError('Please enter an ingredient');
+            }
+
+            if (stepCount <= 0) {
+                setDirectionsError('Please enter a step');
+            }
+            return;
+        }
+
+        setLoadingMessage('Saving...');
+
+        const requestValues = getValuesForRequest(values);
+
+        if (!recipe) {
+            await saveNewRecipe(requestValues);
+            return;
+        }
+
+        await updateRecipe(requestValues);
     };
 
     const addIngredient = () => {
@@ -301,6 +386,7 @@ const RecipeForm = ({
         const [data, error] = await Api.Post<Recipe>('recipes/deleteimage', {
             data: {
                 imageFilename: recipeImage.rootName,
+                recipeId: recipe ? recipe.recipeId : 0,
             },
         });
 
@@ -313,6 +399,46 @@ const RecipeForm = ({
         setLoadingMessage('');
         setRecipeImage({ rootName: '', data: '' });
     };
+
+    useEffect(() => {
+        if (recipe) {
+            form.setFieldsValue({
+                name: recipe.name,
+                description: recipe.description,
+                servings: recipe.servings,
+                source: recipe.source,
+                sourceUrl: recipe.sourceUrl,
+                time: recipe.time,
+                activeTime: recipe.activeTime,
+                calories: recipe.calories,
+                protein: recipe.protein,
+                carbohydrates: recipe.carbohydrates,
+                fat: recipe.fat,
+                sugar: recipe.sugar,
+                cholesterol: recipe.cholesterol,
+                fiber: recipe.fiber,
+                categories: recipe.categories.map((c) => c.categoryId),
+                meats: recipe.meats.map((m) => m.meatId),
+            });
+
+            setIsRecipePublic(recipe.isPublic);
+
+            if (recipe.imageUrl !== '') {
+                setRecipeImage({
+                    rootName: recipe.imageUrlLarge.replace('.jpg', ''),
+                    data: recipe.imageData,
+                });
+            }
+
+            if (recipe.ingredients.length > 0) {
+                setRecipeIngredients(recipe.ingredients.map((i, idx) => ({ id: idx + 1, name: i.name, sortOrder: i.sortOrder || 0 })));
+            }
+
+            if (recipe.steps.length > 0) {
+                setRecipeSteps(recipe.steps.map((s, idx) => ({ id: idx + 1, name: s.direction, sortOrder: s.sortOrder || 0 })));
+            }
+        }
+    }, [recipe]);
 
     return (
         <div className="recipe-form-container">
@@ -417,7 +543,8 @@ const RecipeForm = ({
                                 <div className="ingredients-column">
                                     <Space direction="vertical">
                                         <Ingredients
-                                            ingredients={recipeIngredients}
+                                            form={form}
+                                            data={recipeIngredients}
                                             onDragEnd={onDragIngredientEnd}
                                             onIngredientUpdate={updateIngredient}
                                             onIngredientRemove={removeIngredient}
@@ -440,7 +567,8 @@ const RecipeForm = ({
                                 <div className="ingredients-column">
                                     <Space direction="vertical">
                                         <Directions
-                                            directions={recipeSteps}
+                                            form={form}
+                                            data={recipeSteps}
                                             onDragEnd={onDragDirectionEnd}
                                             onDirectionUpdate={updateDirection}
                                             onDirectionRemove={removeDirection}
@@ -516,7 +644,16 @@ const RecipeForm = ({
                             hidden={recipeImage.rootName === ''}
                         >
                             <img src={recipeImage.data} alt="Recipe" />
-                            <Button type="ghost" onClick={() => deleteImage()}>Delete</Button>
+                            {recipe === null ? (
+                                <Button type="ghost" onClick={() => deleteImage()}>Delete</Button>
+                            ) : (
+                                <ConfirmDialog
+                                    onConfirm={() => deleteImage()}
+                                    text="Are you sure you want to delete this image? It cannot be undone."
+                                >
+                                    <Button type="ghost">Delete</Button>
+                                </ConfirmDialog>
+                            )}
                         </Space>
 
                         <Form.Item
@@ -530,15 +667,17 @@ const RecipeForm = ({
                                 >
                                     Save Recipe
                                 </Button>
-                                <Button
-                                    type="ghost"
-                                    htmlType="button"
-                                    className="clear-form"
-                                    disabled={loadingMessage !== ''}
-                                    onClick={() => resetForm()}
-                                >
-                                    Clear Form
-                                </Button>
+                                {!recipe ? (
+                                    <Button
+                                        type="ghost"
+                                        htmlType="button"
+                                        className="clear-form"
+                                        disabled={loadingMessage !== ''}
+                                        onClick={() => resetForm()}
+                                    >
+                                        Clear Form
+                                    </Button>
+                                ) : null}
                             </Space>
                         </Form.Item>
 
