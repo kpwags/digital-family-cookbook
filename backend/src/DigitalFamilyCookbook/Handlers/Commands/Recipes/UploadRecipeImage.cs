@@ -25,8 +25,8 @@ public class UploadRecipeImage
                 return new OperationResult<ImageUploadResponseApiModel>(true, new ImageUploadResponseApiModel
                 {
                     Filename = uploadResult.Filename,
-                    ImageData = Convert.ToBase64String(uploadResult.Image),
-                    SecondImageData = Convert.ToBase64String(uploadResult.LargeImage),
+                    ImageData = uploadResult.Image,
+                    SecondImageData = uploadResult.LargeImage,
                 });
             }
             catch (Exception ex)

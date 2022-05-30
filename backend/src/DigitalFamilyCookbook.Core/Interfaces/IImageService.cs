@@ -4,11 +4,11 @@ namespace DigitalFamilyCookbook.Core.Interfaces;
 
 public interface IImageService
 {
-    Task<byte[]> ResizeImage(Stream stream, int? desiredWidth = null, int? desiredHeight = null);
+    Task<byte[]> ResizeImage(Stream stream, ImageType type, int? desiredWidth = null, int? desiredHeight = null);
 
-    Task SaveImage(byte[] img, string path);
+    Task SaveImage(byte[] img, ImageType type, string path);
 
-    Task SaveImage(Stream stream, string path);
+    Task SaveImage(Stream stream, ImageType type, string path);
 
     string ConvertToBase64(byte[] img);
 

@@ -38,7 +38,7 @@ public class UploadRecipeImageTests
 
         _fileService
             .Setup(f => f.SaveRecipeImage(It.IsAny<IFormFile>()))
-            .ReturnsAsync(("image.jpg", MockDataGenerator.RandomByteArray(20), MockDataGenerator.RandomByteArray(30)));
+            .ReturnsAsync(("image.jpg", MockDataGenerator.RandomString(200), MockDataGenerator.RandomString(200)));
 
         var handler = new UploadRecipeImage.Handler(_fileService.Object);
 

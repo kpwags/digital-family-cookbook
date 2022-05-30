@@ -17,8 +17,19 @@ public class FileService : IFileService
         _hostEnvironment = hostEnvironment;
     }
 
-    public async Task<(string Filename, byte[] Image, byte[] LargeImage)> SaveRecipeImage(IFormFile image)
+    public async Task<(string Filename, string Image, string LargeImage)> SaveRecipeImage(IFormFile image)
     {
+        var file = new FileInfo(image.FileName);
+
+        var imageType = file.Extension.ToLower() switch
+        {
+            ".jpg" => ImageType.Jpeg,
+            ".jpeg" => ImageType.Jpeg,
+            ".png" => ImageType.Png,
+            ".gif" => ImageType.Gif,
+            _ => throw new Exception("Unknown image type")
+        };
+
         var rootFilename = Guid.NewGuid().ToString();
 
         var filename = Path.Combine(_hostEnvironment.ContentRootPath, $"{_uploadDirectoriesConfiguration.Recipe}{rootFilename}_sm.jpg");
@@ -28,20 +39,17 @@ public class FileService : IFileService
 
         await image.CopyToAsync(memoryStream);
 
-        var originalImage = new byte[memoryStream.Length];
-        memoryStream.Read(originalImage, 0, (int)memoryStream.Length);
+        memoryStream.Seek(0, SeekOrigin.Begin);
+
+        await _imageService.SaveImage(memoryStream, imageType, largeFilename);
 
         memoryStream.Seek(0, SeekOrigin.Begin);
 
-        await _imageService.SaveImage(memoryStream, largeFilename);
+        var resizedImage = await _imageService.ResizeImage(memoryStream, imageType, 400);
 
-        memoryStream.Seek(0, SeekOrigin.Begin);
+        await _imageService.SaveImage(resizedImage, ImageType.Jpeg, filename);
 
-        var resizedImage = await _imageService.ResizeImage(memoryStream, 400);
-
-        await _imageService.SaveImage(resizedImage, filename);
-
-        return (rootFilename, resizedImage, originalImage);
+        return (rootFilename, GetRecipeImage($"{rootFilename}_sm.jpg"), GetRecipeImage($"{rootFilename}.jpg"));
     }
 
     public string GetRecipeImage(string filename)
