@@ -1,13 +1,19 @@
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
+using SixLabors.ImageSharp.Formats;
 using SixLabors.ImageSharp.Formats.Jpeg;
+using SixLabors.ImageSharp.Formats.Png;
+using SixLabors.ImageSharp.Formats.Gif;
+
 namespace DigitalFamilyCookbook.Core.Services;
 
 public class ImageService : IImageService
 {
-    public async Task<byte[]> ResizeImage(Stream stream, int? desiredWidth = null, int? desiredHeight = null)
+    public async Task<byte[]> ResizeImage(Stream stream, ImageType imageType, int? desiredWidth = null, int? desiredHeight = null)
     {
-        using var image = Image.Load(stream, new JpegDecoder());
+        var decoder = GetDecoder(imageType);
+
+        using var image = Image.Load(stream, decoder);
 
         var aspectRatio = decimal.Parse(image.Width.ToString()) / decimal.Parse(image.Height.ToString());
         int width;
@@ -37,16 +43,20 @@ public class ImageService : IImageService
         return ms.ToArray();
     }
 
-    public async Task SaveImage(byte[] img, string path)
+    public async Task SaveImage(byte[] img, ImageType imageType, string path)
     {
-        using var image = Image.Load(img, new JpegDecoder());
+        var decoder = GetDecoder(imageType);
+
+        using var image = Image.Load(img, decoder);
 
         await image.SaveAsJpegAsync(path);
     }
 
-    public async Task SaveImage(Stream stream, string path)
+    public async Task SaveImage(Stream stream, ImageType imageType, string path)
     {
-        using var image = Image.Load(stream, new JpegDecoder());
+        var decoder = GetDecoder(imageType);
+
+        using var image = Image.Load(stream, decoder);
 
         await image.SaveAsJpegAsync(path);
     }
@@ -64,4 +74,12 @@ public class ImageService : IImageService
 
         return image.ToBase64String(JpegFormat.Instance);
     }
+
+    private IImageDecoder GetDecoder(ImageType type) => type switch
+    {
+        ImageType.Jpeg => new JpegDecoder(),
+        ImageType.Png => new PngDecoder(),
+        ImageType.Gif => new GifDecoder(),
+        _ => throw new Exception("Unknown Image Type")
+    };
 }

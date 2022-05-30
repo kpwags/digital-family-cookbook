@@ -374,7 +374,7 @@ const RecipeForm = ({
 
         setRecipeImage({
             rootName: imageData?.filename || '',
-            data: `data:image/jpg;base64,${imageData?.imageData}`,
+            data: imageData?.imageData || '',
         });
 
         return true;
