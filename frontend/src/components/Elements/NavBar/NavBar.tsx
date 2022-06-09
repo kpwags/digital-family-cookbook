@@ -32,9 +32,11 @@ const NavBar = ({
             </div>
 
             <Menu theme="dark" mode="horizontal" selectedKeys={[selectedItem]} className="nav-bar-menu">
-                <Menu.Item key="add-recipe" icon={<FileAddOutlined />}>
-                    <Link to="/recipes/add">New Recipe</Link>
-                </Menu.Item>
+                {user && user.id !== '' ? (
+                    <Menu.Item key="add-recipe" icon={<FileAddOutlined />}>
+                        <Link to="/recipes/add">New Recipe</Link>
+                    </Menu.Item>
+                ) : null}
                 <SubMenu key="categories-dropdown" title="Categories">
                     {categories.length > 0 ? categories.map((c) => (
                         <Menu.Item key={`categories-${c.categoryId}`}>
