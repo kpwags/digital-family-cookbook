@@ -57,6 +57,9 @@ const NavBar = ({
                 </SubMenu>
                 {user && user.id !== '' ? (
                     <SubMenu key="user-dropdown" icon={<UserOutlined />} title={user.name}>
+                        <Menu.Item key="manage-recipes">
+                            <Link to="/manage-recipes">Manage Recipes</Link>
+                        </Menu.Item>
                         {hasRole(user, 'ADMINISTRATOR') ? (
                             <Menu.Item key="manage-users">
                                 <Link to="/manage-users">Manage Users</Link>

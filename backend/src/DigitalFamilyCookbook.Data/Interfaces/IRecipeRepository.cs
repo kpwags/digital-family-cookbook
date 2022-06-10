@@ -13,4 +13,6 @@ public interface IRecipeRepository
     Task Delete(int recipeId);
 
     Task DeleteRecipeImage(int recipeId);
+
+    IEnumerable<Recipe> GetUserRecipes(string userAccountId);
 }

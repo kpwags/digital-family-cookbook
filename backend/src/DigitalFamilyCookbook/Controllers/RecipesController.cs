@@ -123,4 +123,17 @@ public class RecipesController : Controller
 
         return Ok();
     }
+
+    [HttpGet("getuserrecipes")]
+    public async Task<ActionResult<IReadOnlyCollection<RecipeApiModel>>> GetUserRecipes(string userAccountId, CancellationToken cancellationToken)
+    {
+        var result = await _mediatr.Send(new GetUserRecipes.Query { UserAccountId = userAccountId }, cancellationToken);
+
+        if (!result.IsSuccessful)
+        {
+            return BadRequest(result.ErrorMessage);
+        }
+
+        return Ok(result.Value);
+    }
 }

@@ -209,6 +209,13 @@ public class RecipeRepository : IRecipeRepository
         await _db.SaveChangesAsync();
     }
 
+    public IEnumerable<Recipe> GetUserRecipes(string userAccountId)
+    {
+        return _db.Recipes
+            .Where(r => r.UserAccountId == userAccountId)
+            .Select(r => Recipe.FromDto(r));
+    }
+
     private async Task AddIngredients(int recipeId, IEnumerable<Ingredient> ingredients)
     {
         foreach (var ingredient in ingredients)
