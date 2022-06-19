@@ -1,5 +1,6 @@
 using DigitalFamilyCookbook.Core.Configuration;
 using DigitalFamilyCookbook.Data.Database;
+using DigitalFamilyCookbook.IntegrationTests.Database;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -20,7 +21,7 @@ public static class ApplicationFactory
         var appFactory = new WebApplicationFactory<Startup>()
             .WithWebHostBuilder(builder =>
             {
-                builder.ConfigureServices(services =>
+                builder.ConfigureServices(async services =>
                 {
                     var descriptor = services.SingleOrDefault(d => d.ServiceType == typeof(DbContextOptions<ApplicationDbContext>));
 
@@ -46,7 +47,7 @@ public static class ApplicationFactory
                         {
                             context.Database.EnsureCreated();
 
-                            TestPreparation.Seed(context);
+                            await DatabaseSeeder.Seed(context);
                         }
                         catch
                         {

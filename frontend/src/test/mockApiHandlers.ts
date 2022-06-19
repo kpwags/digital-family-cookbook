@@ -6,6 +6,7 @@ import { MockAdminRole, MockUserRole } from './mocks/MockRoleType';
 import { MockCategoryList } from './mocks/MockCategory';
 import DataGenerator from './DataGenerator';
 import { MockMeatList } from './mocks/MockMeat';
+import { MockRecipeList } from './mocks/MockRecipe';
 
 const mockApiHandlers = [
     // auth controller actions
@@ -152,6 +153,17 @@ const mockApiHandlers = [
 
     rest.patch('*/meats/update', (_, res, ctx) => res(
         ctx.status(200),
+    )),
+
+    // recipes controller actions
+    rest.get('*/recipes/getall', (_, res, ctx) => res(
+        ctx.status(200),
+        ctx.json(MockRecipeList(20)),
+    )),
+
+    rest.get('*/recipes/getuserrecipes', (_, res, ctx) => res(
+        ctx.status(200),
+        ctx.json(MockRecipeList(20)),
     )),
 ];
 

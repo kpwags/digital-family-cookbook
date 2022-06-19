@@ -39,3 +39,13 @@ export const MockRecipe = (): Recipe => {
         dateUpdated: new Date(),
     };
 };
+
+export const MockRecipeList = (length = 10): Recipe[] => {
+    const recipes: Recipe[] = [];
+
+    for (let i = 0; i < length; i += 1) {
+        recipes.push(MockRecipe());
+    }
+
+    return recipes;
+};

@@ -25,7 +25,9 @@ public class RecipeRepository : IRecipeRepository
 
     public IEnumerable<Recipe> GetAll()
     {
-        return _db.Recipes.Select(r => Recipe.FromDto(r));
+        return _db.Recipes
+            .Include(r => r.UserAccount)
+            .Select(r => Recipe.FromDto(r));
     }
 
     public Recipe GetById(int recipeId)
@@ -213,6 +215,7 @@ public class RecipeRepository : IRecipeRepository
     {
         return _db.Recipes
             .Where(r => r.UserAccountId == userAccountId)
+            .Include(r => r.UserAccount)
             .Select(r => Recipe.FromDto(r));
     }
 
