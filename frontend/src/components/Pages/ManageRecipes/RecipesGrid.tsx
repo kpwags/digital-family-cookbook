@@ -5,6 +5,8 @@ import {
 import { ColumnsType } from 'antd/lib/table';
 import ConfirmDialog from '@components/ConfirmDialog';
 import Recipe from '@models/Recipe';
+import Sorter from '@utils/Sorter';
+import { useEffect, useState } from 'react';
 
 type RecipesGridProps = {
     recipes: Recipe[]
@@ -19,17 +21,50 @@ const RecipesGrid = ({
     onEditRecipe,
     onDeleteRecipe,
 }: RecipesGridProps): JSX.Element => {
+    const [uniqueUsers, setUniqueUsers] = useState<{ text: string, value: string }[]>([]);
+
+    useEffect(() => {
+        const userIds = recipes.map((r) => r.userAccountId || '');
+        const uniqueUserIds: string[] = [...new Set(userIds)];
+
+        const users: { text: string, value: string }[] = [];
+
+        uniqueUserIds.forEach((id) => {
+            users.push({
+                text: recipes.filter((r) => r.userAccountId === id)[0].userAccount?.name || '',
+                value: id,
+            });
+        });
+
+        setUniqueUsers(users.filter((u) => u.value !== '' && u.text !== ''));
+    }, [recipes]);
+
     const columns: ColumnsType<Recipe> = [
         {
             key: 'name',
             title: 'Name',
             dataIndex: 'name',
             width: '55%',
+            sortDirections: ['ascend', 'descend'],
+            defaultSortOrder: 'ascend',
+            sorter: (a, b) => Sorter.SortStrings(a.name, b.name),
         },
         {
             key: 'addedBy',
             title: 'Added By',
             width: '25%',
+            filters: uniqueUsers,
+            filterMode: 'tree',
+            sortDirections: ['ascend', 'descend'],
+            defaultSortOrder: 'ascend',
+            sorter: (a, b) => Sorter.SortStrings(a?.userAccount?.name || '', b?.userAccount?.name || ''),
+            onFilter: (value, record) => {
+                if (record.userAccount) {
+                    return record.userAccount.id === value.toString();
+                }
+
+                return false;
+            },
             render: (_, recipe) => (
                 <>{recipe?.userAccount?.name}</>
             ),

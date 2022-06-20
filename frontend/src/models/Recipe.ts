@@ -34,6 +34,7 @@ interface Recipe {
     notes: Note[]
     dateCreated: Date
     dateUpdated: Date
+    userAccountId?: string
     userAccount?: UserAccount
 }
 

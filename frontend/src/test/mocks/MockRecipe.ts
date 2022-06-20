@@ -4,6 +4,7 @@ import { MockMeatList } from './MockMeat';
 import { MockCategoryList } from './MockCategory';
 import { MockIngredientList } from './MockIngredient';
 import { MockStepList } from './MockStep';
+import { MockUserAccount } from './MockUsers';
 
 export const MockRecipe = (): Recipe => {
     const recipeId = DataGenerator.GenerateInteger(1, 100);
@@ -37,6 +38,8 @@ export const MockRecipe = (): Recipe => {
         sourceUrl: DataGenerator.GenerateString(30),
         dateCreated: new Date(),
         dateUpdated: new Date(),
+        userAccountId: MockUserAccount.id,
+        userAccount: MockUserAccount,
     };
 };
 
