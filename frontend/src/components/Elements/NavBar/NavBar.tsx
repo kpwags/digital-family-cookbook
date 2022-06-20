@@ -6,9 +6,9 @@ import AppContext from '@contexts/AppContext';
 import { hasRole } from '@utils/UserFunctions';
 
 import './NavBar.less';
+import { ItemType } from 'antd/lib/menu/hooks/useItems';
 
 const { Header } = Layout;
-const { SubMenu } = Menu;
 
 type NavBarProps = {
     selectedItem?: string
@@ -25,78 +25,115 @@ const NavBar = ({
         logout,
     } = useContext(AppContext);
 
+    const buildMenu = (): ItemType[] => {
+        const menuItems: ItemType[] = [];
+
+        if (user && user.id !== '') {
+            menuItems.push({
+                key: 'add-recipe',
+                icon: <FileAddOutlined />,
+                label: <Link to="/recipes/add">New Recipe</Link>,
+            });
+        }
+
+        menuItems.push({
+            key: 'categories',
+            label: 'Categories',
+            children: categories.length === 0
+                ? [{
+                    key: 'no-categories',
+                    label: <>No Categories</>,
+                }]
+                : categories.map((c) => ({
+                    key: `category-${c.categoryId}`,
+                    label: <Link to="/">{c.name}</Link>,
+                })),
+        });
+
+        menuItems.push({
+            key: 'meats',
+            label: 'Meats',
+            children: meats.length === 0
+                ? [{
+                    key: 'no-meats',
+                    label: <>No Meats</>,
+                }]
+                : meats.map((m) => ({
+                    key: `meat-${m.meatId}`,
+                    label: <Link to="/">{m.name}</Link>,
+                })),
+        });
+
+        if (user && user.id !== '') {
+            const userMenuItems: ItemType[] = [];
+
+            userMenuItems.push({
+                key: 'manage-recipes',
+                label: <Link to="/manage-recipes">Manage Recipes</Link>,
+            });
+
+            if (hasRole(user, 'ADMINISTRATOR')) {
+                userMenuItems.push({
+                    key: 'manage-users',
+                    label: <Link to="/manage-users">Manage Users</Link>,
+                });
+
+                userMenuItems.push({
+                    key: 'manage-categories',
+                    label: <Link to="/manage-categories">Manage Categories</Link>,
+                });
+
+                userMenuItems.push({
+                    key: 'manage-meats',
+                    label: <Link to="/manage-meats">Manage Meats</Link>,
+                });
+
+                userMenuItems.push({
+                    key: 'site-settings',
+                    label: <Link to="/site-settings">Edit Site Settings</Link>,
+                });
+            }
+
+            userMenuItems.push({
+                key: 'logout',
+                label: <>Log Out</>,
+                onClick: () => logout(),
+            });
+
+            menuItems.push({
+                key: 'user',
+                icon: <UserOutlined />,
+                label: user.name,
+                children: userMenuItems,
+            });
+        } else {
+            menuItems.push({
+                key: 'register',
+                label: <Link to="/register">Register</Link>,
+            });
+
+            menuItems.push({
+                key: 'signin',
+                label: <Link to="/login">Sign In</Link>,
+            });
+        }
+
+        return menuItems;
+    };
+
     return (
         <Header className="nav">
             <div className="logo">
                 <Link to="/">{siteSettings.title}</Link>
             </div>
 
-            <Menu theme="dark" mode="horizontal" selectedKeys={[selectedItem]} className="nav-bar-menu">
-                {user && user.id !== '' ? (
-                    <Menu.Item key="add-recipe" icon={<FileAddOutlined />}>
-                        <Link to="/recipes/add">New Recipe</Link>
-                    </Menu.Item>
-                ) : null}
-                <SubMenu key="categories-dropdown" title="Categories">
-                    {categories.length > 0 ? categories.map((c) => (
-                        <Menu.Item key={`categories-${c.categoryId}`}>
-                            <Link to="/">{c.name}</Link>
-                        </Menu.Item>
-                    )) : (
-                        <Menu.Item key="no-categories">No Categories</Menu.Item>
-                    )}
-                </SubMenu>
-                <SubMenu key="meats-dropdown" title="Meats">
-                    {meats.length > 0 ? meats.map((m) => (
-                        <Menu.Item key={`meats-${m.meatId}`}>
-                            <Link to="/">{m.name}</Link>
-                        </Menu.Item>
-                    )) : (
-                        <Menu.Item key="no-meats">No Meats</Menu.Item>
-                    )}
-                </SubMenu>
-                {user && user.id !== '' ? (
-                    <SubMenu key="user-dropdown" icon={<UserOutlined />} title={user.name}>
-                        <Menu.Item key="manage-recipes">
-                            <Link to="/manage-recipes">Manage Recipes</Link>
-                        </Menu.Item>
-                        {hasRole(user, 'ADMINISTRATOR') ? (
-                            <Menu.Item key="manage-users">
-                                <Link to="/manage-users">Manage Users</Link>
-                            </Menu.Item>
-                        ) : null}
-
-                        {hasRole(user, 'ADMINISTRATOR') ? (
-                            <Menu.Item key="manage-categories">
-                                <Link to="/manage-categories">Manage Categories</Link>
-                            </Menu.Item>
-                        ) : null}
-
-                        {hasRole(user, 'ADMINISTRATOR') ? (
-                            <Menu.Item key="manage-meats">
-                                <Link to="/manage-meats">Manage Meats</Link>
-                            </Menu.Item>
-                        ) : null}
-
-                        {hasRole(user, 'ADMINISTRATOR') ? (
-                            <Menu.Item key="site-settings">
-                                <Link to="/site-settings">Edit Site Settings</Link>
-                            </Menu.Item>
-                        ) : null}
-
-                        <Menu.Item key="logout" onClick={logout}>Log Out</Menu.Item>
-                    </SubMenu>
-                ) : (
-                    <>
-                        <Menu.Item key="register">
-                            <Link to="/register">Register</Link>
-                        </Menu.Item>
-                        <Menu.Item key="login">
-                            <Link to="/login">Sign In</Link>
-                        </Menu.Item>
-                    </>
-                )}
-            </Menu>
+            <Menu
+                theme="dark"
+                mode="horizontal"
+                selectedKeys={[selectedItem]}
+                className="nav-bar-menu"
+                items={buildMenu()}
+            />
         </Header>
     );
 };
