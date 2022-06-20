@@ -25,7 +25,9 @@ public class RecipeRepository : IRecipeRepository
 
     public IEnumerable<Recipe> GetAll()
     {
-        return _db.Recipes.Select(r => Recipe.FromDto(r));
+        return _db.Recipes
+            .Include(r => r.UserAccount)
+            .Select(r => Recipe.FromDto(r));
     }
 
     public Recipe GetById(int recipeId)
@@ -207,6 +209,14 @@ public class RecipeRepository : IRecipeRepository
         _db.Recipes.Update(recipe);
 
         await _db.SaveChangesAsync();
+    }
+
+    public IEnumerable<Recipe> GetUserRecipes(string userAccountId)
+    {
+        return _db.Recipes
+            .Where(r => r.UserAccountId == userAccountId)
+            .Include(r => r.UserAccount)
+            .Select(r => Recipe.FromDto(r));
     }
 
     private async Task AddIngredients(int recipeId, IEnumerable<Ingredient> ingredients)

@@ -1,6 +1,6 @@
 using DigitalFamilyCookbook.Handlers.Commands.Recipes;
 
-namespace DigitalFamilyCookbook.Tests.Handlers.Recipes;
+namespace DigitalFamilyCookbook.Tests.Handlers.Commands.Recipes;
 
 public class CreateRecipeTests
 {

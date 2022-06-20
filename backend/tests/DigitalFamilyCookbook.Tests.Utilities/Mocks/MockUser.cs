@@ -29,4 +29,10 @@ public static class MockUser
             UserName = email,
         };
     }
+
+    public static UserAccountApiModel GenerateUserApiModel()
+    {
+        var user = GenerateUser();
+        return UserAccountApiModel.FromDomainModel(user);
+    }
 }

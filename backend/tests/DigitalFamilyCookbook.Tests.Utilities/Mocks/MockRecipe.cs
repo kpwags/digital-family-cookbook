@@ -30,4 +30,30 @@ public static class MockRecipe
     public static Recipe GenerateDomainModel() => Recipe.FromDto(GenerateDto());
 
     public static RecipeApiModel GenerateApiModel() => RecipeApiModel.FromDomainModel(GenerateDomainModel());
+
+    public static List<RecipeDto> GenerateDtoList(int count = 5)
+    {
+        var recipes = new List<RecipeDto>();
+
+        for (var i = 0; i < count; i += 1)
+        {
+            recipes.Add(GenerateDto());
+        }
+
+        return recipes;
+    }
+
+    public static List<Recipe> GenerateDomainModelList(int count = 5)
+    {
+        var recipes = GenerateDtoList(count);
+
+        return recipes.Select(r => Recipe.FromDto(r)).ToList();
+    }
+
+    public static List<RecipeApiModel> GenerateApiModelList(int count = 5)
+    {
+        var recipes = GenerateDomainModelList(count);
+
+        return recipes.Select(r => RecipeApiModel.FromDomainModel(r)).ToList();
+    }
 }

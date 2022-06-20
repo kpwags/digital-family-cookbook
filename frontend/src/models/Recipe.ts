@@ -3,6 +3,7 @@ import Ingredient from './Ingredient';
 import { Meat } from './Meat';
 import Note from './Note';
 import Step from './Step';
+import { UserAccount } from './UserAccount';
 
 interface Recipe {
     recipeId: number
@@ -33,6 +34,8 @@ interface Recipe {
     notes: Note[]
     dateCreated: Date
     dateUpdated: Date
+    userAccountId?: string
+    userAccount?: UserAccount
 }
 
 export default Recipe;
