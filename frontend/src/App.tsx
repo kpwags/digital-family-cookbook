@@ -16,6 +16,7 @@ import SiteSettings from '@components/Pages/SiteSettings';
 import ManageCategories from '@components/Pages/ManageCategories';
 import AddRecipe from '@components/Pages/AddRecipe';
 import EditRecipe from '@components/Pages/EditRecipe';
+import ViewRecipe from '@components/Pages/ViewRecipe';
 import ManageMeats from '@components/Pages/ManageMeats';
 import ManageRecipes from '@components/Pages/ManageRecipes';
 
@@ -98,6 +99,12 @@ const App = (): JSX.Element => (
                                 <ProtectedRoute requiredRoles={['ADMINISTRATOR', 'USER']}>
                                     <EditRecipe />
                                 </ProtectedRoute>
+                            )}
+                        />
+                        <Route
+                            path="/recipes/view/:id"
+                            element={(
+                                <ViewRecipe />
                             )}
                         />
                         <Route path="/" element={<Home />} />

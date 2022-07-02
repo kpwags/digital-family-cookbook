@@ -33,6 +33,16 @@ public class GetRecipeById
                     catch { }
                 }
 
+                if (recipe.ImageUrlLarge?.Length > 0)
+                {
+                    try
+                    {
+                        // don't fail the whole process if the image can't be found
+                        recipe.LargeImageData = _fileService.GetRecipeImage(recipe.ImageUrlLarge);
+                    }
+                    catch { }
+                }
+
                 recipe.Categories = _categoryRepostory.GetForRecipe(recipe.RecipeId);
                 recipe.Meats = _meatRepository.GetForRecipe(recipe.RecipeId);
 

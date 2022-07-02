@@ -34,6 +34,7 @@ public class RecipeRepository : IRecipeRepository
     {
         var recipe = _db.Recipes
             .AsSplitQuery()
+            .Include(r => r.UserAccount)
             .Include(r => r.Ingredients)
             .Include(r => r.Steps)
             .FirstOrDefault(r => r.RecipeId == recipeId);

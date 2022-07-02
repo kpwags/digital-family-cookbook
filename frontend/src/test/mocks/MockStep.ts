@@ -1,9 +1,9 @@
 import DataGenerator from '@test/DataGenerator';
 import Step from '@models/Step';
 
-export const MockStep = (recipeId: number): Step => ({
+export const MockStep = (recipeId: number, id = 0): Step => ({
     id: DataGenerator.GenerateGuid(),
-    ingredientId: DataGenerator.GenerateInteger(1, 250),
+    stepId: id === 0 ? DataGenerator.GenerateInteger(1, 250) : id,
     direction: DataGenerator.GenerateString(),
     recipeId,
     sortOrder: DataGenerator.GenerateInteger(1, 20),

@@ -7,6 +7,7 @@ import ConfirmDialog from '@components/ConfirmDialog';
 import Recipe from '@models/Recipe';
 import Sorter from '@utils/Sorter';
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 
 type RecipesGridProps = {
     recipes: Recipe[]
@@ -48,6 +49,9 @@ const RecipesGrid = ({
             sortDirections: ['ascend', 'descend'],
             defaultSortOrder: 'ascend',
             sorter: (a, b) => Sorter.SortStrings(a.name, b.name),
+            render: (_, recipe) => (
+                <Link to={`/recipes/view/${recipe.recipeId}`}>{recipe.name}</Link>
+            ),
         },
         {
             key: 'addedBy',

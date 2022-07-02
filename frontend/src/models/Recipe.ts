@@ -20,13 +20,13 @@ interface Recipe {
     imageData: string
     imageUrlLarge: string
     largeImageData: string
-    calories?: number
-    carbohydrates?: number
-    sugar?: number
-    fat?: number
-    protein?: number
-    fiber?: number
-    cholesterol?: number
+    calories?: number | null
+    carbohydrates?: number | null
+    sugar?: number | null
+    fat?: number | null
+    protein?: number | null
+    fiber?: number | null
+    cholesterol?: number | null
     meats: Meat[]
     categories: Category[]
     ingredients: Ingredient[]
