@@ -1,5 +1,5 @@
 interface Step {
-    ingredientId: number
+    stepId: number
     id: string
     recipeId: number
     direction: string

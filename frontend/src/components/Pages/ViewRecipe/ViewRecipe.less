@@ -1,0 +1,52 @@
+@import (reference) '../../../styles/Theme.less';
+
+.view-recipe {
+    margin-top: 25px;
+
+    .ingredients {
+        ul {
+            margin: 0 0 0 40px;
+            padding: 0 0 16px;
+
+            @media (max-width: @breakpoint-mobile) {
+                margin-left: 20px;
+            }
+
+            li {
+                padding: 8px 0;
+            }
+        }
+    }
+
+    .directions {
+        ol {
+            margin: 0 0 0 40px;
+            padding: 0 0 16px;
+
+            @media (max-width: @breakpoint-mobile) {
+                margin-left: 20px;
+            }
+
+            li {
+                padding: 8px 0;
+                line-height: 1.5;
+            }
+        }
+    }
+
+    .nutrition,
+    .basic-info {
+        strong {
+            font-weight: 800;
+        }
+    }
+
+    .recipe-image {
+        max-width: 100%;
+    }
+
+    span.ant-tag {
+        padding: 6px 12px;
+        font-size: 1rem;
+    }
+}

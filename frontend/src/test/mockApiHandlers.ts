@@ -1,12 +1,18 @@
+/* eslint-disable no-case-declarations */
 /* eslint-disable import/no-extraneous-dependencies */
 import { rest } from 'msw';
 import { MockAdminUserAccount, MockUserAccount } from '@test/mocks/MockUsers';
 import { AuthResult } from '@models/AuthResult';
+import Recipe from '@models/Recipe';
+import copyObject from '@utils/copyObject';
+import { emptyQuillField } from '@utils/constants';
 import { MockAdminRole, MockUserRole } from './mocks/MockRoleType';
 import { MockCategoryList } from './mocks/MockCategory';
 import DataGenerator from './DataGenerator';
 import { MockMeatList } from './mocks/MockMeat';
 import { MockRecipeList } from './mocks/MockRecipe';
+import { MockIngredientList } from './mocks/MockIngredient';
+import { MockStepList } from './mocks/MockStep';
 
 const mockApiHandlers = [
     // auth controller actions
@@ -165,6 +171,103 @@ const mockApiHandlers = [
         ctx.status(200),
         ctx.json(MockRecipeList(20)),
     )),
+
+    rest.get('*/recipes/get', (req, res, ctx) => {
+        const id = req.url.searchParams.get('id');
+
+        if (!id) {
+            return res(
+                ctx.status(400),
+                ctx.text('Unable to find recipe'),
+            );
+        }
+
+        const recipeId = parseInt(id, 10);
+
+        const baseRecipe: Recipe = {
+            recipeId: 1,
+            id: DataGenerator.GenerateGuid(),
+            name: 'Test Recipe 01',
+            description: '<p>This is a delicious recipe</p>',
+            servings: 4,
+            time: 60,
+            activeTime: 20,
+            isPublic: true,
+            imageUrl: '',
+            imageUrlLarge: '',
+            imageData: '',
+            largeImageData: '',
+            calories: 320,
+            protein: 15,
+            carbohydrates: 20,
+            fat: 6,
+            sugar: 2,
+            fiber: 21,
+            cholesterol: 423,
+            ingredients: MockIngredientList(1),
+            steps: MockStepList(1, 5),
+            meats: MockMeatList(2),
+            categories: MockCategoryList(2),
+            notes: [],
+            source: 'AllRecipes',
+            sourceUrl: 'https://www.allrecipes.com',
+            dateCreated: new Date(),
+            dateUpdated: new Date(),
+            userAccountId: MockUserAccount.id,
+            userAccount: MockUserAccount,
+        };
+
+        switch (recipeId) {
+            case 1:
+                return res(
+                    ctx.status(200),
+                    ctx.json(baseRecipe),
+                );
+
+            case 2:
+                // no description
+                const noDescriptionRecipe = copyObject<Recipe>(baseRecipe);
+                noDescriptionRecipe.description = emptyQuillField;
+
+                return res(
+                    ctx.status(200),
+                    ctx.json(noDescriptionRecipe),
+                );
+
+            case 3:
+                // no nutrition
+                const noNutritionRecipe = copyObject<Recipe>(baseRecipe);
+                noNutritionRecipe.calories = null;
+                noNutritionRecipe.protein = null;
+                noNutritionRecipe.carbohydrates = null;
+                noNutritionRecipe.fat = null;
+                noNutritionRecipe.sugar = null;
+                noNutritionRecipe.fiber = null;
+                noNutritionRecipe.cholesterol = null;
+
+                return res(
+                    ctx.status(200),
+                    ctx.json(noNutritionRecipe),
+                );
+
+            case 4:
+                // with image
+                const recipeWithImage = copyObject<Recipe>(baseRecipe);
+                recipeWithImage.imageUrlLarge = DataGenerator.GenerateGuid();
+                recipeWithImage.largeImageData = DataGenerator.GenerateGuid();
+
+                return res(
+                    ctx.status(200),
+                    ctx.json(recipeWithImage),
+                );
+
+            default:
+                return res(
+                    ctx.status(400),
+                    ctx.text('Unable to find recipe'),
+                );
+        }
+    }),
 ];
 
 export { mockApiHandlers };
