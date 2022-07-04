@@ -1,12 +1,12 @@
 import { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { Layout, Menu } from 'antd';
-import { FileAddOutlined, UserOutlined } from '@ant-design/icons';
+import { FileAddOutlined, MenuOutlined, UserOutlined } from '@ant-design/icons';
 import AppContext from '@contexts/AppContext';
 import { hasRole } from '@utils/UserFunctions';
+import { ItemType } from 'antd/lib/menu/hooks/useItems';
 
 import './NavBar.less';
-import { ItemType } from 'antd/lib/menu/hooks/useItems';
 
 const { Header } = Layout;
 
@@ -133,6 +133,7 @@ const NavBar = ({
                 selectedKeys={[selectedItem]}
                 className="nav-bar-menu"
                 items={buildMenu()}
+                overflowedIndicator={<MenuOutlined />}
             />
         </Header>
     );

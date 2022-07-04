@@ -11,9 +11,19 @@
         float: left;
         margin-right: 25px;
 
-        a,
-        a:hover {
+        a {
             color: @color-white;
+
+            &:hover {
+                font-weight: 700;
+                text-decoration: none;
+            }
+        }
+
+        @media screen and (max-width: 400px) {
+            font-size: 1.1rem;
+            line-height: 64px;
+            padding: 0 12px;
         }
     }
 
@@ -21,7 +31,13 @@
         justify-content: flex-end;
     }
 
-    .ant-menu-dark.ant-menu-horizontal > .ant-menu-item:hover {
+    .ant-menu-dark.ant-menu-horizontal>.ant-menu-item:hover {
         background-color: @color-green-01;
+    }
+}
+
+.nav.ant-layout-header {
+    @media screen and (max-width: 400px) {
+        padding: 0 12px;
     }
 }
