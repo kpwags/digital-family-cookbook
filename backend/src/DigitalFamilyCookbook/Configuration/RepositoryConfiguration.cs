@@ -13,6 +13,7 @@ namespace DigitalFamilyCookbook.Configuration
             services.AddScoped<IRecipeRepository, RecipeRepository>();
             services.AddScoped<IRecipeCategoryRepository, RecipeCategoryRepository>();
             services.AddScoped<IRecipeMeatRepository, RecipeMeatRepository>();
+            services.AddScoped<IRefreshTokenRespository, RefreshTokenRepository>();
             services.AddScoped<IStepRepository, StepRepository>();
             services.AddScoped<ISystemRepository, SystemRepository>();
             services.AddScoped<IUserAccountRepository, UserAccountRepository>();

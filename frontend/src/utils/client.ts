@@ -1,5 +1,7 @@
 import { ApiArguments } from '@models/ApiArguments';
-import { CookieUtils } from './CookieUtils';
+import { getNewRefreshToken } from './auth';
+import isTokenExpired from './isTokenExpired';
+import LocalStorageUtils from './LocalStorageUtils';
 
 const apiUrl = process.env.REACT_APP_API_URL;
 
@@ -8,12 +10,22 @@ async function client(endpoint: string, {
     contentType = 'application/json',
     fileUpload = false,
     method = undefined,
+    isRefreshTokenRequest = false,
     ...customConfig
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 }: ApiArguments = {}) : Promise<any> {
     const headers: Record<string, string> = {};
 
-    const token = CookieUtils.GetValue('dfcuser');
+    let token = LocalStorageUtils.getAccessToken();
+
+    if (isTokenExpired(token) && !isRefreshTokenRequest) {
+        const [data] = await getNewRefreshToken();
+
+        if (data && data.isSuccessful) {
+            LocalStorageUtils.setAccessToken(data.accessToken);
+            token = data.accessToken;
+        }
+    }
 
     if (token) {
         headers.Authorization = `Bearer ${token}`;
@@ -42,7 +54,14 @@ async function client(endpoint: string, {
 
     return window.fetch(`${apiUrl}/${endpoint}`, config).then(async (response) => {
         if (response.status === 401) {
-            CookieUtils.DeleteCookie('dfcuser');
+            const data = await response.json() as { message: string };
+
+            if (data.message === 'TOKEN_EXPIRED') {
+                return Promise.reject(new Error(data.message));
+            }
+
+            LocalStorageUtils.clearAccessToken();
+            LocalStorageUtils.clearRefreshToken();
 
             // refresh the page for them
             window.location.assign(window.location.toString());

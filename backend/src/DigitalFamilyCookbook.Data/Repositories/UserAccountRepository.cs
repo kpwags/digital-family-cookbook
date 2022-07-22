@@ -5,13 +5,20 @@ namespace DigitalFamilyCookbook.Data.Repositories;
 public class UserAccountRepository : IUserAccountRepository
 {
     private readonly UserManager<UserAccountDto> _userManager;
+    private readonly RoleManager<RoleTypeDto> _roleManager;
+    private readonly IRefreshTokenRespository _refreshTokenRepository;
 
-    public UserAccountRepository(UserManager<UserAccountDto> userManager)
+    public UserAccountRepository(
+        UserManager<UserAccountDto> userManager,
+        RoleManager<RoleTypeDto> roleManager,
+        IRefreshTokenRespository refreshTokenRespository)
     {
         _userManager = userManager;
+        _roleManager = roleManager;
+        _refreshTokenRepository = refreshTokenRespository;
     }
 
-    public async Task<UserAccount> GetUserAccountById(string userAccountId)
+    public async Task<UserAccount> GetUserAccountById(string userAccountId, bool includeRoles = false)
     {
         var user = await _userManager.FindByIdAsync(userAccountId);
 
@@ -20,12 +27,47 @@ public class UserAccountRepository : IUserAccountRepository
             return UserAccount.None();
         }
 
+        if (includeRoles)
+        {
+            var userRoles = await _userManager.GetRolesAsync(user);
+            var roles = new List<RoleTypeDto>();
+
+            foreach (var userRole in userRoles)
+            {
+                var role = await _roleManager.FindByNameAsync(userRole);
+
+                if (role != null)
+                {
+                    roles.Add(role);
+                }
+            }
+
+            user.RoleTypes = roles;
+        }
+
         return UserAccount.FromDto(user);
     }
 
     public async Task<UserAccount?> GetUserAccountByIdOrDefault(string userAccountId)
     {
         var user = await _userManager.FindByIdAsync(userAccountId);
+
+        return user is not null ? UserAccount.FromDto(user) : null;
+    }
+
+    public async Task<UserAccount?> GetUserAccountByToken(string token)
+    {
+        var userTokens = _refreshTokenRepository.GetUserRefreshTokens(token);
+
+        if (!userTokens.Any())
+        {
+            return null;
+        }
+
+        var t = userTokens.First();
+        var u = t.UserAccount;
+
+        var user = await _userManager.FindByIdAsync(userTokens.First().UserAccount.Id);
 
         return user is not null ? UserAccount.FromDto(user) : null;
     }

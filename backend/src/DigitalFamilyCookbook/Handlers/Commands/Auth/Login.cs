@@ -11,15 +11,23 @@ public class Login
     public class Handler : IRequestHandler<Command, OperationResult<AuthResult>>
     {
         private readonly IAuthService _authService;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public Handler(IAuthService authService)
+        public Handler(IAuthService authService, IHttpContextAccessor httpContextAccessor)
         {
             _authService = authService;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public async Task<OperationResult<AuthResult>> Handle(Command cmd, CancellationToken cancellationToken)
         {
-            var result = await _authService.LoginUser(cmd.Email, cmd.Password);
+            var ip = "";
+            if (_httpContextAccessor.HttpContext is not null)
+            {
+                ip = _httpContextAccessor.HttpContext.GetUserIpAddress();
+            }
+
+            var result = await _authService.LoginUser(cmd.Email, cmd.Password, ip);
 
             if (result.IsSuccessful)
             {

@@ -1,10 +1,11 @@
+using DigitalFamilyCookbook.Authorization;
 using DigitalFamilyCookbook.Handlers.Commands.Auth;
 using DigitalFamilyCookbook.Handlers.Queries.Auth;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading;
 
 namespace DigitalFamilyCookbook.Controllers;
 
+[Authorize]
 [Route("auth")]
 [ApiController]
 public class AuthController : Controller
@@ -16,6 +17,7 @@ public class AuthController : Controller
         _mediatr = mediatr;
     }
 
+    [AllowAnonymous]
     [HttpPost("register")]
     public async Task<ActionResult<AuthResult>> RegisterUser(Register.Command command, CancellationToken cancellationToken)
     {
@@ -34,6 +36,7 @@ public class AuthController : Controller
         return Ok(result.Value);
     }
 
+    [AllowAnonymous]
     [HttpPost("login")]
     public async Task<ActionResult<AuthResult>> LoginUser(Login.Command command, CancellationToken cancellationToken)
     {
@@ -53,8 +56,47 @@ public class AuthController : Controller
     }
 
     [HttpGet("getuser")]
+    [AllowAnonymous]
     public async Task<ActionResult<UserAccountApiModel>> GetUser(CancellationToken cancellationToken)
     {
         return await _mediatr.Send(new GetLoggedInUser.Query(), cancellationToken);
+    }
+
+    [HttpPost("refreshtoken")]
+    public async Task<ActionResult<AuthResult>> RefreshToken(Handlers.Commands.Auth.RefreshToken.Command command, CancellationToken cancellationToken)
+    {
+        var result = await _mediatr.Send(
+            new Handlers.Commands.Auth.RefreshToken.Command
+            {
+                Token = command.Token,
+                IpAddress = HttpContext.GetUserIpAddress(),
+            },
+            cancellationToken);
+
+        if (!result.IsSuccessful)
+        {
+            return BadRequest(result.ErrorMessage);
+        }
+
+        if (result.Value is null)
+        {
+            return BadRequest("Unable to generate refresh token");
+        }
+
+        return Ok(result.Value);
+    }
+
+    [HttpPost("revoketoken")]
+    public async Task<ActionResult> RevokeToken(RevokeToken.Command command, CancellationToken cancellationToken)
+    {
+        try
+        {
+            await _mediatr.Send(command, cancellationToken);
+            return Ok();
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
     }
 }

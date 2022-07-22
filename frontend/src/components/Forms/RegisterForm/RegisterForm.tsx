@@ -7,13 +7,13 @@ import {
     Alert,
 } from 'antd';
 import { Api } from '@utils/api';
-import { AuthResult } from '@models/AuthResult';
+import AuthResult from '@models/AuthResult';
 
 import './RegisterForm.less';
 import AppContext from '@contexts/AppContext';
 
 type RegisterFormProps = {
-    onRegisterCompleted: (token: string) => void
+    onRegisterCompleted: (authResult: AuthResult) => void
 }
 
 type FormValues = {
@@ -54,7 +54,7 @@ const RegisterForm = ({
         }
 
         setLoadingMessage('');
-        onRegisterCompleted(data.token);
+        onRegisterCompleted(data);
     };
 
     const validatePassword = (field: unknown, value: string) => {

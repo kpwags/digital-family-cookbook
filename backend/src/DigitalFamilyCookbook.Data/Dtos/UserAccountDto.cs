@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Identity;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DigitalFamilyCookbook.Data.Dtos;
 
@@ -12,6 +13,12 @@ public class UserAccountDto : IdentityUser
 
     [PersonalData]
     public List<RecipeDto> Recipes { get; set; } = new List<RecipeDto>();
+
+    [PersonalData]
+    public List<RefreshTokenDto> RefreshTokens { get; set; } = new List<RefreshTokenDto>();
+
+    [NotMapped]
+    public IEnumerable<RoleTypeDto> RoleTypes { get; set; } = Enumerable.Empty<RoleTypeDto>();
 
     public static UserAccountDto None() => new UserAccountDto();
 }

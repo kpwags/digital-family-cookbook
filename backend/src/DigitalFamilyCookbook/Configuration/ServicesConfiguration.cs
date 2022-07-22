@@ -10,6 +10,7 @@ namespace DigitalFamilyCookbook.Configuration
             services.AddScoped<IRoleService, RoleService>();
             services.AddScoped<IFileService, FileService>();
             services.AddScoped<IImageService, ImageService>();
+            services.AddScoped<ITokenService, TokenService>();
         }
     }
 }

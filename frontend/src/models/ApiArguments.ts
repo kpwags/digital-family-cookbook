@@ -6,4 +6,5 @@ export interface ApiArguments {
     contentType?: string | null,
     fileUpload?: boolean,
     method?: string
+    isRefreshTokenRequest?: boolean
 }

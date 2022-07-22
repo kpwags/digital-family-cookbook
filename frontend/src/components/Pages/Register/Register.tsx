@@ -7,6 +7,7 @@ import {
 } from 'antd';
 import AppContext from '@contexts/AppContext';
 import RegisterForm from '@components/Forms/RegisterForm';
+import AuthResult from '@models/AuthResult';
 
 const { Title, Paragraph } = Typography;
 
@@ -25,8 +26,8 @@ const Register = (): JSX.Element => {
         document.title = `Register - ${siteSettings.title}`;
     }, []);
 
-    const completeRegistration = (token: string) => {
-        loginUser(token);
+    const completeRegistration = (authResult: AuthResult) => {
+        loginUser(authResult.accessToken, authResult.refreshToken);
         navigate('/');
     };
 

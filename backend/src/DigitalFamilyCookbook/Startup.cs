@@ -9,7 +9,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.OpenApi.Models;
 
 namespace DigitalFamilyCookbook;
 
@@ -38,7 +37,8 @@ public class Startup
             {
                 builder.WithOrigins(_configuration.CorsAllowedOrigins.ToArray())
                     .AllowAnyHeader()
-                    .AllowAnyMethod();
+                    .AllowAnyMethod()
+                    .AllowCredentials();
             });
         });
 
@@ -88,7 +88,7 @@ public class Startup
 
         app.UseGraphiQl("/graphql");
 
-        app.UseMiddleware<DigitalFamilyCookbook.Helpers.JwtMiddleware>();
+        app.UseMiddleware<DigitalFamilyCookbook.Authorization.JwtMiddleware>();
 
         app.UseAuthentication();
         app.UseAuthorization();

@@ -8,6 +8,7 @@ import BaseLayout from '@components/Elements/BaseLayout';
 import { CookiesProvider } from 'react-cookie';
 import ProtectedRoute from '@components/ProtectedRoute';
 
+import Landing from '@components/Pages/Landing';
 import Register from '@components/Pages/Register';
 import Login from '@components/Pages/Login';
 import Roles from '@components/Pages/Roles';
@@ -21,13 +22,6 @@ import ManageMeats from '@components/Pages/ManageMeats';
 import ManageRecipes from '@components/Pages/ManageRecipes';
 
 import './styles/App.less';
-
-const Home = () => (
-    <>
-        <h1>Home</h1>
-        <p>This is the home page</p>
-    </>
-);
 
 const App = (): JSX.Element => (
     <CookiesProvider>
@@ -107,7 +101,7 @@ const App = (): JSX.Element => (
                                 <ViewRecipe />
                             )}
                         />
-                        <Route path="/" element={<Home />} />
+                        <Route path="/" element={<Landing />} />
                     </Routes>
                 </BaseLayout>
             </MainApp>

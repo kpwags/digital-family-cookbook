@@ -2,8 +2,9 @@ import {
     ReactNode,
     useState,
     useEffect,
+    useRef,
+    useCallback,
 } from 'react';
-import { useCookies } from 'react-cookie';
 import AppContext from '@contexts/AppContext';
 import { Api } from '@utils/api';
 import { PageState } from '@utils/constants';
@@ -12,15 +13,18 @@ import { SiteSettings } from '@models/SiteSettings';
 import { UserAccount } from '@models/UserAccount';
 import { Category } from '@models/Category';
 import { Meat } from '@models/Meat';
+import { getNewRefreshToken } from '@utils/auth';
+import LocalStorageUtils from '@utils/LocalStorageUtils';
 
 const MainApp = ({ children }: { children: ReactNode }): JSX.Element => {
     const [siteSettings, setSiteSettings] = useState<SiteSettings>(defaultSiteSettings);
     const [user, setUser] = useState<UserAccount | null>(null);
     const [pageError, setPageError] = useState<string>('');
     const [pageState, setPageState] = useState<PageState>(PageState.Loading);
-    const [cookies, setCookie, removeCookie] = useCookies(['dfcuser']);
     const [categories, setCategories] = useState<Category[]>([]);
     const [meats, setMeats] = useState<Meat[]>([]);
+
+    const intervalRef = useRef<NodeJS.Timer>();
 
     const loadUser = async () => {
         const [data, error] = await Api.Get<UserAccount>('auth/getuser');
@@ -36,7 +40,8 @@ const MainApp = ({ children }: { children: ReactNode }): JSX.Element => {
     };
 
     const logout = () => {
-        removeCookie('dfcuser');
+        LocalStorageUtils.clearAccessToken();
+        LocalStorageUtils.clearRefreshToken();
         document.location.reload();
     };
 
@@ -60,7 +65,7 @@ const MainApp = ({ children }: { children: ReactNode }): JSX.Element => {
         setCategories(categoriesData);
         setMeats(meatsData);
 
-        if (cookies.dfcuser) {
+        if (LocalStorageUtils.getAccessToken()) {
             loadUser();
             setSiteSettings(siteSettingsData);
             setPageState(PageState.Ready);
@@ -74,14 +79,33 @@ const MainApp = ({ children }: { children: ReactNode }): JSX.Element => {
         loadSiteData();
     }, []);
 
+    const getToken = useCallback(async () => {
+        // Get new token if and only if existing token is available
+        if (LocalStorageUtils.getAccessToken() != null) {
+            const [data] = await getNewRefreshToken();
+
+            if (data && data.isSuccessful) {
+                LocalStorageUtils.setAccessToken(data.accessToken);
+                LocalStorageUtils.setRefreshToken(data.refreshToken);
+            }
+        }
+    }, []);
+
+    useEffect(() => {
+        const interval = setInterval(() => getToken(), 1000 * 60 * 6); // 6 minutes interval as our token will expire after 7 minutes.
+        intervalRef.current = interval;
+        return () => clearInterval(interval);
+    }, [getToken]);
+
     const refreshUser = () => {
-        if (cookies.dfcuser) {
+        if (LocalStorageUtils.getAccessToken()) {
             loadUser();
         }
     };
 
-    const loginUser = (token: string) => {
-        setCookie('dfcuser', token, { path: '/' });
+    const loginUser = (accessToken: string, refreshToken: string) => {
+        LocalStorageUtils.setAccessToken(accessToken);
+        LocalStorageUtils.setRefreshToken(refreshToken);
         loadUser();
     };
 
@@ -98,7 +122,7 @@ const MainApp = ({ children }: { children: ReactNode }): JSX.Element => {
             // eslint-disable-next-line react/jsx-no-constructed-context-values
             value={{
                 siteSettings,
-                token: cookies.dfcuser,
+                token: LocalStorageUtils.getAccessToken(),
                 user,
                 categories,
                 meats,

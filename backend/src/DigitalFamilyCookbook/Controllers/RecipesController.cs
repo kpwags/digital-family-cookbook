@@ -1,3 +1,4 @@
+using DigitalFamilyCookbook.Authorization;
 using DigitalFamilyCookbook.Handlers.Commands.Recipes;
 using DigitalFamilyCookbook.Handlers.Queries.Recipes;
 using Microsoft.AspNetCore.Mvc;
@@ -6,6 +7,7 @@ namespace DigitalFamilyCookbook.Controllers;
 
 [Route("recipes")]
 [ApiController]
+[Authorize]
 public class RecipesController : Controller
 {
     private readonly IMediator _mediatr;
@@ -16,6 +18,7 @@ public class RecipesController : Controller
     }
 
     [HttpGet("get")]
+    [AllowAnonymous]
     public async Task<ActionResult<RecipeApiModel>> Get(int id, CancellationToken cancellationToken)
     {
         var result = await _mediatr.Send(new GetRecipeById.Query { Id = id }, cancellationToken);
@@ -29,6 +32,7 @@ public class RecipesController : Controller
     }
 
     [HttpGet("getall")]
+    [AllowAnonymous]
     public async Task<ActionResult<IReadOnlyCollection<RecipeApiModel>>> GetAll(CancellationToken cancellationToken)
     {
         var result = await _mediatr.Send(new GetAllRecipes.Query(), cancellationToken);
@@ -42,6 +46,7 @@ public class RecipesController : Controller
     }
 
     [HttpGet("getimage")]
+    [AllowAnonymous]
     public async Task<ActionResult<string>> GetImage(string filename, CancellationToken cancellationToken)
     {
         var result = await _mediatr.Send(new GetRecipeImage.Query { Filename = filename }, cancellationToken);
@@ -55,7 +60,6 @@ public class RecipesController : Controller
     }
 
     [HttpPost("create")]
-    [ValidateUser]
     public async Task<ActionResult<RecipeApiModel>> Create(CreateRecipe.Command command, CancellationToken cancellationToken)
     {
         var result = await _mediatr.Send(command, cancellationToken);
@@ -69,7 +73,6 @@ public class RecipesController : Controller
     }
 
     [HttpPatch("update")]
-    [ValidateUser]
     public async Task<IActionResult> Update(UpdateRecipe.Command command, CancellationToken cancellationToken)
     {
         var result = await _mediatr.Send(command, cancellationToken);
@@ -83,7 +86,6 @@ public class RecipesController : Controller
     }
 
     [HttpDelete("delete")]
-    [ValidateUser]
     public async Task<IActionResult> Delete(int Id, CancellationToken cancellationToken)
     {
         var result = await _mediatr.Send(new DeleteRecipe.Command { Id = Id }, cancellationToken);
@@ -97,7 +99,6 @@ public class RecipesController : Controller
     }
 
     [HttpPost("uploadimage")]
-    [ValidateUser]
     public async Task<ActionResult<ImageUploadResponseApiModel>> UploadImage([FromForm] UploadRecipeImage.Command command, CancellationToken cancellationToken)
     {
         var result = await _mediatr.Send(command, cancellationToken);
@@ -111,7 +112,6 @@ public class RecipesController : Controller
     }
 
     [HttpPost("deleteimage")]
-    [ValidateUser]
     public async Task<ActionResult<ImageUploadResponseApiModel>> DeleteImage(DeleteRecipeImage.Command command, CancellationToken cancellationToken)
     {
         var result = await _mediatr.Send(command, cancellationToken);
@@ -125,6 +125,7 @@ public class RecipesController : Controller
     }
 
     [HttpGet("getuserrecipes")]
+    [AllowAnonymous]
     public async Task<ActionResult<IReadOnlyCollection<RecipeApiModel>>> GetUserRecipes(string userAccountId, CancellationToken cancellationToken)
     {
         var result = await _mediatr.Send(new GetUserRecipes.Query { UserAccountId = userAccountId }, cancellationToken);

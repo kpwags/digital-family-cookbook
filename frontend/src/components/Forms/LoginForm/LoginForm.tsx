@@ -7,7 +7,7 @@ import {
     Alert,
 } from 'antd';
 import { Api } from '@utils/api';
-import { AuthResult } from '@models/AuthResult';
+import AuthResult from '@models/AuthResult';
 
 import './LoginForm.less';
 
@@ -17,7 +17,7 @@ type FormValues = {
 }
 
 type LoginFormProps = {
-    onLoginCompleted: (token: string) => void
+    onLoginCompleted: (authResult: AuthResult) => void
 }
 
 const LoginForm = ({
@@ -45,7 +45,8 @@ const LoginForm = ({
         }
 
         setLoadingMessage('');
-        onLoginCompleted(data.token);
+
+        onLoginCompleted(data);
     };
 
     return (

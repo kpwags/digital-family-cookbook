@@ -10,7 +10,7 @@ import { Meat } from '@models/Meat';
 interface MockAppProviderProps {
     siteSettings?: SiteSettings
     user?: UserAccount | null
-    token?: string | undefined
+    token?: string | null
     categories?: Category[]
     meats?: Meat[]
     updateSiteSettings?: (settings: SiteSettings) => void
@@ -29,7 +29,7 @@ mockSiteSettings.isPublic = true;
 const MockAppProvider = ({
     siteSettings = mockSiteSettings,
     user = null,
-    token = undefined,
+    token = null,
     categories = [],
     meats = [],
     updateSiteSettings = jest.fn(),
