@@ -1,6 +1,6 @@
 import useDocumentTitle from '@hooks/useDocumentTitle';
 
-const Landing = () => {
+const Landing = (): JSX.Element => {
     useDocumentTitle(undefined);
 
     return (
