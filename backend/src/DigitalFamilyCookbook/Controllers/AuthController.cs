@@ -8,7 +8,7 @@ namespace DigitalFamilyCookbook.Controllers;
 [Authorize]
 [Route("auth")]
 [ApiController]
-public class AuthController : Controller
+public class AuthController : BaseController
 {
     private readonly IMediator _mediatr;
 
@@ -56,13 +56,13 @@ public class AuthController : Controller
     }
 
     [HttpGet("getuser")]
-    [AllowAnonymous]
     public async Task<ActionResult<UserAccountApiModel>> GetUser(CancellationToken cancellationToken)
     {
         return await _mediatr.Send(new GetLoggedInUser.Query(), cancellationToken);
     }
 
     [HttpPost("refreshtoken")]
+    [AllowAnonymous]
     public async Task<ActionResult<AuthResult>> RefreshToken(Handlers.Commands.Auth.RefreshToken.Command command, CancellationToken cancellationToken)
     {
         var result = await _mediatr.Send(
@@ -78,7 +78,7 @@ public class AuthController : Controller
             return BadRequest(result.ErrorMessage);
         }
 
-        if (result.Value is null)
+        if (result is null || result.Value is null)
         {
             return BadRequest("Unable to generate refresh token");
         }

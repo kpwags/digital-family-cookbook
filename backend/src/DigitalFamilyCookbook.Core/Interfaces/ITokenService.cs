@@ -6,7 +6,7 @@ public interface ITokenService
 {
     string GenerateJwtToken(List<Claim> claims);
 
-    string? ValidateJwtToken(string token);
+    (string? userId, string? error) ValidateJwtToken(string token);
 
     Task<RefreshToken> GenerateRefreshToken(string ipAddress, UserAccount user);
 }

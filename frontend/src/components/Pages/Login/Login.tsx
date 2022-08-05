@@ -35,7 +35,7 @@ const Login = ({
 
     return (
         <Row justify="center" align="top">
-            <Col>
+            <Col span={8}>
                 <Title level={1}>Login</Title>
                 <Paragraph>Enter your email and password to gain access.</Paragraph>
                 <LoginForm onLoginCompleted={completeLoginProcess} />

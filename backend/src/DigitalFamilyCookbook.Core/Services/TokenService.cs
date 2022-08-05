@@ -41,10 +41,17 @@ public class TokenService : ITokenService
         return tokenHandler.WriteToken(token);
     }
 
-    public string? ValidateJwtToken(string token)
+    public (string? userId, string? error) ValidateJwtToken(string token)
     {
         if (token == null)
-            return null;
+        {
+            return (null, "NO_TOKEN");
+        }
+
+        if (IsTokenExpired(token))
+        {
+            return (null, "EXPIRED");
+        }
 
         var tokenHandler = new JwtSecurityTokenHandler();
         var key = Encoding.ASCII.GetBytes(_configuration.Auth.JwtSecret);
@@ -58,12 +65,12 @@ public class TokenService : ITokenService
             var userId = jwtToken.Claims.First(x => x.Type == "id").Value;
 
             // return user id from JWT token if validation successful
-            return userId;
+            return (userId, null);
         }
         catch
         {
             // return null if validation fails
-            return null;
+            return (null, "INVALID");
         }
     }
 
@@ -104,5 +111,12 @@ public class TokenService : ITokenService
 
         return new string(Enumerable.Repeat(chars, length)
             .Select(x => x[random.Next(x.Length)]).ToArray());
+    }
+
+    private bool IsTokenExpired(string token)
+    {
+        var jwtToken = new JwtSecurityToken(token);
+
+        return (jwtToken.ValidFrom > DateTime.UtcNow) || (jwtToken.ValidTo < DateTime.UtcNow);
     }
 }

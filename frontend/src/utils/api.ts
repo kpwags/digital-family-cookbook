@@ -1,7 +1,6 @@
 import { ApiArguments } from '@models/ApiArguments';
 import { client, handleApiError } from '@utils/client';
 import { getNewRefreshToken } from './auth';
-import LocalStorageUtils from './LocalStorageUtils';
 
 class Api {
     static Post<T>(endpoint: string, config: ApiArguments = {}) : Promise<[T | null, string | null]> {
@@ -16,10 +15,10 @@ class Api {
                 const errorMessage = handleApiError(error);
 
                 if (errorMessage === 'TOKEN_EXPIRED' && !config.isRefreshTokenRequest) {
-                    const [data] = await getNewRefreshToken();
+                    const [, error] = await getNewRefreshToken();
 
-                    if (data && data.isSuccessful) {
-                        LocalStorageUtils.setAccessToken(data.accessToken);
+                    if (error) {
+                        return [null, 'Unable to get refresh token'];
                     }
 
                     return client(endpoint, apiConfig).then(
@@ -47,10 +46,10 @@ class Api {
                 const errorMessage = handleApiError(error);
 
                 if (errorMessage === 'TOKEN_EXPIRED' && !config.isRefreshTokenRequest) {
-                    const [data] = await getNewRefreshToken();
+                    const [, error] = await getNewRefreshToken();
 
-                    if (data && data.isSuccessful) {
-                        LocalStorageUtils.setAccessToken(data.accessToken);
+                    if (error) {
+                        return [null, 'Unable to get refresh token'];
                     }
 
                     return client(endpoint, apiConfig).then(
@@ -81,10 +80,10 @@ class Api {
                 const errorMessage = handleApiError(error);
 
                 if (errorMessage === 'TOKEN_EXPIRED' && !config.isRefreshTokenRequest) {
-                    const [data] = await getNewRefreshToken();
+                    const [, error] = await getNewRefreshToken();
 
-                    if (data && data.isSuccessful) {
-                        LocalStorageUtils.setAccessToken(data.accessToken);
+                    if (error) {
+                        return [null, 'Unable to get refresh token'];
                     }
 
                     return client(url, { method: 'GET' }).then(
@@ -115,10 +114,10 @@ class Api {
                 const errorMessage = handleApiError(error);
 
                 if (errorMessage === 'TOKEN_EXPIRED' && !config.isRefreshTokenRequest) {
-                    const [data] = await getNewRefreshToken();
+                    const [, error] = await getNewRefreshToken();
 
-                    if (data && data.isSuccessful) {
-                        LocalStorageUtils.setAccessToken(data.accessToken);
+                    if (error) {
+                        return [null, 'Unable to get refresh token'];
                     }
 
                     return client(endpoint, { method: 'DELETE' }).then(
@@ -144,10 +143,10 @@ class Api {
                 const errorMessage = handleApiError(error);
 
                 if (errorMessage === 'TOKEN_EXPIRED' && !config.isRefreshTokenRequest) {
-                    const [data] = await getNewRefreshToken();
+                    const [, error] = await getNewRefreshToken();
 
-                    if (data && data.isSuccessful) {
-                        LocalStorageUtils.setAccessToken(data.accessToken);
+                    if (error) {
+                        return [null, 'Unable to get refresh token'];
                     }
 
                     return client(endpoint, apiConfig).then(

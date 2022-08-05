@@ -15,9 +15,12 @@ const getNewRefreshToken = async (): Promise<[AuthResult | null, string | null]>
         },
     );
 
-    if (error) {
-        return [null, error];
+    if (error || data === null) {
+        return [null, error || 'Error refreshing token'];
     }
+
+    LocalStorageUtils.setAccessToken(data.accessToken);
+    LocalStorageUtils.setRefreshToken(data.refreshToken);
 
     return [data, null];
 };

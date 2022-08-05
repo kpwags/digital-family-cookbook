@@ -1,6 +1,6 @@
 namespace DigitalFamilyCookbook.ApiModels;
 
-public class SiteSettingsApiModel
+public class SiteSettingsApiModel : BaseApiModel
 {
     public int SiteSettingsId { get; set; }
 

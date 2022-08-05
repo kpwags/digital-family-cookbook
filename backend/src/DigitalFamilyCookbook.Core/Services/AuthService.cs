@@ -147,7 +147,7 @@ public class AuthService : IAuthService
         var newRefreshToken = await RotateRefreshToken(refreshToken, user, ip);
 
         var userRefreshTokens = _refreshTokenRepository.GetUserRefreshTokens(refreshToken.Token).ToList();
-        userRefreshTokens.Add(newRefreshToken);
+        // userRefreshTokens.Add(newRefreshToken);
 
         // remove old refresh tokens from user
         await _refreshTokenRepository.RemoveOldRefreshTokens(userRefreshTokens, _configuration.Auth.JwtLifespan);

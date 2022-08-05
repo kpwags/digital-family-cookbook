@@ -34,20 +34,25 @@ public static class HttpContextExtensions
         return UserAccountApiModel.None();
     }
 
-    public static string? GetUserRefreshToken(this HttpContext context)
+
+    public static string? GetAccessTokenFromHeaders(this HttpContext context)
     {
-        return context.Request.Cookies["refreshToken"];
+        return context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
     }
 
-    public static void SetTokenCookie(this HttpContext context, string token)
+    public static string? GetRefreshTokenFromHeaders(this HttpContext context)
     {
-        var cookieOptions = new CookieOptions
-        {
-            HttpOnly = true,
-            Expires = DateTime.UtcNow.AddDays(7)
-        };
+        return context.Request.Headers["RefreshToken"].FirstOrDefault();
+    }
 
-        context.Response.Cookies.Append("refreshToken", token, cookieOptions);
+    public static string? GetAccessToken(this HttpContext context)
+    {
+        return context.Items["AccessToken"]?.ToString();
+    }
+
+    public static string? GetRefreshToken(this HttpContext context)
+    {
+        return context.Items["RefreshToken"]?.ToString();
     }
 
     public static string GetUserIpAddress(this HttpContext context)

@@ -1,5 +1,4 @@
 using DigitalFamilyCookbook.Core.Configuration;
-using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 
 namespace DigitalFamilyCookbook.Authorization;
@@ -17,26 +16,26 @@ public class JwtMiddleware
         _configuration = configuration;
     }
 
-    public async Task Invoke(HttpContext context, IUserAccountRepository userAccountRepository, ITokenService jwtService)
+    public async Task Invoke(HttpContext context, IUserAccountRepository userAccountRepository, ITokenService tokenService, IAuthService authService)
     {
-        var token = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
+        var accessToken = context.GetAccessTokenFromHeaders();
 
-        if (token != null)
+        if (accessToken is not null)
         {
-            await AttachUserToContext(context, userAccountRepository, jwtService, token);
+            await AttachUserToContext(context, userAccountRepository, tokenService, accessToken);
         }
 
         await _next(context);
     }
 
-    private async Task AttachUserToContext(HttpContext context, IUserAccountRepository userAccountRepository, ITokenService jwtService, string token)
+    private async Task AttachUserToContext(HttpContext context, IUserAccountRepository userAccountRepository, ITokenService tokenService, string token)
     {
         try
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = System.Text.Encoding.ASCII.GetBytes(_configuration.Auth.JwtSecret);
 
-            var userId = jwtService.ValidateJwtToken(token);
+            var (userId, error) = tokenService.ValidateJwtToken(token);
 
             if (userId is not null)
             {
@@ -44,11 +43,20 @@ public class JwtMiddleware
 
                 // attach user to context on successful jwt validation
                 context.Items["User"] = UserAccountApiModel.FromDomainModel(user);
+
+                if (context.Items.ContainsKey("TokenError"))
+                {
+                    context.Items.Remove("TokenError");
+                }
             }
-        }
-        catch (SecurityTokenExpiredException)
-        {
-            context.Items["TokenError"] = "expired";
+            else if (error is not null)
+            {
+                context.Items["TokenError"] = error;
+            }
+            else
+            {
+                context.Items["TokenError"] = "unknown";
+            }
         }
         catch
         {

@@ -31,12 +31,14 @@ public class AuthorizeAttribute : Attribute, IAuthorizationFilter
         {
             string? tokenError = context.HttpContext.Items["TokenError"] as string;
 
-            if (tokenError is not null && tokenError == "expired")
+            if (tokenError is not null && tokenError == "EXPIRED")
             {
                 context.Result = new JsonResult(new { message = "TOKEN_EXPIRED" }) { StatusCode = StatusCodes.Status401Unauthorized };
             }
-
-            context.Result = new JsonResult(new { message = "UNAUTHORIZED" }) { StatusCode = StatusCodes.Status401Unauthorized };
+            else
+            {
+                context.Result = new JsonResult(new { message = "UNAUTHORIZED" }) { StatusCode = StatusCodes.Status401Unauthorized };
+            }
         }
 
         if (user is not null && _roles.Count > 0)

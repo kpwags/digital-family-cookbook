@@ -1,6 +1,6 @@
 namespace DigitalFamilyCookbook.ApiModels;
 
-public class MeatApiModel
+public class MeatApiModel : BaseApiModel
 {
     public string Id { get; set; } = string.Empty;
 

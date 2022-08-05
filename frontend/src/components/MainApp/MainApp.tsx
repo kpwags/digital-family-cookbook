@@ -15,6 +15,7 @@ import { Category } from '@models/Category';
 import { Meat } from '@models/Meat';
 import { getNewRefreshToken } from '@utils/auth';
 import LocalStorageUtils from '@utils/LocalStorageUtils';
+import { Button } from 'antd';
 
 const MainApp = ({ children }: { children: ReactNode }): JSX.Element => {
     const [siteSettings, setSiteSettings] = useState<SiteSettings>(defaultSiteSettings);
@@ -26,23 +27,23 @@ const MainApp = ({ children }: { children: ReactNode }): JSX.Element => {
 
     const intervalRef = useRef<NodeJS.Timer>();
 
+    const logout = () => {
+        LocalStorageUtils.clearAccessToken();
+        LocalStorageUtils.clearRefreshToken();
+        document.location.reload();
+    };
+
     const loadUser = async () => {
         const [data, error] = await Api.Get<UserAccount>('auth/getuser');
 
         if (error || data === null) {
-            setPageError(error || 'Unable to load site settings');
-            setPageState(PageState.Error);
+            logout();
+            setPageState(PageState.Ready);
             return;
         }
 
         setUser(data);
         setPageState(PageState.Ready);
-    };
-
-    const logout = () => {
-        LocalStorageUtils.clearAccessToken();
-        LocalStorageUtils.clearRefreshToken();
-        document.location.reload();
     };
 
     const loadSiteData = async () => {
@@ -92,7 +93,7 @@ const MainApp = ({ children }: { children: ReactNode }): JSX.Element => {
     }, []);
 
     useEffect(() => {
-        const interval = setInterval(() => getToken(), 1000 * 60 * 6); // 6 minutes interval as our token will expire after 7 minutes.
+        const interval = setInterval(() => getToken(), 450000); // 7.5 minutes
         intervalRef.current = interval;
         return () => clearInterval(interval);
     }, [getToken]);
@@ -140,6 +141,7 @@ const MainApp = ({ children }: { children: ReactNode }): JSX.Element => {
                 },
             }}
         >
+            {user ? <Button onClick={() => getToken()}>Refresh Tokens</Button> : null}
             {children}
         </AppContext.Provider>
     );
