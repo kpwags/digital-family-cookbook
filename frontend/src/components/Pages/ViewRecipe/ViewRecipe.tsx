@@ -96,7 +96,7 @@ const ViewRecipe = (): JSX.Element => {
                                     <Title level={3}>Ingredients</Title>
                                     <ul>
                                         {recipe.ingredients.map((i) => (
-                                            <li key={i.ingredientId}>{i.name}</li>
+                                            <li key={i.id}>{i.name}</li>
                                         ))}
                                     </ul>
                                 </div>
@@ -104,7 +104,7 @@ const ViewRecipe = (): JSX.Element => {
                                     <Title level={3}>Directions</Title>
                                     <ol>
                                         {recipe.steps.map((s) => (
-                                            <li key={s.stepId}>{s.direction}</li>
+                                            <li key={s.id}>{s.direction}</li>
                                         ))}
                                     </ol>
                                 </div>
