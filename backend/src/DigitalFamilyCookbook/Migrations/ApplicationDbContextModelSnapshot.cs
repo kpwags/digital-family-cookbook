@@ -44,7 +44,7 @@ namespace DigitalFamilyCookbook.Migrations
                         .ValueGeneratedOnAdd()
                         .HasMaxLength(36)
                         .HasColumnType("nvarchar(36)")
-                        .HasDefaultValue("da9a6fdd-d702-4dc3-bc9f-6caea2c9e410");
+                        .HasDefaultValue("781b0240-3501-4fd2-b883-dd437b3f5587");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -83,7 +83,7 @@ namespace DigitalFamilyCookbook.Migrations
                         .ValueGeneratedOnAdd()
                         .HasMaxLength(36)
                         .HasColumnType("nvarchar(36)")
-                        .HasDefaultValue("337cc394-83e2-4a8a-8a7d-e55712fa2673");
+                        .HasDefaultValue("e26f1477-c566-43da-ade8-f2ab21ad0f44");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -126,7 +126,7 @@ namespace DigitalFamilyCookbook.Migrations
                         .ValueGeneratedOnAdd()
                         .HasMaxLength(36)
                         .HasColumnType("nvarchar(36)")
-                        .HasDefaultValue("1689ae3e-1e6d-46d2-b31a-e695ee80b49a");
+                        .HasDefaultValue("9215c01e-b4a8-4157-919b-1e79741aee21");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -161,7 +161,7 @@ namespace DigitalFamilyCookbook.Migrations
                         .ValueGeneratedOnAdd()
                         .HasMaxLength(36)
                         .HasColumnType("nvarchar(36)")
-                        .HasDefaultValue("63978d2a-7a1e-45ca-ab26-2478302fd763");
+                        .HasDefaultValue("069c3b5f-2060-4aab-9fb6-a6af2059c8f4");
 
                     b.Property<string>("NoteText")
                         .IsRequired()
@@ -199,7 +199,7 @@ namespace DigitalFamilyCookbook.Migrations
                         .ValueGeneratedOnAdd()
                         .HasMaxLength(36)
                         .HasColumnType("nvarchar(36)")
-                        .HasDefaultValue("0fde9d3e-3b4c-43cc-99c1-9366d4abb230");
+                        .HasDefaultValue("6d914464-f729-4d8d-9422-38c067bce8ec");
 
                     b.Property<int>("RecipeId")
                         .HasColumnType("int");
@@ -265,13 +265,15 @@ namespace DigitalFamilyCookbook.Migrations
                         .ValueGeneratedOnAdd()
                         .HasMaxLength(36)
                         .HasColumnType("nvarchar(36)")
-                        .HasDefaultValue("b022e383-379a-44e9-bd0a-25a2ac5b6fa3");
+                        .HasDefaultValue("7adb1d17-3b81-474d-bc22-698b329d328f");
 
                     b.Property<string>("ImageUrl")
+                        .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
                     b.Property<string>("ImageUrlLarge")
+                        .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
@@ -295,10 +297,12 @@ namespace DigitalFamilyCookbook.Migrations
                         .HasDefaultValue(1);
 
                     b.Property<string>("Source")
+                        .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
                     b.Property<string>("SourceUrl")
+                        .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
@@ -347,7 +351,7 @@ namespace DigitalFamilyCookbook.Migrations
                         .ValueGeneratedOnAdd()
                         .HasMaxLength(36)
                         .HasColumnType("nvarchar(36)")
-                        .HasDefaultValue("3adb04d3-4ac2-4cb8-8879-65c110110ff9");
+                        .HasDefaultValue("01e6f38e-41a7-461a-8b56-a1ddc2a34ce8");
 
                     b.Property<int>("MeatId")
                         .HasColumnType("int");
@@ -389,7 +393,7 @@ namespace DigitalFamilyCookbook.Migrations
                         .ValueGeneratedOnAdd()
                         .HasMaxLength(36)
                         .HasColumnType("nvarchar(36)")
-                        .HasDefaultValue("9e828120-49b9-4329-a4d8-2373c5f04a38");
+                        .HasDefaultValue("f2ef4df2-6b38-4801-a052-e74c4a9e0a88");
 
                     b.Property<int>("NoteId")
                         .HasColumnType("int");
@@ -407,6 +411,57 @@ namespace DigitalFamilyCookbook.Migrations
                         .HasDatabaseName("UQ_Recipe_RecipeNote_RecipeId_NoteId");
 
                     b.ToTable("RecipeNote", "recipe");
+                });
+
+            modelBuilder.Entity("DigitalFamilyCookbook.Data.Dtos.RefreshTokenDto", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("CreatedByIp")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DateUpdated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("Expires")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ReasonRevoked")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ReplacedByToken")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("Revoked")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("RevokedByIp")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Token")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserAccountId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserAccountId");
+
+                    b.ToTable("RefreshToken", "application");
                 });
 
             modelBuilder.Entity("DigitalFamilyCookbook.Data.Dtos.RoleTypeClaimDto", b =>
@@ -489,7 +544,7 @@ namespace DigitalFamilyCookbook.Migrations
                         .IsRequired()
                         .ValueGeneratedOnAdd()
                         .HasColumnType("nvarchar(max)")
-                        .HasDefaultValue("c8064ff3-7b83-4162-af30-d606fa553bfa");
+                        .HasDefaultValue("c5aaf2a9-c5e9-4fe4-9a85-7ab04e4a8c66");
 
                     b.Property<bool>("IsPublic")
                         .ValueGeneratedOnAdd()
@@ -539,7 +594,7 @@ namespace DigitalFamilyCookbook.Migrations
                         .ValueGeneratedOnAdd()
                         .HasMaxLength(36)
                         .HasColumnType("nvarchar(36)")
-                        .HasDefaultValue("73d2d360-4890-4a09-914f-0b5b6ff0f476");
+                        .HasDefaultValue("937f5ab5-3818-4750-8f22-8712f710f031");
 
                     b.Property<int>("RecipeId")
                         .HasColumnType("int");
@@ -805,6 +860,17 @@ namespace DigitalFamilyCookbook.Migrations
                     b.Navigation("Recipe");
                 });
 
+            modelBuilder.Entity("DigitalFamilyCookbook.Data.Dtos.RefreshTokenDto", b =>
+                {
+                    b.HasOne("DigitalFamilyCookbook.Data.Dtos.UserAccountDto", "UserAccount")
+                        .WithMany("RefreshTokens")
+                        .HasForeignKey("UserAccountId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("UserAccount");
+                });
+
             modelBuilder.Entity("DigitalFamilyCookbook.Data.Dtos.RoleTypeClaimDto", b =>
                 {
                     b.HasOne("DigitalFamilyCookbook.Data.Dtos.RoleTypeDto", null)
@@ -898,6 +964,8 @@ namespace DigitalFamilyCookbook.Migrations
             modelBuilder.Entity("DigitalFamilyCookbook.Data.Dtos.UserAccountDto", b =>
                 {
                     b.Navigation("Recipes");
+
+                    b.Navigation("RefreshTokens");
                 });
 #pragma warning restore 612, 618
         }

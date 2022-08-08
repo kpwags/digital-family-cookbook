@@ -1,9 +1,9 @@
 using DigitalFamilyCookbook.Core.Configuration;
+using DigitalFamilyCookbook.Data.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using System.Text;
 
 namespace DigitalFamilyCookbook.Core.Services;
 
@@ -14,21 +14,30 @@ public class AuthService : IAuthService
     private readonly UserManager<UserAccountDto> _userManager;
     private readonly SignInManager<UserAccountDto> _signInManager;
     private readonly RoleManager<RoleTypeDto> _roleManager;
+    private readonly IUserAccountRepository _userAccountRepository;
+    private readonly IRefreshTokenRepository _refreshTokenRepository;
+    private readonly ITokenService _tokenService;
 
     public AuthService(DigitalFamilyCookbookConfiguration configuration,
         UserManager<UserAccountDto> userManager,
         SignInManager<UserAccountDto> signInManager,
         RoleManager<RoleTypeDto> roleManager,
-        TokenValidationParameters tokenValidationParameters)
+        TokenValidationParameters tokenValidationParameters,
+        IUserAccountRepository userAccountRepository,
+        IRefreshTokenRepository refreshTokenRespository,
+        ITokenService tokenService)
     {
         _configuration = configuration;
         _userManager = userManager;
         _signInManager = signInManager;
         _roleManager = roleManager;
         _tokenValidationParameters = tokenValidationParameters;
+        _userAccountRepository = userAccountRepository;
+        _refreshTokenRepository = refreshTokenRespository;
+        _tokenService = tokenService;
     }
 
-    public async Task<AuthResult> LoginUser(string email, string password)
+    public async Task<AuthResult> LoginUser(string email, string password, string ip)
     {
         var user = await _userManager.FindByEmailAsync(email);
 
@@ -38,7 +47,18 @@ public class AuthService : IAuthService
 
             if (passwordCheck.Succeeded)
             {
-                return await GenerateToken(user);
+                var claims = await BuildClaimsForUser(user);
+                var token = _tokenService.GenerateAccessToken(claims);
+                var userAccount = UserAccount.FromDto(user);
+
+                var refreshToken = await _tokenService.GenerateRefreshToken(ip, userAccount);
+
+                return new AuthResult
+                {
+                    IsSuccessful = true,
+                    RefreshToken = refreshToken.Token,
+                    AccessToken = token,
+                };
             }
         }
 
@@ -49,7 +69,7 @@ public class AuthService : IAuthService
         };
     }
 
-    public async Task<AuthResult> RegisterUser(string email, string password, string name)
+    public async Task<AuthResult> RegisterUser(string email, string password, string name, string ip)
     {
         var user = await _userManager.FindByEmailAsync(email);
 
@@ -78,7 +98,17 @@ public class AuthService : IAuthService
 
             await _userManager.AddToRoleAsync(createdUser, "User");
 
-            return await GenerateToken(createdUser);
+            var claims = await BuildClaimsForUser(createdUser);
+
+            var refreshToken = await _tokenService.GenerateRefreshToken(ip, UserAccount.FromDto(createdUser));
+            var accessToken = _tokenService.GenerateAccessToken(claims);
+
+            return new AuthResult
+            {
+                IsSuccessful = true,
+                RefreshToken = refreshToken.Token,
+                AccessToken = accessToken,
+            };
         }
 
         return new AuthResult
@@ -88,45 +118,118 @@ public class AuthService : IAuthService
         };
     }
 
-    private async Task<AuthResult> GenerateToken(UserAccountDto user)
+    public async Task<AuthResult> RefreshToken(string token, string ip)
     {
-        var jwtTokenHandler = new JwtSecurityTokenHandler();
+        var user = await _userAccountRepository.GetUserAccountByToken(token);
+        var refreshToken = _refreshTokenRepository.GetRefreshTokenByToken(token);
 
-        var claims = await GetUserClaims(user);
-
-        var tokenDescriptor = new SecurityTokenDescriptor
+        if (user is null || refreshToken is null)
         {
-            Subject = new ClaimsIdentity(claims),
-            Expires = DateTime.UtcNow.AddDays(_configuration.Auth.JwtLifespan),
-            SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_configuration.Auth.JwtSecret)), SecurityAlgorithms.HmacSha256Signature)
-        };
+            return new AuthResult
+            {
+                IsSuccessful = false,
+                Error = "Invalid token",
+            };
+        }
 
-        var token = jwtTokenHandler.CreateToken(tokenDescriptor);
-        var jwtToken = jwtTokenHandler.WriteToken(token);
+        if (refreshToken.IsRevoked)
+        {
+            // revoke all descendant tokens in case this token has been compromised
+            await RevokeDescendantRefreshTokens(refreshToken, ip, $"Attempted reuse of revoked ancestor token: {token}");
+        }
+
+        if (!refreshToken.IsActive)
+        {
+            return new AuthResult
+            {
+                IsSuccessful = false,
+                Error = "Invalid token",
+            };
+        }
+
+        // replace old refresh token with a new one (rotate token)
+        var newRefreshToken = await RotateRefreshToken(refreshToken, user, ip);
+
+        var userRefreshTokens = _refreshTokenRepository.GetUserRefreshTokens(refreshToken.Token).ToList();
+        // userRefreshTokens.Add(newRefreshToken);
+
+        // remove old refresh tokens from user
+        await _refreshTokenRepository.RemoveOldRefreshTokens(userRefreshTokens, _configuration.Auth.JwtLifespan);
+
+        // generate new jwt
+        var userDto = await _userManager.FindByIdAsync(user.Id);
+        var claims = await BuildClaimsForUser(userDto);
+        var jwtToken = _tokenService.GenerateAccessToken(claims);
 
         return new AuthResult
         {
-            Token = jwtToken,
             IsSuccessful = true,
+            AccessToken = jwtToken,
+            RefreshToken = newRefreshToken.Token,
         };
     }
 
-    private async Task<List<Claim>> GetUserClaims(UserAccountDto user)
+    public async Task RevokeToken(string token, string ip)
     {
-        var claims = new List<Claim>
-            {
-                new Claim("Id", user.Id),
-                new Claim(JwtRegisteredClaimNames.Email, user.Email),
-                new Claim(JwtRegisteredClaimNames.Sub, user.Email),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
-            };
+        var user = await _userAccountRepository.GetUserAccountByToken(token);
 
-        // Getting the claims that we have assigned to the user
+        if (user is null)
+        {
+            throw new Exception("Invalid token");
+        }
+
+        var refreshToken = _refreshTokenRepository.GetRefreshTokenByToken(token);
+
+        if (refreshToken is null || !refreshToken.IsActive)
+            throw new Exception("Invalid token");
+
+        // revoke token and save
+        await _refreshTokenRepository.RevokeToken(refreshToken, ip, "Revoked without replacement");
+    }
+
+    private async Task RevokeDescendantRefreshTokens(RefreshToken token, string ipAddress, string reason)
+    {
+        // recursively traverse the refresh token chain and ensure all descendants are revoked
+        if (!string.IsNullOrEmpty(token.ReplacedByToken))
+        {
+            var childToken = _refreshTokenRepository.GetRefreshTokenByToken(token.ReplacedByToken);
+
+            if (childToken is null)
+            {
+                return;
+            }
+
+            if (childToken.IsActive)
+            {
+                await _refreshTokenRepository.RevokeToken(childToken, ipAddress, reason);
+            }
+            else
+            {
+                await RevokeDescendantRefreshTokens(childToken, ipAddress, reason);
+            }
+        }
+    }
+
+    private async Task<RefreshToken> RotateRefreshToken(RefreshToken refreshToken, UserAccount user, string ipAddress)
+    {
+        var newRefreshToken = await _tokenService.GenerateRefreshToken(ipAddress, user);
+
+        await _refreshTokenRepository.RevokeToken(refreshToken, ipAddress, "Replaced by new token", newRefreshToken.Token);
+
+        return newRefreshToken;
+    }
+
+    private async Task<List<Claim>> BuildClaimsForUser(UserAccountDto user)
+    {
+        var claims = new List<Claim>();
+
+        var userRoles = await _userManager.GetRolesAsync(user);
+
+        claims.Add(new Claim("id", user.Id.ToString()));
+        claims.Add(new Claim(JwtRegisteredClaimNames.Email, user.Email));
+
         var userClaims = await _userManager.GetClaimsAsync(user);
         claims.AddRange(userClaims);
-
-        // Get the user role and add it to the claims
-        var userRoles = await _userManager.GetRolesAsync(user);
 
         foreach (var userRole in userRoles)
         {
@@ -145,14 +248,5 @@ public class AuthService : IAuthService
         }
 
         return claims;
-    }
-
-    private string RandomString(int length)
-    {
-        var random = new Random();
-        var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-
-        return new string(Enumerable.Repeat(chars, length)
-            .Select(x => x[random.Next(x.Length)]).ToArray());
     }
 }

@@ -1,14 +1,13 @@
+using DigitalFamilyCookbook.Authorization;
 using DigitalFamilyCookbook.Handlers.Commands.System;
 using DigitalFamilyCookbook.Handlers.Queries.System;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading;
 
 namespace DigitalFamilyCookbook.Controllers;
 
 [Route("system")]
 [ApiController]
-[Authorize]
-[ValidateUser]
+[Authorize("Administrator")]
 public class SystemController : Controller
 {
     private readonly IMediator _mediatr;

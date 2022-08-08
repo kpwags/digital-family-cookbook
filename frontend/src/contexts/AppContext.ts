@@ -7,12 +7,12 @@ import { Meat } from '@models/Meat';
 
 type AppContextProps = {
     siteSettings: SiteSettings
-    token: string | undefined
+    token: string | null
     user: UserAccount | null
     categories: Category[]
     meats: Meat[]
     updateSiteSettings: (settings: SiteSettings) => void
-    loginUser: (token: string) => void
+    loginUser: (accessToken: string) => void
     logout: () => void
     refreshUser: () => void
     updateCategories: (c: Category[]) => void
@@ -21,7 +21,7 @@ type AppContextProps = {
 
 const AppContext = createContext<AppContextProps>({
     siteSettings: defaultSiteSettings,
-    token: undefined,
+    token: null,
     user: null,
     categories: [],
     meats: [],

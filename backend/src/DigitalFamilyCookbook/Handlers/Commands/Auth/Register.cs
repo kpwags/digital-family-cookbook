@@ -1,5 +1,4 @@
-using DigitalFamilyCookbook.Core.Services;
-using System.Threading;
+using DigitalFamilyCookbook.Extensions;
 
 namespace DigitalFamilyCookbook.Handlers.Commands.Auth;
 
@@ -9,11 +8,13 @@ public class Register
     {
         private readonly IAuthService _authService;
         private readonly ISystemRepository _systemRepository;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public Handler(IAuthService authService, ISystemRepository systemRepository)
+        public Handler(IAuthService authService, ISystemRepository systemRepository, IHttpContextAccessor httpContextAccessor)
         {
             _authService = authService;
             _systemRepository = systemRepository;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public async Task<OperationResult<AuthResult>> Handle(Command cmd, CancellationToken cancellationToken)
@@ -39,7 +40,13 @@ public class Register
                 return new OperationResult<AuthResult>("Invalid invitation code");
             }
 
-            var result = await _authService.RegisterUser(cmd.Email, cmd.Password, cmd.Name);
+            var ip = "";
+            if (_httpContextAccessor.HttpContext is not null)
+            {
+                ip = _httpContextAccessor.HttpContext.GetUserIpAddress();
+            }
+
+            var result = await _authService.RegisterUser(cmd.Email, cmd.Password, cmd.Name, ip);
 
             if (result.IsSuccessful)
             {

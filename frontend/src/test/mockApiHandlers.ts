@@ -2,7 +2,7 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import { rest } from 'msw';
 import { MockAdminUserAccount, MockUserAccount } from '@test/mocks/MockUsers';
-import { AuthResult } from '@models/AuthResult';
+import AuthResult from '@models/AuthResult';
 import Recipe from '@models/Recipe';
 import copyObject from '@utils/copyObject';
 import { emptyQuillField } from '@utils/constants';
@@ -26,9 +26,9 @@ const mockApiHandlers = [
 
         if (email === 'test@testing.com' && password === 'validPassword123') {
             const authResult: AuthResult = {
-                isSuccesful: true,
+                isSuccessful: true,
                 error: '',
-                token: '1234567890',
+                accessToken: '1234567890',
             };
 
             return res(
@@ -49,9 +49,10 @@ const mockApiHandlers = [
             return res(
                 ctx.status(200),
                 ctx.json({
-                    isSuccesful: true,
+                    isSuccessful: true,
                     error: '',
-                    token: '1234567890',
+                    accessToken: '1234567890',
+                    refreshToken: '123456780',
                 }),
             );
         }

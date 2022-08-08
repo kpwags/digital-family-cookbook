@@ -1,8 +1,13 @@
+using System.Text.Json.Serialization;
+
 namespace DigitalFamilyCookbook.Data.Models;
 
 public class AuthResult
 {
-    public string Token { get; set; } = string.Empty;
+    [JsonIgnore]
+    public string RefreshToken { get; set; } = string.Empty;
+
+    public string AccessToken { get; set; } = string.Empty;
 
     public bool IsSuccessful { get; set; }
 

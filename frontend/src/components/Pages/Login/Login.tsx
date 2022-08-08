@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import LoginForm from '@components/Forms/LoginForm';
 import { useContext, useEffect } from 'react';
 import AppContext from '@contexts/AppContext';
+import AuthResult from '@models/AuthResult';
 
 const { Title, Paragraph } = Typography;
 
@@ -17,8 +18,8 @@ const Login = ({
 
     const { user, loginUser, siteSettings } = useContext(AppContext);
 
-    const completeLoginProcess = (token: string) => {
-        loginUser(token);
+    const completeLoginProcess = (authResult: AuthResult) => {
+        loginUser(authResult.accessToken);
         navigate(redirectTo);
     };
 
@@ -34,10 +35,10 @@ const Login = ({
 
     return (
         <Row justify="center" align="top">
-            <Col span={6}>
+            <Col span={8}>
                 <Title level={1}>Login</Title>
                 <Paragraph>Enter your email and password to gain access.</Paragraph>
-                <LoginForm onLoginCompleted={(token) => completeLoginProcess(token)} />
+                <LoginForm onLoginCompleted={completeLoginProcess} />
             </Col>
         </Row>
     );

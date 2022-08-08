@@ -1,6 +1,6 @@
 namespace DigitalFamilyCookbook.ApiModels;
 
-public class RoleTypeApiModel
+public class RoleTypeApiModel : BaseApiModel
 {
     public string Id { get; set; } = string.Empty;
 

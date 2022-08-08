@@ -1,6 +1,6 @@
 namespace DigitalFamilyCookbook.Models;
 
-public class ImageUploadResponseApiModel
+public class ImageUploadResponseApiModel : BaseApiModel
 {
     public string Filename { get; set; } = string.Empty;
 

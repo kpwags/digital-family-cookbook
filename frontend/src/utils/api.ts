@@ -1,5 +1,6 @@
 import { ApiArguments } from '@models/ApiArguments';
 import { client, handleApiError } from '@utils/client';
+import { getNewRefreshToken } from './auth';
 
 class Api {
     static Post<T>(endpoint: string, config: ApiArguments = {}) : Promise<[T | null, string | null]> {
@@ -10,7 +11,24 @@ class Api {
 
         return client(endpoint, apiConfig).then(
             (data) => [data, null],
-            (error) => [null, handleApiError(error)],
+            async (error) => {
+                const errorMessage = handleApiError(error);
+
+                if (errorMessage === 'TOKEN_EXPIRED' && !config.isRefreshTokenRequest) {
+                    const [, error] = await getNewRefreshToken();
+
+                    if (error) {
+                        return [null, 'Unable to get refresh token'];
+                    }
+
+                    return client(endpoint, apiConfig).then(
+                        (data) => [data, null],
+                        (error) => [null, handleApiError(error)],
+                    );
+                }
+
+                return [null, handleApiError(error)];
+            },
         );
     }
 
@@ -24,7 +42,24 @@ class Api {
 
         return client(endpoint, apiConfig).then(
             (data) => [data, null],
-            (error) => [null, handleApiError(error)],
+            async (error) => {
+                const errorMessage = handleApiError(error);
+
+                if (errorMessage === 'TOKEN_EXPIRED' && !config.isRefreshTokenRequest) {
+                    const [, error] = await getNewRefreshToken();
+
+                    if (error) {
+                        return [null, 'Unable to get refresh token'];
+                    }
+
+                    return client(endpoint, apiConfig).then(
+                        (data) => [data, null],
+                        (error) => [null, handleApiError(error)],
+                    );
+                }
+
+                return [null, handleApiError(error)];
+            },
         );
     }
 
@@ -41,7 +76,24 @@ class Api {
 
         return client(url, { method: 'GET' }).then(
             (data) => [data, null],
-            (error) => [null, handleApiError(error)],
+            async (error) => {
+                const errorMessage = handleApiError(error);
+
+                if (errorMessage === 'TOKEN_EXPIRED' && !config.isRefreshTokenRequest) {
+                    const [, error] = await getNewRefreshToken();
+
+                    if (error) {
+                        return [null, 'Unable to get refresh token'];
+                    }
+
+                    return client(url, { method: 'GET' }).then(
+                        (data) => [data, null],
+                        (error) => [null, handleApiError(error)],
+                    );
+                }
+
+                return [null, handleApiError(error)];
+            },
         );
     }
 
@@ -58,7 +110,24 @@ class Api {
 
         return client(url, { method: 'DELETE' }).then(
             (data) => [data, null],
-            (error) => [null, handleApiError(error)],
+            async (error) => {
+                const errorMessage = handleApiError(error);
+
+                if (errorMessage === 'TOKEN_EXPIRED' && !config.isRefreshTokenRequest) {
+                    const [, error] = await getNewRefreshToken();
+
+                    if (error) {
+                        return [null, 'Unable to get refresh token'];
+                    }
+
+                    return client(endpoint, { method: 'DELETE' }).then(
+                        (data) => [data, null],
+                        (error) => [null, handleApiError(error)],
+                    );
+                }
+
+                return [null, handleApiError(error)];
+            },
         );
     }
 
@@ -70,7 +139,24 @@ class Api {
 
         return client(endpoint, apiConfig).then(
             (data) => [data, null],
-            (error) => [null, handleApiError(error)],
+            async (error) => {
+                const errorMessage = handleApiError(error);
+
+                if (errorMessage === 'TOKEN_EXPIRED' && !config.isRefreshTokenRequest) {
+                    const [, error] = await getNewRefreshToken();
+
+                    if (error) {
+                        return [null, 'Unable to get refresh token'];
+                    }
+
+                    return client(endpoint, apiConfig).then(
+                        (data) => [data, null],
+                        (error) => [null, handleApiError(error)],
+                    );
+                }
+
+                return [null, handleApiError(error)];
+            },
         );
     }
 }

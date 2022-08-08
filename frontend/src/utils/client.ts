@@ -1,5 +1,5 @@
 import { ApiArguments } from '@models/ApiArguments';
-import { CookieUtils } from './CookieUtils';
+import LocalStorageUtils from './LocalStorageUtils';
 
 const apiUrl = process.env.REACT_APP_API_URL;
 
@@ -13,7 +13,7 @@ async function client(endpoint: string, {
 }: ApiArguments = {}) : Promise<any> {
     const headers: Record<string, string> = {};
 
-    const token = CookieUtils.GetValue('dfcuser');
+    const token = LocalStorageUtils.getAccessToken();
 
     if (token) {
         headers.Authorization = `Bearer ${token}`;
@@ -37,12 +37,19 @@ async function client(endpoint: string, {
         method: clientMethod,
         body,
         headers,
+        credentials: 'include',
         ...customConfig,
     };
 
     return window.fetch(`${apiUrl}/${endpoint}`, config).then(async (response) => {
         if (response.status === 401) {
-            CookieUtils.DeleteCookie('dfcuser');
+            const data = await response.json() as { message: string };
+
+            if (data.message === 'TOKEN_EXPIRED') {
+                return Promise.reject(new Error(data.message));
+            }
+
+            LocalStorageUtils.clearAccessToken();
 
             // refresh the page for them
             window.location.assign(window.location.toString());

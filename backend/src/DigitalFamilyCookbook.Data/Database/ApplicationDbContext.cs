@@ -21,6 +21,8 @@ public class ApplicationDbContext : IdentityDbContext<UserAccountDto, RoleTypeDt
 
     public DbSet<RecipeMeatDto> RecipeMeats { get; set; }
 
+    public DbSet<RefreshTokenDto> RefreshTokens { get; set; }
+
     public DbSet<RoleTypeClaimDto> RoleTypeClaims { get; set; }
 
     public DbSet<RoleTypeDto> RoleTypes { get; set; }
@@ -78,6 +80,15 @@ public class ApplicationDbContext : IdentityDbContext<UserAccountDto, RoleTypeDt
             .HasDefaultValueSql("GETDATE()")
             .ValueGeneratedOnAddOrUpdate();
 
+        #endregion
+
+        #region "application.RefreshToken"
+        modelBuilder.Entity<RefreshTokenDto>()
+            .ToTable("RefreshToken", schema: "application");
+
+        modelBuilder.Entity<RefreshTokenDto>()
+            .HasOne(r => r.UserAccount)
+            .WithMany(u => u.RefreshTokens);
         #endregion
 
         #region "application.RoleType"
