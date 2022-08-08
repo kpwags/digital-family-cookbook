@@ -12,7 +12,7 @@ type AppContextProps = {
     categories: Category[]
     meats: Meat[]
     updateSiteSettings: (settings: SiteSettings) => void
-    loginUser: (accessToken: string, refreshToken: string) => void
+    loginUser: (accessToken: string) => void
     logout: () => void
     refreshUser: () => void
     updateCategories: (c: Category[]) => void

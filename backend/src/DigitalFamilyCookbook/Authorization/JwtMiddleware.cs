@@ -18,7 +18,7 @@ public class JwtMiddleware
 
     public async Task Invoke(HttpContext context, IUserAccountRepository userAccountRepository, ITokenService tokenService, IAuthService authService)
     {
-        var accessToken = context.GetAccessTokenFromHeaders();
+        var accessToken = context.GetAccessToken();
 
         if (accessToken is not null)
         {

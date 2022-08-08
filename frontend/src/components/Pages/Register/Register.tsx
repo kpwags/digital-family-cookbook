@@ -27,7 +27,7 @@ const Register = (): JSX.Element => {
     }, []);
 
     const completeRegistration = (authResult: AuthResult) => {
-        loginUser(authResult.accessToken, authResult.refreshToken);
+        loginUser(authResult.accessToken);
         navigate('/');
     };
 

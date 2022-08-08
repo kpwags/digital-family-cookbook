@@ -1,4 +1,7 @@
 using DigitalFamilyCookbook.Core.Configuration;
+using DigitalFamilyCookbook.Core.Interfaces;
+using DigitalFamilyCookbook.Data.Domain.Models;
+using DigitalFamilyCookbook.Data.Interfaces;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
@@ -14,6 +17,9 @@ public class AuthServiceTests
     private Mock<UserManager<UserAccountDto>> _userManager;
     private Mock<SignInManager<UserAccountDto>> _signInManager;
     private Mock<RoleManager<RoleTypeDto>> _roleManager;
+    private Mock<IUserAccountRepository> _userAccountRepository;
+    private Mock<IRefreshTokenRepository> _refreshTokenRepository;
+    private Mock<ITokenService> _tokenService;
 
     public AuthServiceTests()
     {
@@ -64,6 +70,12 @@ public class AuthServiceTests
             RequireExpirationTime = false,
             ClockSkew = TimeSpan.Zero,
         };
+
+        _userAccountRepository = new Mock<IUserAccountRepository>();
+
+        _refreshTokenRepository = new Mock<IRefreshTokenRepository>();
+
+        _tokenService = new Mock<ITokenService>();
     }
 
     [Fact]
@@ -82,15 +94,27 @@ public class AuthServiceTests
         _userManager.Setup(u => u.GetClaimsAsync(It.IsAny<UserAccountDto>())).ReturnsAsync(new List<Claim>());
         _userManager.Setup(u => u.GetRolesAsync(It.IsAny<UserAccountDto>())).ReturnsAsync(new List<string>());
 
+        _tokenService.Setup(t => t.GenerateRefreshToken(It.IsAny<string>(), It.IsAny<UserAccount>())).ReturnsAsync(new RefreshToken
+        {
+            Token = Convert.ToBase64String(System.Text.Encoding.ASCII.GetBytes(MockDataGenerator.RandomString(64))),
+            Expires = DateTime.UtcNow.AddDays(7),
+            DateCreated = DateTime.UtcNow,
+            CreatedByIp = "127.0.0.1",
+            UserAccount = UserAccount.FromDto(createdUser),
+        });
+
         var authService = new AuthService(
             _configuration,
             _userManager.Object,
             _signInManager.Object,
             _roleManager.Object,
-            _tokenValidationParameters
+            _tokenValidationParameters,
+            _userAccountRepository.Object,
+            _refreshTokenRepository.Object,
+            _tokenService.Object
         );
 
-        var result = await authService.RegisterUser(createdUser.Email, MockDataGenerator.RandomString(12), MockDataGenerator.RandomString(10));
+        var result = await authService.RegisterUser(createdUser.Email, MockDataGenerator.RandomString(12), MockDataGenerator.RandomString(10), "127.0.0.1");
 
         Assert.True(result.IsSuccessful);
     }
@@ -108,12 +132,15 @@ public class AuthServiceTests
             _userManager.Object,
             _signInManager.Object,
             _roleManager.Object,
-            _tokenValidationParameters
+            _tokenValidationParameters,
+            _userAccountRepository.Object,
+            _refreshTokenRepository.Object,
+            _tokenService.Object
         );
 
         var email = MockDataGenerator.RandomEmail();
 
-        var result = await authService.RegisterUser(email, MockDataGenerator.RandomString(12), MockDataGenerator.RandomString(10));
+        var result = await authService.RegisterUser(email, MockDataGenerator.RandomString(12), MockDataGenerator.RandomString(10), "127.0.0.1");
 
         Assert.False(result.IsSuccessful);
         Assert.Equal($"{email} already exists", result.Error);
@@ -130,15 +157,27 @@ public class AuthServiceTests
 
         _signInManager.Setup(s => s.CheckPasswordSignInAsync(It.IsAny<UserAccountDto>(), It.IsAny<string>(), It.IsAny<bool>())).ReturnsAsync(SignInResult.Success);
 
+        _tokenService.Setup(t => t.GenerateRefreshToken(It.IsAny<string>(), It.IsAny<UserAccount>())).ReturnsAsync(new RefreshToken
+        {
+            Token = Convert.ToBase64String(System.Text.Encoding.ASCII.GetBytes(MockDataGenerator.RandomString(64))),
+            Expires = DateTime.UtcNow.AddDays(7),
+            DateCreated = DateTime.UtcNow,
+            CreatedByIp = "127.0.0.1",
+            UserAccount = UserAccount.FromDto(user),
+        });
+
         var authService = new AuthService(
             _configuration,
             _userManager.Object,
             _signInManager.Object,
             _roleManager.Object,
-            _tokenValidationParameters
+            _tokenValidationParameters,
+            _userAccountRepository.Object,
+            _refreshTokenRepository.Object,
+            _tokenService.Object
         );
 
-        var result = await authService.LoginUser(user.Email, MockDataGenerator.RandomString(12));
+        var result = await authService.LoginUser(user.Email, MockDataGenerator.RandomString(12), "127.0.0.1");
 
         Assert.True(result.IsSuccessful);
     }
@@ -161,10 +200,13 @@ public class AuthServiceTests
             _userManager.Object,
             _signInManager.Object,
             _roleManager.Object,
-            _tokenValidationParameters
+            _tokenValidationParameters,
+            _userAccountRepository.Object,
+            _refreshTokenRepository.Object,
+            _tokenService.Object
         );
 
-        var result = await authService.LoginUser(user.Email, MockDataGenerator.RandomString(12));
+        var result = await authService.LoginUser(user.Email, MockDataGenerator.RandomString(12), "127.0.0.1");
 
         Assert.False(result.IsSuccessful);
         Assert.Equal("Invalid email or password", result.Error);
@@ -186,10 +228,13 @@ public class AuthServiceTests
             _userManager.Object,
             _signInManager.Object,
             _roleManager.Object,
-            _tokenValidationParameters
+            _tokenValidationParameters,
+            _userAccountRepository.Object,
+            _refreshTokenRepository.Object,
+            _tokenService.Object
         );
 
-        var result = await authService.LoginUser(user.Email, MockDataGenerator.RandomString(12));
+        var result = await authService.LoginUser(user.Email, MockDataGenerator.RandomString(12), "127.0.0.1");
 
         Assert.False(result.IsSuccessful);
         Assert.Equal("Invalid email or password", result.Error);

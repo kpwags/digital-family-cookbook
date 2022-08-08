@@ -3,15 +3,11 @@ import { Api } from './api';
 import LocalStorageUtils from './LocalStorageUtils';
 
 const getNewRefreshToken = async (): Promise<[AuthResult | null, string | null]> => {
-    const token = LocalStorageUtils.getRefreshToken();
-
     const [data, error] = await Api.Post<AuthResult>(
         'auth/refreshtoken',
         {
-            data: {
-                token,
-            },
             isRefreshTokenRequest: true,
+            credentials: 'include',
         },
     );
 
@@ -20,7 +16,6 @@ const getNewRefreshToken = async (): Promise<[AuthResult | null, string | null]>
     }
 
     LocalStorageUtils.setAccessToken(data.accessToken);
-    LocalStorageUtils.setRefreshToken(data.refreshToken);
 
     return [data, null];
 };

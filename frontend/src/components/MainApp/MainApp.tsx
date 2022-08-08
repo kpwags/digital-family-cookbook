@@ -15,7 +15,6 @@ import { Category } from '@models/Category';
 import { Meat } from '@models/Meat';
 import { getNewRefreshToken } from '@utils/auth';
 import LocalStorageUtils from '@utils/LocalStorageUtils';
-import { Button } from 'antd';
 
 const MainApp = ({ children }: { children: ReactNode }): JSX.Element => {
     const [siteSettings, setSiteSettings] = useState<SiteSettings>(defaultSiteSettings);
@@ -29,7 +28,6 @@ const MainApp = ({ children }: { children: ReactNode }): JSX.Element => {
 
     const logout = () => {
         LocalStorageUtils.clearAccessToken();
-        LocalStorageUtils.clearRefreshToken();
         document.location.reload();
     };
 
@@ -87,7 +85,6 @@ const MainApp = ({ children }: { children: ReactNode }): JSX.Element => {
 
             if (data && data.isSuccessful) {
                 LocalStorageUtils.setAccessToken(data.accessToken);
-                LocalStorageUtils.setRefreshToken(data.refreshToken);
             }
         }
     }, []);
@@ -104,9 +101,8 @@ const MainApp = ({ children }: { children: ReactNode }): JSX.Element => {
         }
     };
 
-    const loginUser = (accessToken: string, refreshToken: string) => {
+    const loginUser = (accessToken: string) => {
         LocalStorageUtils.setAccessToken(accessToken);
-        LocalStorageUtils.setRefreshToken(refreshToken);
         loadUser();
     };
 
@@ -141,7 +137,6 @@ const MainApp = ({ children }: { children: ReactNode }): JSX.Element => {
                 },
             }}
         >
-            {user ? <Button onClick={() => getToken()}>Refresh Tokens</Button> : null}
             {children}
         </AppContext.Provider>
     );

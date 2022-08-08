@@ -29,7 +29,6 @@ const mockApiHandlers = [
                 isSuccessful: true,
                 error: '',
                 accessToken: '1234567890',
-                refreshToken: '123456780',
             };
 
             return res(

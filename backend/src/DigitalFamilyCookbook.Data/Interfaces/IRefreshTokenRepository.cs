@@ -1,6 +1,6 @@
 namespace DigitalFamilyCookbook.Data.Interfaces;
 
-public interface IRefreshTokenRespository
+public interface IRefreshTokenRepository
 {
     IEnumerable<RefreshToken> GetUserRefreshTokens(string token);
 

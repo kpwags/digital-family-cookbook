@@ -6,12 +6,12 @@ public class UserAccountRepository : IUserAccountRepository
 {
     private readonly UserManager<UserAccountDto> _userManager;
     private readonly RoleManager<RoleTypeDto> _roleManager;
-    private readonly IRefreshTokenRespository _refreshTokenRepository;
+    private readonly IRefreshTokenRepository _refreshTokenRepository;
 
     public UserAccountRepository(
         UserManager<UserAccountDto> userManager,
         RoleManager<RoleTypeDto> roleManager,
-        IRefreshTokenRespository refreshTokenRespository)
+        IRefreshTokenRepository refreshTokenRespository)
     {
         _userManager = userManager;
         _roleManager = roleManager;

@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DigitalFamilyCookbook.Data.Repositories;
 
-public class RefreshTokenRepository : IRefreshTokenRespository
+public class RefreshTokenRepository : IRefreshTokenRepository
 {
     private readonly ApplicationDbContext _db;
 
@@ -58,27 +58,20 @@ public class RefreshTokenRepository : IRefreshTokenRespository
 
     public async Task Add(RefreshToken refreshToken)
     {
-        try
+        var dto = new RefreshTokenDto
         {
-            var dto = new RefreshTokenDto
-            {
-                Token = refreshToken.Token,
-                Expires = refreshToken.Expires,
-                CreatedByIp = refreshToken.CreatedByIp,
-                Revoked = refreshToken.Revoked,
-                RevokedByIp = refreshToken.RevokedByIp,
-                ReplacedByToken = refreshToken.ReplacedByToken,
-                ReasonRevoked = refreshToken.ReasonRevoked,
-                UserAccount = _db.UserAccounts.First(u => u.Id == refreshToken.UserAccount.Id),
-            };
+            Token = refreshToken.Token,
+            Expires = refreshToken.Expires,
+            CreatedByIp = refreshToken.CreatedByIp,
+            Revoked = refreshToken.Revoked,
+            RevokedByIp = refreshToken.RevokedByIp,
+            ReplacedByToken = refreshToken.ReplacedByToken,
+            ReasonRevoked = refreshToken.ReasonRevoked,
+            UserAccount = _db.UserAccounts.First(u => u.Id == refreshToken.UserAccount.Id),
+        };
 
-            _db.RefreshTokens.Add(dto);
+        _db.RefreshTokens.Add(dto);
 
-            await _db.SaveChangesAsync();
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine(ex.Message);
-        }
+        await _db.SaveChangesAsync();
     }
 }

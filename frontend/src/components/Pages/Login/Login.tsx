@@ -19,7 +19,7 @@ const Login = ({
     const { user, loginUser, siteSettings } = useContext(AppContext);
 
     const completeLoginProcess = (authResult: AuthResult) => {
-        loginUser(authResult.accessToken, authResult.refreshToken);
+        loginUser(authResult.accessToken);
         navigate(redirectTo);
     };
 

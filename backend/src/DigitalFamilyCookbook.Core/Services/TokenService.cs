@@ -12,12 +12,12 @@ public class TokenService : ITokenService
 {
     private readonly DigitalFamilyCookbookConfiguration _configuration;
     private readonly TokenValidationParameters _tokenValidationParameters;
-    private readonly IRefreshTokenRespository _refreshTokenRepository;
+    private readonly IRefreshTokenRepository _refreshTokenRepository;
 
     public TokenService(
         DigitalFamilyCookbookConfiguration configuration,
         TokenValidationParameters tokenValidationParameters,
-        IRefreshTokenRespository refreshTokenRespository)
+        IRefreshTokenRepository refreshTokenRespository)
     {
         _configuration = configuration;
         _tokenValidationParameters = tokenValidationParameters;

@@ -33,6 +33,8 @@ public class AuthController : BaseController
             return BadRequest("Unable to register");
         }
 
+        HttpContext.SetRefreshToken(result.Value.RefreshToken);
+
         return Ok(result.Value);
     }
 
@@ -52,6 +54,8 @@ public class AuthController : BaseController
             return BadRequest("Unable to login");
         }
 
+        HttpContext.SetRefreshToken(result.Value.RefreshToken);
+
         return Ok(result.Value);
     }
 
@@ -63,12 +67,19 @@ public class AuthController : BaseController
 
     [HttpPost("refreshtoken")]
     [AllowAnonymous]
-    public async Task<ActionResult<AuthResult>> RefreshToken(Handlers.Commands.Auth.RefreshToken.Command command, CancellationToken cancellationToken)
+    public async Task<ActionResult<AuthResult>> RefreshToken(CancellationToken cancellationToken)
     {
+        var refreshToken = HttpContext.GetRefreshToken();
+
+        if (string.IsNullOrEmpty(refreshToken))
+        {
+            return BadRequest("Invalid refresh token");
+        }
+
         var result = await _mediatr.Send(
             new Handlers.Commands.Auth.RefreshToken.Command
             {
-                Token = command.Token,
+                Token = refreshToken,
                 IpAddress = HttpContext.GetUserIpAddress(),
             },
             cancellationToken);
@@ -82,6 +93,8 @@ public class AuthController : BaseController
         {
             return BadRequest("Unable to generate refresh token");
         }
+
+        HttpContext.SetRefreshToken(result.Value.RefreshToken);
 
         return Ok(result.Value);
     }

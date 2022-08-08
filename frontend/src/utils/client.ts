@@ -37,6 +37,7 @@ async function client(endpoint: string, {
         method: clientMethod,
         body,
         headers,
+        credentials: 'include',
         ...customConfig,
     };
 
@@ -49,7 +50,6 @@ async function client(endpoint: string, {
             }
 
             LocalStorageUtils.clearAccessToken();
-            LocalStorageUtils.clearRefreshToken();
 
             // refresh the page for them
             window.location.assign(window.location.toString());

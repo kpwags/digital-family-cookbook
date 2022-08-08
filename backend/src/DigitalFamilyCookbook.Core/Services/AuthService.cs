@@ -16,7 +16,7 @@ public class AuthService : IAuthService
     private readonly SignInManager<UserAccountDto> _signInManager;
     private readonly RoleManager<RoleTypeDto> _roleManager;
     private readonly IUserAccountRepository _userAccountRepository;
-    private readonly IRefreshTokenRespository _refreshTokenRepository;
+    private readonly IRefreshTokenRepository _refreshTokenRepository;
     private readonly ITokenService _tokenService;
 
     public AuthService(DigitalFamilyCookbookConfiguration configuration,
@@ -25,7 +25,7 @@ public class AuthService : IAuthService
         RoleManager<RoleTypeDto> roleManager,
         TokenValidationParameters tokenValidationParameters,
         IUserAccountRepository userAccountRepository,
-        IRefreshTokenRespository refreshTokenRespository,
+        IRefreshTokenRepository refreshTokenRespository,
         ITokenService tokenService)
     {
         _configuration = configuration;
@@ -50,7 +50,9 @@ public class AuthService : IAuthService
             {
                 var claims = await BuildClaimsForUser(user);
                 var token = _tokenService.GenerateJwtToken(claims);
-                var refreshToken = await _tokenService.GenerateRefreshToken(ip, UserAccount.FromDto(user));
+                var userAccount = UserAccount.FromDto(user);
+
+                var refreshToken = await _tokenService.GenerateRefreshToken(ip, userAccount);
 
                 return new AuthResult
                 {
@@ -99,11 +101,14 @@ public class AuthService : IAuthService
 
             var claims = await BuildClaimsForUser(createdUser);
 
+            var refreshToken = await _tokenService.GenerateRefreshToken(ip, UserAccount.FromDto(createdUser));
+            var accessToken = _tokenService.GenerateJwtToken(claims);
+
             return new AuthResult
             {
                 IsSuccessful = true,
-                RefreshToken = (await _tokenService.GenerateRefreshToken(ip, UserAccount.FromDto(createdUser))).Token,
-                AccessToken = _tokenService.GenerateJwtToken(claims),
+                RefreshToken = refreshToken.Token,
+                AccessToken = accessToken,
             };
         }
 
