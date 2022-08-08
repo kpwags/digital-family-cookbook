@@ -1,6 +1,5 @@
 using DigitalFamilyCookbook.Core.Configuration;
 using DigitalFamilyCookbook.Data.Interfaces;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -24,7 +23,7 @@ public class TokenService : ITokenService
         _refreshTokenRepository = refreshTokenRespository;
     }
 
-    public string GenerateJwtToken(List<Claim> claims)
+    public string GenerateAccessToken(List<Claim> claims)
     {
         var tokenHandler = new JwtSecurityTokenHandler();
         var key = Encoding.ASCII.GetBytes(_configuration.Auth.JwtSecret);
@@ -41,7 +40,7 @@ public class TokenService : ITokenService
         return tokenHandler.WriteToken(token);
     }
 
-    public (string? userId, string? error) ValidateJwtToken(string token)
+    public (string? userId, string? error) ValidateAccessToken(string token)
     {
         if (token == null)
         {

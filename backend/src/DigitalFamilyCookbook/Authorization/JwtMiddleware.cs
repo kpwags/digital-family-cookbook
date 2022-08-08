@@ -35,7 +35,7 @@ public class JwtMiddleware
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = System.Text.Encoding.ASCII.GetBytes(_configuration.Auth.JwtSecret);
 
-            var (userId, error) = tokenService.ValidateJwtToken(token);
+            var (userId, error) = tokenService.ValidateAccessToken(token);
 
             if (userId is not null)
             {

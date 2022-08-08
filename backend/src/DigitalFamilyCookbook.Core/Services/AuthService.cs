@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using System.Text;
 
 namespace DigitalFamilyCookbook.Core.Services;
 
@@ -49,7 +48,7 @@ public class AuthService : IAuthService
             if (passwordCheck.Succeeded)
             {
                 var claims = await BuildClaimsForUser(user);
-                var token = _tokenService.GenerateJwtToken(claims);
+                var token = _tokenService.GenerateAccessToken(claims);
                 var userAccount = UserAccount.FromDto(user);
 
                 var refreshToken = await _tokenService.GenerateRefreshToken(ip, userAccount);
@@ -102,7 +101,7 @@ public class AuthService : IAuthService
             var claims = await BuildClaimsForUser(createdUser);
 
             var refreshToken = await _tokenService.GenerateRefreshToken(ip, UserAccount.FromDto(createdUser));
-            var accessToken = _tokenService.GenerateJwtToken(claims);
+            var accessToken = _tokenService.GenerateAccessToken(claims);
 
             return new AuthResult
             {
@@ -160,7 +159,7 @@ public class AuthService : IAuthService
         // generate new jwt
         var userDto = await _userManager.FindByIdAsync(user.Id);
         var claims = await BuildClaimsForUser(userDto);
-        var jwtToken = _tokenService.GenerateJwtToken(claims);
+        var jwtToken = _tokenService.GenerateAccessToken(claims);
 
         return new AuthResult
         {

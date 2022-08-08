@@ -4,9 +4,9 @@ namespace DigitalFamilyCookbook.Core.Interfaces;
 
 public interface ITokenService
 {
-    string GenerateJwtToken(List<Claim> claims);
+    string GenerateAccessToken(List<Claim> claims);
 
-    (string? userId, string? error) ValidateJwtToken(string token);
+    (string? userId, string? error) ValidateAccessToken(string token);
 
     Task<RefreshToken> GenerateRefreshToken(string ipAddress, UserAccount user);
 }
