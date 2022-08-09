@@ -1,7 +1,7 @@
 import { ApiArguments } from '@models/ApiArguments';
 import LocalStorageUtils from './LocalStorageUtils';
 
-const apiUrl = process.env.REACT_APP_API_URL;
+const apiUrl = process.env.VITE_API_URL;
 
 async function client(endpoint: string, {
     data = null,

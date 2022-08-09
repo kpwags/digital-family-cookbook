@@ -1,9 +1,9 @@
 process.env.BABEL_ENV = 'test';
 process.env.NODE_ENV = 'test';
 
-require('react-scripts/config/env');
-
 module.exports = {
+    preset: 'ts-jest',
+
     // The root of your source code, typically /src
     // `<rootDir>` is a token Jest substitutes
     roots: ['<rootDir>/src'],

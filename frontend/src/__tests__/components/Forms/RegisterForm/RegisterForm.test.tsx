@@ -72,7 +72,7 @@ describe('<RegisterForm />', () => {
             await fireEvent.blur(passwordField1);
 
             userEvent.clear(passwordField2);
-            userEvent.type(passwordField2, 'password2');
+            await userEvent.type(passwordField2, 'password2');
 
             await fireEvent.blur(passwordField2);
 
