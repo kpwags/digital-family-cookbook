@@ -1,7 +1,5 @@
 import { useNavigate } from 'react-router';
-import {
-    Card,
-} from 'antd';
+import { Card } from 'antd';
 import Recipe from '@models/Recipe';
 
 import './RecipeCard.less';
@@ -20,6 +18,7 @@ const RecipeCard = ({
     return (
         <Card
             className="recipe-card"
+            data-testid={`recipe-card-${recipe.recipeId}`}
             cover={recipe.imageUrl !== '' ? (
                 <img
                     alt={recipe.name}
