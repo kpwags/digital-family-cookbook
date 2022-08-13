@@ -140,7 +140,7 @@ public class RecipesController : Controller
 
     [HttpGet("getrecipesbycategory")]
     [AllowAnonymous]
-    public async Task<ActionResult<IReadOnlyCollection<RecipeApiModel>>> GetRecipesByCategory(int id, CancellationToken cancellationToken, bool includeImages = false)
+    public async Task<ActionResult<RecipeListPageResults>> GetRecipesByCategory(int id, CancellationToken cancellationToken, bool includeImages = false)
     {
         var result = await _mediatr.Send(new GetRecipesByCategory.Query { CategoryId = id, IncludeImages = includeImages }, cancellationToken);
 
@@ -154,9 +154,23 @@ public class RecipesController : Controller
 
     [HttpGet("getrecipesbymeat")]
     [AllowAnonymous]
-    public async Task<ActionResult<IReadOnlyCollection<RecipeApiModel>>> GetRecipesByMeat(int id, CancellationToken cancellationToken, bool includeImages = false)
+    public async Task<ActionResult<IReadOnlyCollection<RecipeListPageResults>>> GetRecipesByMeat(int id, CancellationToken cancellationToken, bool includeImages = false)
     {
         var result = await _mediatr.Send(new GetRecipesByMeat.Query { MeatId = id, IncludeImages = includeImages }, cancellationToken);
+
+        if (!result.IsSuccessful)
+        {
+            return BadRequest(result.ErrorMessage);
+        }
+
+        return Ok(result.Value);
+    }
+
+    [HttpGet("getrecipesbyuser")]
+    [AllowAnonymous]
+    public async Task<ActionResult<IReadOnlyCollection<RecipeListPageResults>>> GetRecipesByUser(string id, CancellationToken cancellationToken, bool includeImages = false)
+    {
+        var result = await _mediatr.Send(new GetRecipesByUser.Query { UserAccountId = id, IncludeImages = includeImages }, cancellationToken);
 
         if (!result.IsSuccessful)
         {

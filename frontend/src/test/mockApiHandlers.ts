@@ -333,6 +333,36 @@ const mockApiHandlers = [
                 );
         }
     }),
+
+    rest.get('*/recipes/getrecipesbyuser', (req, res, ctx) => {
+        const id = req.url.searchParams.get('id');
+
+        if (!id) {
+            return res(
+                ctx.status(400),
+                ctx.text('Meat not specified'),
+            );
+        }
+
+        switch (id) {
+            case '123456':
+                return res(
+                    ctx.status(200),
+                    ctx.json({
+                        pageTitle: 'Mock User',
+                        recipes: MockRecipeList(8),
+                    }),
+                );
+            default:
+                return res(
+                    ctx.status(200),
+                    ctx.json({
+                        pageTitle: 'Mock User',
+                        recipes: [],
+                    }),
+                );
+        }
+    }),
 ];
 
 export { mockApiHandlers };

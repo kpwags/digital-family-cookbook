@@ -24,6 +24,7 @@ import RecipesByCategory from '@components/Pages/RecipesByCategory';
 import RecipesByMeat from '@components/Pages/RecipesByMeat';
 
 import './styles/App.less';
+import RecipesByUser from '@components/Pages/RecipesByUser';
 
 const App = (): JSX.Element => (
     <CookiesProvider>
@@ -113,6 +114,12 @@ const App = (): JSX.Element => (
                             path="/recipes/meat/:id"
                             element={(
                                 <RecipesByMeat />
+                            )}
+                        />
+                        <Route
+                            path="/recipes/user/:id"
+                            element={(
+                                <RecipesByUser />
                             )}
                         />
                         <Route path="/" element={<Landing />} />
