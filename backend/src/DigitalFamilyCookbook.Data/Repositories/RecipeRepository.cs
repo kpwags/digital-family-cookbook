@@ -227,4 +227,12 @@ public class RecipeRepository : IRecipeRepository
             .Where(r => r.RecipeCategories.Select(rc => rc.CategoryId).Contains(categoryId))
             .Select(r => Recipe.FromDto(r));
     }
+
+    public IEnumerable<Recipe> GetRecipesForMeat(int meatId)
+    {
+        return _db.Recipes
+            .Include(r => r.RecipeMeats)
+            .Where(r => r.RecipeMeats.Select(rm => rm.MeatId).Contains(meatId))
+            .Select(r => Recipe.FromDto(r));
+    }
 }

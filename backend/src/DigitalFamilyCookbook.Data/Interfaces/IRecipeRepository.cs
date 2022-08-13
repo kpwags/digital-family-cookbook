@@ -17,4 +17,6 @@ public interface IRecipeRepository
     IEnumerable<Recipe> GetUserRecipes(string userAccountId);
 
     IEnumerable<Recipe> GetRecipesForCategory(int categoryId);
+
+    IEnumerable<Recipe> GetRecipesForMeat(int meatId);
 }

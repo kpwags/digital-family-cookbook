@@ -151,4 +151,18 @@ public class RecipesController : Controller
 
         return Ok(result.Value);
     }
+
+    [HttpGet("getrecipesbymeat")]
+    [AllowAnonymous]
+    public async Task<ActionResult<IReadOnlyCollection<RecipeApiModel>>> GetRecipesByMeat(int id, CancellationToken cancellationToken, bool includeImages = false)
+    {
+        var result = await _mediatr.Send(new GetRecipesByMeat.Query { MeatId = id, IncludeImages = includeImages }, cancellationToken);
+
+        if (!result.IsSuccessful)
+        {
+            return BadRequest(result.ErrorMessage);
+        }
+
+        return Ok(result.Value);
+    }
 }

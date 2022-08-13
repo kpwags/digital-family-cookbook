@@ -14,12 +14,12 @@ import Recipe from '@models/Recipe';
 
 const { Title } = Typography;
 
-const RecipesByCategory = (): JSX.Element => {
+const RecipesByMeat = (): JSX.Element => {
     const [processingMessage, setProcessingMessage] = useState<string>('Loading...');
     const [recipes, setRecipes] = useState<Recipe[]>([]);
     const [pageTitle, setPageTitle] = useState<string>('');
 
-    useDocumentTitle('Recipes by Category');
+    useDocumentTitle('Recipes by Meat');
 
     const { id } = useParams();
 
@@ -29,10 +29,10 @@ const RecipesByCategory = (): JSX.Element => {
             return;
         }
 
-        const categoryId = parseInt(id, 10);
+        const meatId = parseInt(id, 10);
 
-        const [data, error] = await Api.Get<RecipeListPageResults>('recipes/getrecipesbycategory', {
-            params: { id: categoryId, includeImages: true },
+        const [data, error] = await Api.Get<RecipeListPageResults>('recipes/getrecipesbymeat', {
+            params: { id: meatId, includeImages: true },
         });
 
         if (error || !data) {
@@ -55,13 +55,13 @@ const RecipesByCategory = (): JSX.Element => {
             spinning={processingMessage !== ''}
             tip={processingMessage}
         >
-            <Title>Recipes Categorized &apos;{pageTitle}&apos;</Title>
+            <Title>Recipes with {pageTitle}</Title>
 
             {recipes.length > 0 || processingMessage !== '' ? (
                 <RecipeList recipes={recipes} />
-            ) : <NoRecipes pageText={`No recipes were found with the category '${pageTitle}'`} />}
+            ) : <NoRecipes pageText={`No recipes were found with the meat '${pageTitle}'`} />}
         </Spin>
     );
 };
 
-export default RecipesByCategory;
+export default RecipesByMeat;

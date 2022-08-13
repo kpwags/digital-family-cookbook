@@ -21,6 +21,7 @@ import ViewRecipe from '@components/Pages/ViewRecipe';
 import ManageMeats from '@components/Pages/ManageMeats';
 import ManageRecipes from '@components/Pages/ManageRecipes';
 import RecipesByCategory from '@components/Pages/RecipesByCategory';
+import RecipesByMeat from '@components/Pages/RecipesByMeat';
 
 import './styles/App.less';
 
@@ -106,6 +107,12 @@ const App = (): JSX.Element => (
                             path="/recipes/category/:id"
                             element={(
                                 <RecipesByCategory />
+                            )}
+                        />
+                        <Route
+                            path="/recipes/meat/:id"
+                            element={(
+                                <RecipesByMeat />
                             )}
                         />
                         <Route path="/" element={<Landing />} />
