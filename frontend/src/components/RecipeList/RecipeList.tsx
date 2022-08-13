@@ -12,7 +12,7 @@ const RecipeList = ({
     <div>
         <Row gutter={[16, 16]}>
             {recipes.map((r) => (
-                <Col span={6} key={r.id}>
+                <Col xs={24} sm={24} md={12} lg={6} key={r.id}>
                     <RecipeCard recipe={r} />
                 </Col>
             ))}

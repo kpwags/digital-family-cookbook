@@ -10,6 +10,7 @@ import useDocumentTitle from '@hooks/useDocumentTitle';
 import { Api } from '@utils/api';
 import RecipeListPageResults from '@models/RecipeListPageResults';
 import Recipe from '@models/Recipe';
+import NoRecipes from '@components/NoRecipes';
 
 const { Title } = Typography;
 
@@ -31,7 +32,7 @@ const RecipesByCategory = (): JSX.Element => {
         const categoryId = parseInt(id, 10);
 
         const [data, error] = await Api.Get<RecipeListPageResults>('recipes/getrecipesbycategory', {
-            params: { id: categoryId },
+            params: { id: categoryId, includeImages: true },
         });
 
         if (error || !data) {
@@ -47,7 +48,7 @@ const RecipesByCategory = (): JSX.Element => {
 
     useEffect(() => {
         fetchRecipes();
-    }, []);
+    }, [id]);
 
     return (
         <Spin
@@ -56,7 +57,9 @@ const RecipesByCategory = (): JSX.Element => {
         >
             <Title>{pageTitle}</Title>
 
-            <RecipeList recipes={recipes} />
+            {recipes.length > 0 || processingMessage !== '' ? (
+                <RecipeList recipes={recipes} />
+            ) : <NoRecipes pageText={`No recipes were found with the category '${pageTitle}'`} />}
         </Spin>
     );
 };

@@ -140,9 +140,9 @@ public class RecipesController : Controller
 
     [HttpGet("getrecipesbycategory")]
     [AllowAnonymous]
-    public async Task<ActionResult<IReadOnlyCollection<RecipeApiModel>>> GetRecipesByCategory(int id, CancellationToken cancellationToken)
+    public async Task<ActionResult<IReadOnlyCollection<RecipeApiModel>>> GetRecipesByCategory(int id, CancellationToken cancellationToken, bool includeImages = false)
     {
-        var result = await _mediatr.Send(new GetRecipesByCategory.Query { CategoryId = id }, cancellationToken);
+        var result = await _mediatr.Send(new GetRecipesByCategory.Query { CategoryId = id, IncludeImages = includeImages }, cancellationToken);
 
         if (!result.IsSuccessful)
         {
