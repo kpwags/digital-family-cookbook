@@ -46,7 +46,7 @@ const NavBar = ({
                 }]
                 : categories.map((c) => ({
                     key: `category-${c.categoryId}`,
-                    label: <Link to="/">{c.name}</Link>,
+                    label: <Link to={`/recipes/category/${c.categoryId}`}>{c.name}</Link>,
                 })),
         });
 

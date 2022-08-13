@@ -220,21 +220,11 @@ public class RecipeRepository : IRecipeRepository
             .Select(r => Recipe.FromDto(r));
     }
 
-    private async Task AddIngredients(int recipeId, IEnumerable<Ingredient> ingredients)
+    public IEnumerable<Recipe> GetRecipesForCategory(int categoryId)
     {
-        foreach (var ingredient in ingredients)
-        {
-            ingredient.RecipeId = recipeId;
-            await _ingredientRepository.Add(ingredient);
-        }
-    }
-
-    private async Task AddSteps(int recipeId, IEnumerable<Step> steps)
-    {
-        foreach (var step in steps)
-        {
-            step.RecipeId = recipeId;
-            var newStep = await _stepRepository.Add(step);
-        }
+        return _db.Recipes
+            .Include(r => r.RecipeCategories)
+            .Where(r => r.RecipeCategories.Select(rc => rc.CategoryId).Contains(categoryId))
+            .Select(r => Recipe.FromDto(r));
     }
 }

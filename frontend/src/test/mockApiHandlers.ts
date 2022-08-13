@@ -269,6 +269,38 @@ const mockApiHandlers = [
                 );
         }
     }),
+
+    rest.get('*/recipes/getrecipesbycategory', (req, res, ctx) => {
+        const id = req.url.searchParams.get('id');
+
+        if (!id) {
+            return res(
+                ctx.status(400),
+                ctx.text('Category not specified'),
+            );
+        }
+
+        const categoryId = parseInt(id, 10);
+
+        switch (categoryId) {
+            case 1:
+                return res(
+                    ctx.status(200),
+                    ctx.json({
+                        pageTitle: 'Mock Category',
+                        recipes: MockRecipeList(8),
+                    }),
+                );
+            default:
+                return res(
+                    ctx.status(200),
+                    ctx.json({
+                        pageTitle: 'Mock Category',
+                        recipes: [],
+                    }),
+                );
+        }
+    }),
 ];
 
 export { mockApiHandlers };

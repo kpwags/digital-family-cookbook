@@ -1,0 +1,46 @@
+@import (reference) '../../styles/Theme.less';
+
+.recipe-card {
+    cursor: pointer;
+
+    &.ant-card {
+        border-radius: 4px;
+    }
+
+    &.ant-card-bordered {
+        border-color: @color-green-01;
+    }
+
+    .ant-card-cover {
+        img {
+            border: 1px solid @color-green-01;
+            object-fit: cover;
+            width: 100%;
+            max-height: 250px;
+            min-height: 250px;
+        }
+    }
+
+    .ant-card-meta-title {
+        color: @color-green-01;
+        font-weight: 600;
+    }
+
+    &:hover {
+        animation: pulse-animation 2s infinite;
+
+        .ant-card-meta-title {
+            text-decoration: underline;
+        }
+    }
+
+    @keyframes pulse-animation {
+        0% {
+            box-shadow: 0 0 0 0px rgba(0, 0, 0, 0.2);
+        }
+
+        100% {
+            box-shadow: 0 0 0 20px rgba(0, 0, 0, 0);
+        }
+    }
+}
