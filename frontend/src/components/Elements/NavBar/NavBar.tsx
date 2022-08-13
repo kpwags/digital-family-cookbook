@@ -60,7 +60,7 @@ const NavBar = ({
                 }]
                 : meats.map((m) => ({
                     key: `meat-${m.meatId}`,
-                    label: <Link to="/">{m.name}</Link>,
+                    label: <Link to={`/recipes/meat/${m.meatId}`}>{m.name}</Link>,
                 })),
         });
 

@@ -301,6 +301,38 @@ const mockApiHandlers = [
                 );
         }
     }),
+
+    rest.get('*/recipes/getrecipesbymeat', (req, res, ctx) => {
+        const id = req.url.searchParams.get('id');
+
+        if (!id) {
+            return res(
+                ctx.status(400),
+                ctx.text('Meat not specified'),
+            );
+        }
+
+        const meatId = parseInt(id, 10);
+
+        switch (meatId) {
+            case 1:
+                return res(
+                    ctx.status(200),
+                    ctx.json({
+                        pageTitle: 'Mock Meat',
+                        recipes: MockRecipeList(8),
+                    }),
+                );
+            default:
+                return res(
+                    ctx.status(200),
+                    ctx.json({
+                        pageTitle: 'Mock Meat',
+                        recipes: [],
+                    }),
+                );
+        }
+    }),
 ];
 
 export { mockApiHandlers };
