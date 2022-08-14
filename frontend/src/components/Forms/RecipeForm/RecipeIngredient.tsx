@@ -41,7 +41,7 @@ const RecipeIngredient = ({
             >
                 <Input
                     id={`ingredient-${ingredient.id}`}
-                    data-testid={`ingredient-${ingredient.id}`}
+                    data-testid={`ingredient-input-${ingredient.id}`}
                     onChange={(e) => {
                         e.preventDefault();
                         onChange(ingredient.id, e.target.value);

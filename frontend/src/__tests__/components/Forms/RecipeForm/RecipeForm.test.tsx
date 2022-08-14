@@ -2,12 +2,15 @@ import {
     act,
     screen,
 } from '@testing-library/react';
+import { v4 as uuid4 } from 'uuid';
 import { renderWithRouter } from '@test/renderWithRouter';
 import { MockAppProvider } from '@test/MockAppProvider';
 import { MockAdminUserAccount } from '@test/mocks/MockUsers';
 import RecipeForm from '@components/Forms/RecipeForm';
 import userEvent from '@testing-library/user-event';
-import { MockRecipe } from '@test/mocks/MockRecipe';
+import Recipe from '@models/Recipe';
+import { MockIngredientList } from '@test/mocks/MockIngredient';
+import { MockStepList } from '@test/mocks/MockStep';
 
 describe('<RecipeForm />', () => {
     test('It loads the form with the default display', () => {
@@ -17,8 +20,8 @@ describe('<RecipeForm />', () => {
             </MockAppProvider>,
         );
 
-        const ingredients = screen.getAllByTestId(/^ingredient-/);
-        const directions = screen.getAllByTestId(/^direction-/);
+        const ingredients = screen.getAllByTestId(/^ingredient-input-/);
+        const directions = screen.getAllByTestId(/^direction-input-/);
 
         expect(ingredients.length).toBe(1);
         expect(directions.length).toBe(1);
@@ -35,7 +38,7 @@ describe('<RecipeForm />', () => {
 
         userEvent.click(addIngredientButton);
 
-        const ingredients = screen.getAllByTestId(/^ingredient-/);
+        const ingredients = screen.getAllByTestId(/^ingredient-input-/);
 
         expect(ingredients.length).toBe(2);
     });
@@ -76,9 +79,9 @@ describe('<RecipeForm />', () => {
 
         expect(ingredients.length).toBe(2);
 
-        expect(screen.queryByTestId(/^ingredient-1/)).toBeInTheDocument();
-        expect(screen.queryByTestId(/^ingredient-2/)).not.toBeInTheDocument();
-        expect(screen.queryByTestId(/^ingredient-3/)).toBeInTheDocument();
+        expect(screen.queryByTestId(/^ingredient-input-1/)).toBeInTheDocument();
+        expect(screen.queryByTestId(/^ingredient-input-2/)).not.toBeInTheDocument();
+        expect(screen.queryByTestId(/^ingredient-input-3/)).toBeInTheDocument();
     });
 
     test('Clicking the "Delete Step" button direction the step input field', () => {
@@ -101,9 +104,9 @@ describe('<RecipeForm />', () => {
 
         expect(directions.length).toBe(2);
 
-        expect(screen.queryByTestId(/^direction-1/)).toBeInTheDocument();
-        expect(screen.queryByTestId(/^direction-2/)).not.toBeInTheDocument();
-        expect(screen.queryByTestId(/^direction-3/)).toBeInTheDocument();
+        expect(screen.queryByTestId(/^direction-input-1/)).toBeInTheDocument();
+        expect(screen.queryByTestId(/^direction-input-2/)).not.toBeInTheDocument();
+        expect(screen.queryByTestId(/^direction-input-3/)).toBeInTheDocument();
     });
 
     test('It validates the recipe has a name', async () => {
@@ -161,7 +164,7 @@ describe('<RecipeForm />', () => {
             userEvent.click(addIngredientButton);
         });
 
-        expect(screen.queryAllByTestId(/^ingredient-/).length).toBe(2);
+        expect(screen.queryAllByTestId(/^ingredient-input-/).length).toBe(2);
         expect(screen.queryAllByTestId(/^delete-ingredient-/).length).toBe(2);
     });
 
@@ -205,12 +208,51 @@ describe('<RecipeForm />', () => {
             userEvent.click(addStepButton);
         });
 
-        expect(screen.queryAllByTestId(/^direction-/).length).toBe(2);
+        expect(screen.queryAllByTestId(/^direction-input/).length).toBe(2);
         expect(screen.queryAllByTestId(/^delete-step-/).length).toBe(2);
     });
 
     test('It loads an existing recipe', async () => {
-        const recipe = MockRecipe();
+        const userId = uuid4();
+
+        const recipe: Recipe = {
+            recipeId: 1,
+            id: uuid4(),
+            name: 'Mock Recipe',
+            imageData: '',
+            imageUrl: 'http://localhost:3000/image.jpg',
+            largeImageData: '',
+            imageUrlLarge: 'http://localhost:3000/image_lg.jpg',
+            isPublic: true,
+            servings: 4,
+            activeTime: 45,
+            time: 60,
+            calories: 400,
+            carbohydrates: 25,
+            fat: 8,
+            protein: 22,
+            cholesterol: 100,
+            fiber: 12,
+            sugar: 9,
+            description: '<p>This is a test recipe</p>',
+            source: 'Google',
+            sourceUrl: 'https://www.google.com',
+            userAccount: {
+                id: userId,
+                userId,
+                roles: [],
+                name: 'Test User',
+                email: 'testuser@gmail.com',
+            },
+            userAccountId: userId,
+            ingredients: MockIngredientList(1, 10),
+            steps: MockStepList(1, 5),
+            categories: [],
+            meats: [],
+            notes: [],
+            dateCreated: new Date(),
+            dateUpdated: new Date(),
+        };
 
         renderWithRouter(
             <MockAppProvider user={MockAdminUserAccount}>
@@ -222,45 +264,45 @@ describe('<RecipeForm />', () => {
         );
 
         const nameField = screen.getByLabelText(/Name/) as HTMLInputElement;
-        expect(nameField.value).toBe(recipe.name);
+        expect(nameField.value).toBe('Mock Recipe');
 
         const servingsField = screen.getByLabelText(/Servings/) as HTMLInputElement;
-        expect(servingsField.value).toBe(recipe.servings?.toString());
+        expect(servingsField.value).toBe('4');
 
         const sourceField = screen.getByLabelText(/Source/) as HTMLInputElement;
-        expect(sourceField.value).toBe(recipe.source);
+        expect(sourceField.value).toBe('Google');
 
         const sourceUrlField = screen.getByLabelText(/Web Address/) as HTMLInputElement;
-        expect(sourceUrlField.value).toBe(recipe.sourceUrl);
+        expect(sourceUrlField.value).toBe('https://www.google.com');
 
         const timeField = screen.getByLabelText(/^Time/) as HTMLInputElement;
-        expect(timeField.value).toBe(recipe.time?.toString());
+        expect(timeField.value).toBe('60');
 
         const activeTimeField = screen.getByLabelText(/Active Time/) as HTMLInputElement;
-        expect(activeTimeField.value).toBe(recipe.activeTime?.toString());
+        expect(activeTimeField.value).toBe('45');
 
         const caloriesField = screen.getByLabelText(/Calories/) as HTMLInputElement;
-        expect(caloriesField.value).toBe(recipe.calories?.toString());
+        expect(caloriesField.value).toBe('400');
 
         const proteinField = screen.getByLabelText(/Protein/) as HTMLInputElement;
-        expect(proteinField.value).toBe(recipe.protein?.toString());
+        expect(proteinField.value).toBe('22');
 
         const carbsField = screen.getByLabelText(/Carbohydrates/) as HTMLInputElement;
-        expect(carbsField.value).toBe(recipe.carbohydrates?.toString());
+        expect(carbsField.value).toBe('25');
 
         const fatField = screen.getByLabelText(/Fat/) as HTMLInputElement;
-        expect(fatField.value).toBe(recipe.fat?.toString());
+        expect(fatField.value).toBe('8');
 
         const sugarField = screen.getByLabelText(/Sugar/) as HTMLInputElement;
-        expect(sugarField.value).toBe(recipe.sugar?.toString());
+        expect(sugarField.value).toBe('9');
 
         const cholesterolField = screen.getByLabelText(/Cholesterol/) as HTMLInputElement;
-        expect(cholesterolField.value).toBe(recipe.cholesterol?.toString());
+        expect(cholesterolField.value).toBe('100');
 
         const FiberField = screen.getByLabelText(/Fiber/) as HTMLInputElement;
-        expect(FiberField.value).toBe(recipe.fiber?.toString());
+        expect(FiberField.value).toBe('12');
 
-        expect(screen.queryAllByTestId(/^ingredient-/).length).toBe(10);
-        expect(screen.queryAllByTestId(/^direction-/).length).toBe(5);
+        expect(screen.queryAllByTestId(/^ingredient-input-/).length).toBe(10);
+        expect(screen.queryAllByTestId(/^direction-input-/).length).toBe(5);
     });
 });

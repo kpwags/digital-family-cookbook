@@ -1,4 +1,5 @@
 import { useContext, useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import {
     Table,
     Button,
@@ -95,15 +96,23 @@ const UsersGrid = (): JSX.Element => {
             key: 'name',
             title: 'Name',
             dataIndex: 'name',
-            width: '50%',
+            width: '40%',
         },
         {
             key: 'roles',
             title: 'Roles',
             dataIndex: 'roles',
-            width: '30%',
+            width: '25%',
             render: (_, user: UserAccount) => (
                 <>{user.roles.map((r) => r.name).join(', ')}</>
+            ),
+        },
+        {
+            key: 'recipes',
+            title: 'Recipes',
+            width: '15%',
+            render: (_, user: UserAccount) => (
+                <Link to={`/recipes/user/${user.id}`}>View Recipes</Link>
             ),
         },
         {
