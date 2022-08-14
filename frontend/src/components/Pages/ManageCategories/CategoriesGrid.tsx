@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import {
     Table,
     Button,
@@ -40,7 +41,15 @@ const CategoriesGrid = ({
             key: 'name',
             title: 'Name',
             dataIndex: 'name',
-            width: '80%',
+            width: '65%',
+        },
+        {
+            key: 'recipes',
+            title: 'Recipes',
+            width: '15%',
+            render: (_, category: Category) => (
+                <Link to={`/recipes/category/${category.categoryId}`}>View Recipes</Link>
+            ),
         },
         {
             key: 'actions',

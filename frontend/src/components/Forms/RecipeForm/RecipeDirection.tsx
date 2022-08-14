@@ -43,7 +43,7 @@ const RecipeIngredient = ({
             >
                 <TextArea
                     id={`direction-${direction.id}`}
-                    data-testid={`direction-${direction.id}`}
+                    data-testid={`direction-input-${direction.id}`}
                     onChange={(e) => {
                         e.preventDefault();
                         onChange(direction.id, e.target.value);
@@ -52,7 +52,7 @@ const RecipeIngredient = ({
             </Form.Item>
             <Button
                 type="link"
-                className="delete-ingredient-step"
+                className="delete-step"
                 hidden={directionCount <= 1}
                 data-testid={`delete-step-${direction.id}`}
                 onClick={() => onRemove(direction.id)}
