@@ -21,8 +21,8 @@ public class GetRecipesByUserTests
         var recipes = MockRecipe.GenerateDomainModelList(10);
 
         _recipeRepository
-            .Setup(r => r.GetUserRecipes(It.IsAny<string>()))
-            .Returns(recipes);
+            .Setup(r => r.GetRecipesForUserPaginated(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>()))
+            .Returns((recipes, 10));
 
         _userAccountRepository
             .Setup(u => u.GetUserAccountById(It.IsAny<string>(), false))
@@ -46,13 +46,13 @@ public class GetRecipesByUserTests
     }
 
     [Fact]
-    public async Task ItReturnsRecipesForAGivenMeatWithImages()
+    public async Task ItReturnsRecipesForAGivenUserWithImages()
     {
         var recipes = MockRecipe.GenerateDomainModelList(10);
 
         _recipeRepository
-            .Setup(r => r.GetUserRecipes(It.IsAny<string>()))
-            .Returns(recipes);
+            .Setup(r => r.GetRecipesForUserPaginated(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>()))
+            .Returns((recipes, 10));
 
         _userAccountRepository
             .Setup(u => u.GetUserAccountById(It.IsAny<string>(), false))

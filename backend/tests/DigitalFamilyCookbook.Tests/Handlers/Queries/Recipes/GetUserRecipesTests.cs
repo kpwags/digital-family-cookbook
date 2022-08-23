@@ -18,7 +18,7 @@ public class GetUserRecipesTests
         var recipes = MockRecipe.GenerateDomainModelList(10);
 
         _recipeRepository
-            .Setup(r => r.GetUserRecipes(It.IsAny<string>()))
+            .Setup(r => r.GetRecipesForUser(It.IsAny<string>()))
             .Returns(recipes);
 
         var query = new GetUserRecipes.Query { UserAccountId = MockDataGenerator.RandomId() };
@@ -38,7 +38,7 @@ public class GetUserRecipesTests
         var recipes = MockRecipe.GenerateDomainModelList(10);
 
         _recipeRepository
-            .Setup(r => r.GetUserRecipes(userAccount.Id))
+            .Setup(r => r.GetRecipesForUser(userAccount.Id))
             .Returns(recipes);
 
         var httpContextAccessor = MockSession.BuildSession(userAccount);

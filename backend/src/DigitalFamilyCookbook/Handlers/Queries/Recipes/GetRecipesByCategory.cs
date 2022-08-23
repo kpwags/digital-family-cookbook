@@ -1,3 +1,5 @@
+using DigitalFamilyCookbook.Core.Configuration;
+
 namespace DigitalFamilyCookbook.Handlers.Queries.Recipes;
 
 public class GetRecipesByCategory
@@ -8,7 +10,11 @@ public class GetRecipesByCategory
         private readonly ICategoryRepository _categoryRepository;
         private readonly IFileService _fileService;
 
-        public Handler(IRecipeRepository recipeRepository, ICategoryRepository categoryRepository, IFileService fileService)
+        public Handler(
+            IRecipeRepository recipeRepository,
+            ICategoryRepository categoryRepository,
+            IFileService fileService
+        )
         {
             _recipeRepository = recipeRepository;
             _categoryRepository = categoryRepository;
@@ -21,7 +27,7 @@ public class GetRecipesByCategory
             {
                 var category = _categoryRepository.Get(request.CategoryId);
 
-                var data = await Task.FromResult(_recipeRepository.GetRecipesForCategory(request.CategoryId));
+                var (data, totalRecipes) = await Task.FromResult(_recipeRepository.GetRecipesForCategoryPaginated(request.CategoryId, request.PageNumber, request.RecipesPerPage));
 
                 var recipes = data
                     .Select(r => RecipeApiModel.FromDomainModel(r))
@@ -54,10 +60,15 @@ public class GetRecipesByCategory
                     }
                 }
 
+                var maxPage = (decimal)totalRecipes / request.RecipesPerPage;
+                var pageCount = (int)Math.Ceiling((double)maxPage);
+
                 return new OperationResult<RecipeListPageResults>(new RecipeListPageResults
                 {
                     PageTitle = category.Name,
                     Recipes = recipes,
+                    PageCount = pageCount,
+                    TotalRecipeCount = totalRecipes,
                 });
             }
             catch (Exception ex)
@@ -71,6 +82,10 @@ public class GetRecipesByCategory
     {
         public int CategoryId { get; set; }
 
+        public int PageNumber { get; set; } = 1;
+
         public bool IncludeImages { get; set; }
+
+        public int RecipesPerPage { get; set; } = 10;
     }
 }

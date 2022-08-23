@@ -104,24 +104,15 @@ const App = (): JSX.Element => (
                                 <ViewRecipe />
                             )}
                         />
-                        <Route
-                            path="/recipes/category/:id"
-                            element={(
-                                <RecipesByCategory />
-                            )}
-                        />
-                        <Route
-                            path="/recipes/meat/:id"
-                            element={(
-                                <RecipesByMeat />
-                            )}
-                        />
-                        <Route
-                            path="/recipes/user/:id"
-                            element={(
-                                <RecipesByUser />
-                            )}
-                        />
+                        <Route path="/recipes/category/:id" element={(<RecipesByCategory />)}>
+                            <Route path=":page" element={(<RecipesByCategory />)} />
+                        </Route>
+                        <Route path="/recipes/meat/:id" element={(<RecipesByMeat />)}>
+                            <Route path=":page" element={(<RecipesByMeat />)} />
+                        </Route>
+                        <Route path="/recipes/user/:id" element={(<RecipesByUser />)}>
+                            <Route path=":page" element={(<RecipesByUser />)} />
+                        </Route>
                         <Route path="/" element={<Landing />} />
                     </Routes>
                 </BaseLayout>

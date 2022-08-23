@@ -1,3 +1,5 @@
+using DigitalFamilyCookbook.Core.Configuration;
+
 namespace DigitalFamilyCookbook.Handlers.Queries.Recipes;
 
 public class GetRecipesByMeat
@@ -8,7 +10,9 @@ public class GetRecipesByMeat
         private readonly IMeatRepository _meatRepository;
         private readonly IFileService _fileService;
 
-        public Handler(IRecipeRepository recipeRepository, IMeatRepository meatRepository, IFileService fileService)
+        public Handler(IRecipeRepository recipeRepository,
+            IMeatRepository meatRepository,
+            IFileService fileService)
         {
             _recipeRepository = recipeRepository;
             _meatRepository = meatRepository;
@@ -21,7 +25,7 @@ public class GetRecipesByMeat
             {
                 var meat = _meatRepository.Get(request.MeatId);
 
-                var data = await Task.FromResult(_recipeRepository.GetRecipesForMeat(request.MeatId));
+                var (data, totalRecipes) = await Task.FromResult(_recipeRepository.GetRecipesForMeatPaginated(request.MeatId, request.PageNumber, request.RecipesPerPage));
 
                 var recipes = data
                     .Select(r => RecipeApiModel.FromDomainModel(r))
@@ -54,10 +58,15 @@ public class GetRecipesByMeat
                     }
                 }
 
+                var maxPage = (decimal)totalRecipes / request.RecipesPerPage;
+                var pageCount = (int)Math.Ceiling((double)maxPage);
+
                 return new OperationResult<RecipeListPageResults>(new RecipeListPageResults
                 {
                     PageTitle = meat.Name,
                     Recipes = recipes,
+                    PageCount = pageCount,
+                    TotalRecipeCount = totalRecipes,
                 });
             }
             catch (Exception ex)
@@ -71,6 +80,10 @@ public class GetRecipesByMeat
     {
         public int MeatId { get; set; }
 
+        public int PageNumber { get; set; } = 1;
+
         public bool IncludeImages { get; set; }
+
+        public int RecipesPerPage { get; set; } = 10;
     }
 }

@@ -21,8 +21,8 @@ public class GetRecipesByCategoryTests
         var recipes = MockRecipe.GenerateDomainModelList(10);
 
         _recipeRepository
-            .Setup(r => r.GetRecipesForCategory(It.IsAny<int>()))
-            .Returns(recipes);
+            .Setup(r => r.GetRecipesForCategoryPaginated(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>()))
+            .Returns((recipes, 10));
 
         _categoryRepository
             .Setup(c => c.Get(It.IsAny<int>()))
@@ -51,8 +51,8 @@ public class GetRecipesByCategoryTests
         var recipes = MockRecipe.GenerateDomainModelList(10);
 
         _recipeRepository
-            .Setup(r => r.GetRecipesForCategory(It.IsAny<int>()))
-            .Returns(recipes);
+            .Setup(r => r.GetRecipesForCategoryPaginated(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>()))
+            .Returns((recipes, 10));
 
         _categoryRepository
             .Setup(c => c.Get(It.IsAny<int>()))

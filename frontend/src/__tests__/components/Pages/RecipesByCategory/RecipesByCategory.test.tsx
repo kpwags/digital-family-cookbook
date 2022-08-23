@@ -12,7 +12,7 @@ jest.mock('react-router', () => ({
 
 describe('<RecipesByCategory />', () => {
     test('It displays a grid of recipes', async () => {
-        jest.spyOn(Router, 'useParams').mockReturnValue({ id: '1' });
+        jest.spyOn(Router, 'useParams').mockReturnValue({ id: '1', page: '1' });
 
         renderWithRouter(
             <MockAppProvider user={MockUserAccount}>
@@ -26,7 +26,7 @@ describe('<RecipesByCategory />', () => {
     });
 
     test('It tells the user there are no recipes', async () => {
-        jest.spyOn(Router, 'useParams').mockReturnValue({ id: '100' });
+        jest.spyOn(Router, 'useParams').mockReturnValue({ id: '100', page: '1' });
 
         renderWithRouter(
             <MockAppProvider user={MockUserAccount}>
