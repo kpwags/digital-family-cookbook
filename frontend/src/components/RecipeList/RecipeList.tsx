@@ -1,4 +1,7 @@
-import { Row, Col } from 'antd';
+import {
+    Row,
+    Col,
+} from 'antd';
 import RecipeCard from '@components/RecipeCard';
 import Recipe from '@models/Recipe';
 

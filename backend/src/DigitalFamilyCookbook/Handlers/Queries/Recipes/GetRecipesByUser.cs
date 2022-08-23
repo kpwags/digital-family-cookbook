@@ -1,3 +1,5 @@
+using DigitalFamilyCookbook.Core.Configuration;
+
 namespace DigitalFamilyCookbook.Handlers.Queries.Recipes;
 
 public class GetRecipesByUser
@@ -8,7 +10,10 @@ public class GetRecipesByUser
         private readonly IUserAccountRepository _userAccountRepository;
         private readonly IFileService _fileService;
 
-        public Handler(IRecipeRepository recipeRepository, IUserAccountRepository userAccountRepository, IFileService fileService)
+        public Handler(
+            IRecipeRepository recipeRepository,
+            IUserAccountRepository userAccountRepository,
+            IFileService fileService)
         {
             _recipeRepository = recipeRepository;
             _userAccountRepository = userAccountRepository;
@@ -21,7 +26,7 @@ public class GetRecipesByUser
             {
                 var userAccount = await _userAccountRepository.GetUserAccountById(request.UserAccountId);
 
-                var data = await Task.FromResult(_recipeRepository.GetUserRecipes(request.UserAccountId));
+                var (data, totalRecipes) = await Task.FromResult(_recipeRepository.GetRecipesForUserPaginated(request.UserAccountId, request.PageNumber, request.RecipesPerPage));
 
                 var recipes = data
                     .Select(r => RecipeApiModel.FromDomainModel(r))
@@ -54,10 +59,15 @@ public class GetRecipesByUser
                     }
                 }
 
+                var maxPage = (decimal)totalRecipes / request.RecipesPerPage;
+                var pageCount = (int)Math.Ceiling((double)maxPage);
+
                 return new OperationResult<RecipeListPageResults>(new RecipeListPageResults
                 {
                     PageTitle = userAccount.Name,
                     Recipes = recipes,
+                    PageCount = pageCount,
+                    TotalRecipeCount = totalRecipes,
                 });
             }
             catch (Exception ex)
@@ -71,6 +81,10 @@ public class GetRecipesByUser
     {
         public string UserAccountId { get; set; } = string.Empty;
 
+        public int PageNumber { get; set; }
+
         public bool IncludeImages { get; set; }
+
+        public int RecipesPerPage { get; set; } = 10;
     }
 }

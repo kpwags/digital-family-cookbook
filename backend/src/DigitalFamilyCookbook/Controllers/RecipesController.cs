@@ -140,9 +140,9 @@ public class RecipesController : Controller
 
     [HttpGet("getrecipesbycategory")]
     [AllowAnonymous]
-    public async Task<ActionResult<RecipeListPageResults>> GetRecipesByCategory(int id, CancellationToken cancellationToken, bool includeImages = false)
+    public async Task<ActionResult<RecipeListPageResults>> GetRecipesByCategory([FromQuery] GetRecipesByCategory.Query query, CancellationToken cancellationToken)
     {
-        var result = await _mediatr.Send(new GetRecipesByCategory.Query { CategoryId = id, IncludeImages = includeImages }, cancellationToken);
+        var result = await _mediatr.Send(query, cancellationToken);
 
         if (!result.IsSuccessful)
         {
@@ -154,9 +154,9 @@ public class RecipesController : Controller
 
     [HttpGet("getrecipesbymeat")]
     [AllowAnonymous]
-    public async Task<ActionResult<IReadOnlyCollection<RecipeListPageResults>>> GetRecipesByMeat(int id, CancellationToken cancellationToken, bool includeImages = false)
+    public async Task<ActionResult<IReadOnlyCollection<RecipeListPageResults>>> GetRecipesByMeat([FromQuery] GetRecipesByMeat.Query query, CancellationToken cancellationToken)
     {
-        var result = await _mediatr.Send(new GetRecipesByMeat.Query { MeatId = id, IncludeImages = includeImages }, cancellationToken);
+        var result = await _mediatr.Send(query, cancellationToken);
 
         if (!result.IsSuccessful)
         {
@@ -168,9 +168,9 @@ public class RecipesController : Controller
 
     [HttpGet("getrecipesbyuser")]
     [AllowAnonymous]
-    public async Task<ActionResult<IReadOnlyCollection<RecipeListPageResults>>> GetRecipesByUser(string id, CancellationToken cancellationToken, bool includeImages = false)
+    public async Task<ActionResult<IReadOnlyCollection<RecipeListPageResults>>> GetRecipesByUser([FromQuery] GetRecipesByUser.Query query, CancellationToken cancellationToken)
     {
-        var result = await _mediatr.Send(new GetRecipesByUser.Query { UserAccountId = id, IncludeImages = includeImages }, cancellationToken);
+        var result = await _mediatr.Send(query, cancellationToken);
 
         if (!result.IsSuccessful)
         {

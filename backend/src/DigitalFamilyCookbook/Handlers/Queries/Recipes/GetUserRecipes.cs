@@ -31,7 +31,7 @@ public class GetUserRecipes
                     userAccountId = user.Id;
                 }
 
-                var data = await Task.FromResult(_recipeRepository.GetUserRecipes(userAccountId));
+                var data = await Task.FromResult(_recipeRepository.GetRecipesForUser(userAccountId));
 
                 var recipes = data
                     .Select(r => RecipeApiModel.FromDomainModel(r))

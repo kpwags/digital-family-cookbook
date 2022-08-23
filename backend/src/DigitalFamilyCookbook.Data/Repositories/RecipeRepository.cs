@@ -212,7 +212,7 @@ public class RecipeRepository : IRecipeRepository
         await _db.SaveChangesAsync();
     }
 
-    public IEnumerable<Recipe> GetUserRecipes(string userAccountId)
+    public IEnumerable<Recipe> GetRecipesForUser(string userAccountId)
     {
         return _db.Recipes
             .Where(r => r.UserAccountId == userAccountId)
@@ -220,12 +220,46 @@ public class RecipeRepository : IRecipeRepository
             .Select(r => Recipe.FromDto(r));
     }
 
+    public (IEnumerable<Recipe> recipes, int totalRecipes) GetRecipesForUserPaginated(string userAccountId, int currentPage = 1, int recipesPerPage = 10)
+    {
+        var recipes = _db.Recipes
+            .OrderBy(r => r.Name)
+            .Skip(currentPage == 1 ? 0 : (currentPage - 1) * recipesPerPage)
+            .Where(r => r.UserAccountId == userAccountId)
+            .Include(r => r.UserAccount)
+            .Take(recipesPerPage)
+            .Select(r => Recipe.FromDto(r));
+
+        var recipeCount = _db.Recipes
+            .Include(r => r.RecipeCategories)
+            .Count(r => r.UserAccountId == userAccountId);
+
+        return (recipes, recipeCount);
+    }
+
     public IEnumerable<Recipe> GetRecipesForCategory(int categoryId)
     {
         return _db.Recipes
+                .Include(r => r.RecipeCategories)
+                .Where(r => r.RecipeCategories.Select(rc => rc.CategoryId).Contains(categoryId))
+                .Select(r => Recipe.FromDto(r));
+    }
+
+    public (IEnumerable<Recipe> recipes, int totalRecipes) GetRecipesForCategoryPaginated(int categoryId, int currentPage = 1, int recipesPerPage = 10)
+    {
+        var recipes = _db.Recipes
+            .OrderBy(r => r.Name)
+            .Skip(currentPage == 1 ? 0 : (currentPage - 1) * recipesPerPage)
             .Include(r => r.RecipeCategories)
             .Where(r => r.RecipeCategories.Select(rc => rc.CategoryId).Contains(categoryId))
+            .Take(recipesPerPage)
             .Select(r => Recipe.FromDto(r));
+
+        var recipeCount = _db.Recipes
+            .Include(r => r.RecipeCategories)
+            .Count(r => r.RecipeCategories.Select(rc => rc.CategoryId).Contains(categoryId));
+
+        return (recipes, recipeCount);
     }
 
     public IEnumerable<Recipe> GetRecipesForMeat(int meatId)
@@ -234,5 +268,22 @@ public class RecipeRepository : IRecipeRepository
             .Include(r => r.RecipeMeats)
             .Where(r => r.RecipeMeats.Select(rm => rm.MeatId).Contains(meatId))
             .Select(r => Recipe.FromDto(r));
+    }
+
+    public (IEnumerable<Recipe> recipes, int totalRecipes) GetRecipesForMeatPaginated(int meatId, int currentPage = 1, int recipesPerPage = 10)
+    {
+        var recipes = _db.Recipes
+            .OrderBy(r => r.Name)
+            .Skip(currentPage == 1 ? 0 : (currentPage - 1) * recipesPerPage)
+            .Include(r => r.RecipeMeats)
+            .Where(r => r.RecipeMeats.Select(rc => rc.MeatId).Contains(meatId))
+            .Take(recipesPerPage)
+            .Select(r => Recipe.FromDto(r));
+
+        var recipeCount = _db.Recipes
+            .Include(r => r.RecipeMeats)
+            .Count(r => r.RecipeMeats.Select(rm => rm.MeatId).Contains(meatId));
+
+        return (recipes, recipeCount);
     }
 }

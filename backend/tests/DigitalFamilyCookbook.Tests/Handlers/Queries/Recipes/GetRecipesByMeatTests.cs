@@ -21,8 +21,8 @@ public class GetRecipesByMeatTests
         var recipes = MockRecipe.GenerateDomainModelList(10);
 
         _recipeRepository
-            .Setup(r => r.GetRecipesForMeat(It.IsAny<int>()))
-            .Returns(recipes);
+            .Setup(r => r.GetRecipesForMeatPaginated(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>()))
+            .Returns((recipes, 10));
 
         _meatRepository
             .Setup(c => c.Get(It.IsAny<int>()))
@@ -51,8 +51,8 @@ public class GetRecipesByMeatTests
         var recipes = MockRecipe.GenerateDomainModelList(10);
 
         _recipeRepository
-            .Setup(r => r.GetRecipesForMeat(It.IsAny<int>()))
-            .Returns(recipes);
+            .Setup(r => r.GetRecipesForMeatPaginated(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>()))
+            .Returns((recipes, 10));
 
         _meatRepository
             .Setup(c => c.Get(It.IsAny<int>()))

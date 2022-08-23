@@ -271,7 +271,7 @@ const mockApiHandlers = [
     }),
 
     rest.get('*/recipes/getrecipesbycategory', (req, res, ctx) => {
-        const id = req.url.searchParams.get('id');
+        const id = req.url.searchParams.get('categoryId');
 
         if (!id) {
             return res(
@@ -289,6 +289,8 @@ const mockApiHandlers = [
                     ctx.json({
                         pageTitle: 'Mock Category',
                         recipes: MockRecipeList(8),
+                        pageCount: 1,
+                        totalRecipeCount: 8,
                     }),
                 );
             default:
@@ -297,13 +299,15 @@ const mockApiHandlers = [
                     ctx.json({
                         pageTitle: 'Mock Category',
                         recipes: [],
+                        pageCount: 1,
+                        totalRecipeCount: 0,
                     }),
                 );
         }
     }),
 
     rest.get('*/recipes/getrecipesbymeat', (req, res, ctx) => {
-        const id = req.url.searchParams.get('id');
+        const id = req.url.searchParams.get('meatId');
 
         if (!id) {
             return res(
@@ -335,7 +339,7 @@ const mockApiHandlers = [
     }),
 
     rest.get('*/recipes/getrecipesbyuser', (req, res, ctx) => {
-        const id = req.url.searchParams.get('id');
+        const id = req.url.searchParams.get('userAccountId');
 
         if (!id) {
             return res(
