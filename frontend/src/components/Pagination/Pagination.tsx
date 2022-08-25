@@ -19,7 +19,7 @@ const Pagination = ({
         className="pagination"
         total={recipeCount}
         showTotal={(total, range) => `${range[0]}-${range[1]} of ${total} recipes`}
-        defaultPageSize={4}
+        defaultPageSize={10}
         pageSize={recipesPerPage}
         current={currentPageNumber}
         defaultCurrent={1}

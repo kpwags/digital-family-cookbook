@@ -1,0 +1,23 @@
+@import (reference) '../../styles/Theme.less';
+
+.basic-recipe-list {
+    width: min(100ch, 100vw - 2rem);
+    margin: 0 auto;
+    max-width: 100%;
+    padding: 0;
+
+    li {
+        margin: 1.5rem 0;
+        padding: 0;
+        list-style-type: none;
+
+        a {
+            color: @color-green-01;
+            font-size: 1.5rem;
+
+            &:hover {
+                color: @color-green-02;
+            }
+        }
+    }
+}
