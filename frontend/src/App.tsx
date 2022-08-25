@@ -20,11 +20,9 @@ import EditRecipe from '@components/Pages/EditRecipe';
 import ViewRecipe from '@components/Pages/ViewRecipe';
 import ManageMeats from '@components/Pages/ManageMeats';
 import ManageRecipes from '@components/Pages/ManageRecipes';
-import RecipesByCategory from '@components/Pages/RecipesByCategory';
-import RecipesByMeat from '@components/Pages/RecipesByMeat';
+import RecipeListing from '@components/Pages/RecipeListing';
 
 import './styles/App.less';
-import RecipesByUser from '@components/Pages/RecipesByUser';
 
 const App = (): JSX.Element => (
     <CookiesProvider>
@@ -104,14 +102,14 @@ const App = (): JSX.Element => (
                                 <ViewRecipe />
                             )}
                         />
-                        <Route path="/recipes/category/:id" element={(<RecipesByCategory />)}>
-                            <Route path=":page" element={(<RecipesByCategory />)} />
+                        <Route path="/recipes/category/:id" element={(<RecipeListing mode="category" />)}>
+                            <Route path=":page" element={(<RecipeListing mode="category" />)} />
                         </Route>
-                        <Route path="/recipes/meat/:id" element={(<RecipesByMeat />)}>
-                            <Route path=":page" element={(<RecipesByMeat />)} />
+                        <Route path="/recipes/meat/:id" element={(<RecipeListing mode="meat" />)}>
+                            <Route path=":page" element={(<RecipeListing mode="meat" />)} />
                         </Route>
-                        <Route path="/recipes/user/:id" element={(<RecipesByUser />)}>
-                            <Route path=":page" element={(<RecipesByUser />)} />
+                        <Route path="/recipes/user/:id" element={(<RecipeListing mode="user" />)}>
+                            <Route path=":page" element={(<RecipeListing mode="user" />)} />
                         </Route>
                         <Route path="/" element={<Landing />} />
                     </Routes>

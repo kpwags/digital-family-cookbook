@@ -5,6 +5,8 @@ class LocalStorageUtils {
 
     static clearAccessToken = () => window.localStorage.removeItem('__dfc_access_token__');
 
+    static setValue = (key: string, value: string) => window.localStorage.setItem(key, value);
+
     static getValue = (key: string): string | null => window.localStorage.getItem(key);
 
     static clearValue = (key: string) => window.localStorage.removeItem(key);
