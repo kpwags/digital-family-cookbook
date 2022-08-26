@@ -34,11 +34,11 @@ enum ViewMode {
 }
 
 type RecipeListingProps = {
-    mode: 'category' | 'meat' | 'user'
+    mode: 'category' | 'meat' | 'user' | 'all'
 }
 
 const RecipeListing = ({
-    mode,
+    mode = 'all',
 }: RecipeListingProps): JSX.Element => {
     const [processingMessage, setProcessingMessage] = useState<string>('Loading...');
     const [recipes, setRecipes] = useState<Recipe[]>([]);
@@ -81,8 +81,17 @@ const RecipeListing = ({
         },
     });
 
+    // eslint-disable-next-line max-len
+    const fetchAllRecipes = async (pageNum = 1): Promise<[RecipeListPageResults | null, string | null]> => Api.Get<RecipeListPageResults>('recipes/getallrecipes', {
+        params: {
+            includeImages: true,
+            pageNumber: pageNum,
+            recipesPerPage,
+        },
+    });
+
     const fetchRecipes = async (pageNum = 1) => {
-        if (!id) {
+        if (mode !== 'all' && !id) {
             message.error('Error retrieving recipes');
             return;
         }
@@ -92,15 +101,19 @@ const RecipeListing = ({
 
         switch (mode) {
             case 'category':
-                [data, error] = await fetchRecipesByCategory(parseInt(id, 10), pageNum);
+                [data, error] = await fetchRecipesByCategory(parseInt(id || '0', 10), pageNum);
                 break;
 
             case 'meat':
-                [data, error] = await fetchRecipesByMeat(parseInt(id, 10), pageNum);
+                [data, error] = await fetchRecipesByMeat(parseInt(id || '0', 10), pageNum);
                 break;
 
             case 'user':
-                [data, error] = await fetchRecipesByUser(id, pageNum);
+                [data, error] = await fetchRecipesByUser(id || '0', pageNum);
+                break;
+
+            case 'all':
+                [data, error] = await fetchAllRecipes(pageNum);
                 break;
 
             default:
@@ -129,7 +142,10 @@ const RecipeListing = ({
                 setNoRecipesMessage(`No recipes were found created by ${data.pageTitle}`);
                 break;
 
+            case 'all':
             default:
+                setPageTitle('All Recipes');
+                setNoRecipesMessage('No recipes were found');
                 break;
         }
 
@@ -142,7 +158,24 @@ const RecipeListing = ({
         LocalStorageUtils.setValue('default_recipe_view', view.toString());
     };
 
-    useDocumentTitle(`Recipes by ${mode}`);
+    const getDocumentTitle = (mode: 'category' | 'meat' | 'user' | 'all'): string => {
+        switch (mode) {
+            case 'category':
+                return 'Recipes by Category';
+
+            case 'meat':
+                return 'Recipes by Meat';
+
+            case 'user':
+                return 'Recipes by User';
+
+            case 'all':
+            default:
+                return 'Recipes';
+        }
+    };
+
+    useDocumentTitle(getDocumentTitle(mode));
 
     useEffect(() => {
         const pageNumber = page ? parseInt(page, 10) : 1;

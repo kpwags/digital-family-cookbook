@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { Layout, Menu } from 'antd';
-import { FileAddOutlined, MenuOutlined, UserOutlined } from '@ant-design/icons';
+import { PlusOutlined, MenuOutlined, UserOutlined } from '@ant-design/icons';
 import AppContext from '@contexts/AppContext';
 import { hasRole } from '@utils/UserFunctions';
 import { ItemType } from 'antd/lib/menu/hooks/useItems';
@@ -31,10 +31,15 @@ const NavBar = ({
         if (user && user.id !== '') {
             menuItems.push({
                 key: 'add-recipe',
-                icon: <FileAddOutlined />,
+                icon: <PlusOutlined />,
                 label: <Link to="/recipes/add">New Recipe</Link>,
             });
         }
+
+        menuItems.push({
+            key: 'all-recipes',
+            label: <Link to="/recipes/list">All Recipes</Link>,
+        });
 
         menuItems.push({
             key: 'categories',

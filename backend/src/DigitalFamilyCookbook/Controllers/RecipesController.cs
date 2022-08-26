@@ -35,7 +35,7 @@ public class RecipesController : Controller
     [AllowAnonymous]
     public async Task<ActionResult<IReadOnlyCollection<RecipeApiModel>>> GetAll(CancellationToken cancellationToken)
     {
-        var result = await _mediatr.Send(new GetAllRecipes.Query(), cancellationToken);
+        var result = await _mediatr.Send(new GetRecipesForAdmin.Query(), cancellationToken);
 
         if (!result.IsSuccessful)
         {
@@ -169,6 +169,20 @@ public class RecipesController : Controller
     [HttpGet("getrecipesbyuser")]
     [AllowAnonymous]
     public async Task<ActionResult<IReadOnlyCollection<RecipeListPageResults>>> GetRecipesByUser([FromQuery] GetRecipesByUser.Query query, CancellationToken cancellationToken)
+    {
+        var result = await _mediatr.Send(query, cancellationToken);
+
+        if (!result.IsSuccessful)
+        {
+            return BadRequest(result.ErrorMessage);
+        }
+
+        return Ok(result.Value);
+    }
+
+    [HttpGet("getallrecipes")]
+    [AllowAnonymous]
+    public async Task<ActionResult<IReadOnlyCollection<RecipeListPageResults>>> GetAllRecipes([FromQuery] GetAllRecipes.Query query, CancellationToken cancellationToken)
     {
         var result = await _mediatr.Send(query, cancellationToken);
 

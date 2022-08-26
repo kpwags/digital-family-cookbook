@@ -111,6 +111,9 @@ const App = (): JSX.Element => (
                         <Route path="/recipes/user/:id" element={(<RecipeListing mode="user" />)}>
                             <Route path=":page" element={(<RecipeListing mode="user" />)} />
                         </Route>
+                        <Route path="/recipes/list" element={(<RecipeListing mode="all" />)}>
+                            <Route path=":page" element={(<RecipeListing mode="all" />)} />
+                        </Route>
                         <Route path="/" element={<Landing />} />
                     </Routes>
                 </BaseLayout>
