@@ -14,6 +14,8 @@ public class UserAccount : IdentityUser
 
     public IEnumerable<RefreshToken> RefreshTokens { get; set; } = Enumerable.Empty<RefreshToken>();
 
+    public IEnumerable<RecipeFavorite> Favorites { get; set; } = Enumerable.Empty<RecipeFavorite>();
+
     public static UserAccount None() => new UserAccount();
 
     public static UserAccount FromDto(UserAccountDto dto)
@@ -29,6 +31,7 @@ public class UserAccount : IdentityUser
             Recipes = dto.Recipes.Select(r => Recipe.FromDto(r)),
             RoleTypes = dto.RoleTypes.Select(r => RoleType.FromDto(r)).ToList(),
             RefreshTokens = dto.RefreshTokens.Select(r => RefreshToken.FromDto(r)),
+            Favorites = dto.RecipeFavorites.Select(rf => RecipeFavorite.FromDto(rf)),
         };
     }
 }

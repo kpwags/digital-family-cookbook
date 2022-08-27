@@ -54,6 +54,10 @@ public class Recipe : BaseDomainModel
 
     public IEnumerable<Note> Notes { get; set; } = Enumerable.Empty<Note>();
 
+    public IEnumerable<RecipeFavorite> Favorites { get; set; } = Enumerable.Empty<RecipeFavorite>();
+
+    public bool IsFavorite { get; set; }
+
     public string UserAccountId { get; set; } = string.Empty;
 
     public UserAccount UserAccount { get; set; } = UserAccount.None();
@@ -87,5 +91,6 @@ public class Recipe : BaseDomainModel
         Steps = dto.Steps.Select(s => Step.FromDto(s)),
         UserAccountId = dto.UserAccountId,
         UserAccount = UserAccount.FromDto(dto.UserAccount),
+        Favorites = dto.RecipeFavorites.Select(rf => RecipeFavorite.FromDto(rf)),
     };
 }

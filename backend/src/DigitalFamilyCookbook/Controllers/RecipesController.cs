@@ -124,6 +124,22 @@ public class RecipesController : Controller
         return Ok();
     }
 
+    [HttpPost("markfavorite")]
+    public async Task<ActionResult<ImageUploadResponseApiModel>> MarkRecipeAsFavorite(MarkRecipeAsFavorite.Command command, CancellationToken cancellationToken)
+    {
+        await _mediatr.Send(command, cancellationToken);
+
+        return Ok();
+    }
+
+    [HttpPost("removefavorite")]
+    public async Task<ActionResult<ImageUploadResponseApiModel>> RemoveRecipeAsFavorite(RemoveRecipeAsFavorite.Command command, CancellationToken cancellationToken)
+    {
+        await _mediatr.Send(command, cancellationToken);
+
+        return Ok();
+    }
+
     [HttpGet("getuserrecipes")]
     [AllowAnonymous]
     public async Task<ActionResult<IReadOnlyCollection<RecipeApiModel>>> GetUserRecipes(string userAccountId, CancellationToken cancellationToken)

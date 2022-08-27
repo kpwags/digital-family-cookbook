@@ -3,6 +3,26 @@
 .view-recipe {
     margin-top: 25px;
 
+    .recipe-title {
+        margin-bottom: 1rem;
+
+        h1 {
+            margin: 0;
+        }
+    }
+
+    .favorite-indicator {
+        text-align: right;
+
+        svg {
+            fill: hsl(0, 88%, 59%);
+        }
+
+        button:hover svg {
+            animation: pulse-animation 2s infinite;
+        }
+    }
+
     .ingredients {
         ul {
             margin: 0 0 0 40px;

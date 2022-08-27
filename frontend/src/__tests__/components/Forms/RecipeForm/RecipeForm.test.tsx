@@ -250,6 +250,7 @@ describe('<RecipeForm />', () => {
             categories: [],
             meats: [],
             notes: [],
+            isFavorite: false,
             dateCreated: new Date(),
             dateUpdated: new Date(),
         };

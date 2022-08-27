@@ -36,6 +36,7 @@ interface Recipe {
     dateUpdated: Date
     userAccountId?: string
     userAccount?: UserAccount
+    isFavorite: boolean
 }
 
 export default Recipe;
