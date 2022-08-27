@@ -19,6 +19,8 @@ public class ApplicationDbContext : IdentityDbContext<UserAccountDto, RoleTypeDt
 
     public DbSet<RecipeCategoryDto> RecipeCategories { get; set; }
 
+    public DbSet<RecipeFavoriteDto> RecipeFavorites { get; set; }
+
     public DbSet<RecipeMeatDto> RecipeMeats { get; set; }
 
     public DbSet<RefreshTokenDto> RefreshTokens { get; set; }
@@ -563,6 +565,50 @@ public class ApplicationDbContext : IdentityDbContext<UserAccountDto, RoleTypeDt
             .Property(rn => rn.DateUpdated)
             .HasDefaultValueSql("GETDATE()")
             .ValueGeneratedOnAddOrUpdate();
+
+        #endregion
+
+        #region "recipe.RecipeFavorite"
+
+        modelBuilder.Entity<RecipeFavoriteDto>()
+            .ToTable("RecipeFavorite", schema: "recipe");
+
+        modelBuilder.Entity<RecipeFavoriteDto>()
+            .HasKey(rf => rf.RecipeFavoriteId)
+            .HasName("PK_Recipe_RecipeFavorite");
+
+        modelBuilder.Entity<RecipeFavoriteDto>()
+            .HasIndex(rf => new { rf.RecipeId, rf.UserAccountId })
+            .HasDatabaseName("UQ_Recipe_RecipeFavorite_RecipeId_UserAccountId")
+            .IsUnique();
+
+        modelBuilder.Entity<RecipeFavoriteDto>()
+            .Property(rf => rf.Id)
+            .HasMaxLength(36)
+            .HasDefaultValue(Guid.NewGuid().ToString())
+            .ValueGeneratedOnAdd();
+
+        modelBuilder.Entity<RecipeFavoriteDto>()
+            .Property(rf => rf.DateCreated)
+            .HasDefaultValueSql("GETDATE()")
+            .ValueGeneratedOnAdd();
+
+        modelBuilder.Entity<RecipeFavoriteDto>()
+            .Property(rf => rf.DateUpdated)
+            .HasDefaultValueSql("GETDATE()")
+            .ValueGeneratedOnAddOrUpdate();
+
+        modelBuilder.Entity<RecipeFavoriteDto>()
+            .HasOne(rf => rf.Recipe)
+            .WithMany(r => r.RecipeFavorites)
+            .HasForeignKey(rn => rn.RecipeId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<RecipeFavoriteDto>()
+            .HasOne(rf => rf.UserAccount)
+            .WithMany(r => r.RecipeFavorites)
+            .HasForeignKey(rf => rf.UserAccountId)
+            .OnDelete(DeleteBehavior.Restrict);
 
         #endregion
     }

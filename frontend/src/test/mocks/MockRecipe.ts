@@ -40,6 +40,7 @@ export const MockRecipe = (): Recipe => {
         dateUpdated: new Date(),
         userAccountId: MockUserAccount.id,
         userAccount: MockUserAccount,
+        isFavorite: false,
     };
 };
 

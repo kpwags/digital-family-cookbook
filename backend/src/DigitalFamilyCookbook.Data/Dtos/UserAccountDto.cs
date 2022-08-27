@@ -20,5 +20,8 @@ public class UserAccountDto : IdentityUser
     [NotMapped]
     public IEnumerable<RoleTypeDto> RoleTypes { get; set; } = Enumerable.Empty<RoleTypeDto>();
 
+    [PersonalData]
+    public List<RecipeFavoriteDto> RecipeFavorites { get; set; } = new List<RecipeFavoriteDto>();
+
     public static UserAccountDto None() => new UserAccountDto();
 }

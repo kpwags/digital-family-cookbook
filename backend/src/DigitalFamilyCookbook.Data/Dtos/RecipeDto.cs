@@ -50,6 +50,8 @@ public class RecipeDto : BaseDto
 
     public List<RecipeNoteDto> RecipeNotes { get; set; } = new List<RecipeNoteDto>();
 
+    public List<RecipeFavoriteDto> RecipeFavorites { get; set; } = new List<RecipeFavoriteDto>();
+
     public string UserAccountId { get; set; } = string.Empty;
 
     public UserAccountDto UserAccount { get; set; } = UserAccountDto.None();

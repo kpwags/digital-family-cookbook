@@ -8,10 +8,14 @@ import {
     Spin,
     Space,
     Typography,
+    Button,
+    message,
 } from 'antd';
+import { HeartFilled, HeartOutlined } from '@ant-design/icons';
 import useDocumentTitle from '@hooks/useDocumentTitle';
 import { useParams } from 'react-router';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
+import AppContext from '@contexts/AppContext';
 import HtmlViewer from '@components/HtmlViewer';
 import BasicInfo from './BasicInfo';
 import NutritionInfo from './NutritionInfo';
@@ -27,6 +31,8 @@ const ViewRecipe = (): JSX.Element => {
     const [pageState, setPageState] = useState<PageState>(PageState.Loading);
     const [errorMessage, setErrorMessage] = useState<string>('');
     const [recipe, setRecipe] = useState<Recipe | null>(null);
+
+    const { user } = useContext(AppContext);
 
     const { id } = useParams();
 
@@ -53,6 +59,35 @@ const ViewRecipe = (): JSX.Element => {
         fetchRecipe();
     }, []);
 
+    const toggleFavorite = async () => {
+        let error: string | null = null;
+
+        if (recipe?.isFavorite) {
+            [, error] = await Api.Post('recipes/removefavorite', {
+                data: {
+                    userAccountId: user?.id,
+                    recipeId: recipe?.recipeId,
+                },
+            });
+        } else {
+            [, error] = await Api.Post('recipes/markfavorite', {
+                data: {
+                    userAccountId: user?.id,
+                    recipeId: recipe?.recipeId,
+                },
+            });
+        }
+
+        if (error) {
+            message.error(error);
+            return;
+        }
+
+        message.success(recipe?.isFavorite ? 'Removed as favorite' : 'Marked as favorite');
+
+        fetchRecipe();
+    };
+
     useDocumentTitle(recipe?.name || '');
 
     if (pageState === PageState.Loading) {
@@ -71,9 +106,16 @@ const ViewRecipe = (): JSX.Element => {
         <article className="view-recipe">
             <Row justify="center">
                 <Col lg={18} md={22}>
-                    <Row>
-                        <Col xs={24}>
+                    <Row align="middle" className="recipe-title">
+                        <Col xs={22}>
                             <Title level={1}>{recipe.name}</Title>
+                        </Col>
+                        <Col xs={2} className="favorite-indicator">
+                            <Button
+                                type="link"
+                                icon={recipe.isFavorite ? <HeartFilled /> : <HeartOutlined />}
+                                onClick={() => toggleFavorite()}
+                            />
                         </Col>
                     </Row>
                     <Row gutter={[24, 0]}>

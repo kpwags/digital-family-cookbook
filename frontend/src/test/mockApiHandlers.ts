@@ -216,6 +216,7 @@ const mockApiHandlers = [
             dateUpdated: new Date(),
             userAccountId: MockUserAccount.id,
             userAccount: MockUserAccount,
+            isFavorite: false,
         };
 
         switch (recipeId) {

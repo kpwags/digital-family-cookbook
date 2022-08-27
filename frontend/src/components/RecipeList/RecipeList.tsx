@@ -42,6 +42,7 @@ const RecipeList = ({
                 showSizeChanger: true,
                 style: { textAlign: 'center', margin: '2rem 0' },
             }}
+            rowKey="recipeId"
             dataSource={recipes}
             renderItem={(recipe) => (
                 <List.Item

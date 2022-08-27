@@ -8,13 +8,20 @@ public class GetRecipeById
         private readonly ICategoryRepository _categoryRepostory;
         private readonly IMeatRepository _meatRepository;
         private readonly IFileService _fileService;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public Handler(IRecipeRepository recipeRepository, ICategoryRepository categoryRepository, IMeatRepository meatRepository, IFileService fileService)
+        public Handler(
+            IRecipeRepository recipeRepository,
+            ICategoryRepository categoryRepository,
+            IMeatRepository meatRepository,
+            IFileService fileService,
+            IHttpContextAccessor httpContextAccessor)
         {
             _recipeRepository = recipeRepository;
             _categoryRepostory = categoryRepository;
             _meatRepository = meatRepository;
             _fileService = fileService;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public async Task<OperationResult<RecipeApiModel>> Handle(Query request, CancellationToken cancellationToken)
@@ -45,6 +52,13 @@ public class GetRecipeById
 
                 recipe.Categories = _categoryRepostory.GetForRecipe(recipe.RecipeId);
                 recipe.Meats = _meatRepository.GetForRecipe(recipe.RecipeId);
+
+                var user = _httpContextAccessor.HttpContext?.CurrentUser();
+
+                if (user is not null)
+                {
+                    recipe.IsFavorite = _recipeRepository.IsRecipeFavoriteForUser(user.Id, request.Id);
+                }
 
                 return new OperationResult<RecipeApiModel>(RecipeApiModel.FromDomainModel(recipe));
             }

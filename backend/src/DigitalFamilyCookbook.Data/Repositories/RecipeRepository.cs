@@ -331,6 +331,42 @@ public class RecipeRepository : IRecipeRepository
         return (recipes, recipeCount);
     }
 
+    public async Task MarkRecipeAsFavorite(string userAccountId, int recipeId)
+    {
+        var recipe = _db.Recipes.FirstOrDefault(r => r.RecipeId == recipeId);
+        var user = _db.UserAccounts.FirstOrDefault(u => u.Id == userAccountId);
+
+        if (recipe is not null && user is not null)
+        {
+            var favorite = new RecipeFavoriteDto()
+            {
+                UserAccount = user,
+                Recipe = recipe,
+            };
+
+            _db.RecipeFavorites.Add(favorite);
+
+            await _db.SaveChangesAsync();
+        }
+    }
+
+    public async Task RemoveRecipeAsFavorite(string userAccountId, int recipeId)
+    {
+        var favorite = _db.RecipeFavorites.FirstOrDefault(rf => rf.UserAccountId == userAccountId && rf.RecipeId == recipeId);
+
+        if (favorite is not null)
+        {
+            _db.RecipeFavorites.Remove(favorite);
+
+            await _db.SaveChangesAsync();
+        }
+    }
+
+    public bool IsRecipeFavoriteForUser(string userAccountId, int recipeId)
+    {
+        return _db.RecipeFavorites.Any(rf => rf.UserAccountId == userAccountId && rf.RecipeId == recipeId);
+    }
+
     private Recipe AddCategoriesAndMeatsToRecipe(RecipeDto dto)
     {
         var recipe = Recipe.FromDto(dto);

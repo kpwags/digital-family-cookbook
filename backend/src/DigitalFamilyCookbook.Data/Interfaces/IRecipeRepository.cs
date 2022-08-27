@@ -27,4 +27,10 @@ public interface IRecipeRepository
     (IEnumerable<Recipe> recipes, int totalRecipes) GetRecipesForMeatPaginated(int meatId, int currentPage = 1, int recipesPerPage = 10);
 
     (IEnumerable<Recipe> recipes, int totalRecipes) GetAllRecipesPaginated(int currentPage = 1, int recipesPerPage = 10);
+
+    Task MarkRecipeAsFavorite(string userAccountId, int recipeId);
+
+    Task RemoveRecipeAsFavorite(string userAccountId, int recipeId);
+
+    bool IsRecipeFavoriteForUser(string userAccountId, int recipeId);
 }

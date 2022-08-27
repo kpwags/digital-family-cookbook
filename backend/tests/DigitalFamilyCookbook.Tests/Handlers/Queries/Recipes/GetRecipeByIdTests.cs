@@ -5,10 +5,10 @@ namespace DigitalFamilyCookbook.Tests.Handlers.Queries.Recipes;
 
 public class GetRecipeByIdTests
 {
-    private Mock<IRecipeRepository> _recipeRepository;
-    private Mock<ICategoryRepository> _categoryRepository;
-    private Mock<IMeatRepository> _meatRepository;
-    private Mock<IFileService> _fileService;
+    private readonly Mock<IRecipeRepository> _recipeRepository;
+    private readonly Mock<ICategoryRepository> _categoryRepository;
+    private readonly Mock<IMeatRepository> _meatRepository;
+    private readonly Mock<IFileService> _fileService;
 
     public GetRecipeByIdTests()
     {
@@ -21,6 +21,8 @@ public class GetRecipeByIdTests
     [Fact]
     public async Task ItReturnsTheRecipeIfItExists()
     {
+        var userAccount = MockUser.GenerateUserApiModel();
+
         var recipe = MockRecipe.GenerateDomainModel();
         recipe.ImageUrl = string.Empty;
 
@@ -38,9 +40,11 @@ public class GetRecipeByIdTests
             .Setup(r => r.GetForRecipe(recipe.RecipeId))
             .Returns(MockMeat.GenerateMeatList(1));
 
+        var httpContextAccessor = MockSession.BuildSession(userAccount);
+
         var query = new GetRecipeById.Query { Id = recipe.RecipeId };
 
-        var handler = new GetRecipeById.Handler(_recipeRepository.Object, _categoryRepository.Object, _meatRepository.Object, _fileService.Object);
+        var handler = new GetRecipeById.Handler(_recipeRepository.Object, _categoryRepository.Object, _meatRepository.Object, _fileService.Object, httpContextAccessor.Object);
 
         var result = await handler.Handle(query, new CancellationToken());
 
@@ -51,13 +55,17 @@ public class GetRecipeByIdTests
     [Fact]
     public async Task ItReturnsAnErrorIfTheRecipeIsNotFound()
     {
+        var userAccount = MockUser.GenerateUserApiModel();
+
         _recipeRepository
             .Setup(r => r.GetById(It.IsAny<int>()))
             .Throws(new Exception("Recipe not found"));
 
+        var httpContextAccessor = MockSession.BuildSession(userAccount);
+
         var query = new GetRecipeById.Query { Id = MockDataGenerator.RandomInteger() };
 
-        var handler = new GetRecipeById.Handler(_recipeRepository.Object, _categoryRepository.Object, _meatRepository.Object, _fileService.Object);
+        var handler = new GetRecipeById.Handler(_recipeRepository.Object, _categoryRepository.Object, _meatRepository.Object, _fileService.Object, httpContextAccessor.Object);
 
         var result = await handler.Handle(query, new CancellationToken());
 

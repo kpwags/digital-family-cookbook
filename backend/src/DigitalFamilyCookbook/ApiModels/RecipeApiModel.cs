@@ -44,6 +44,8 @@ public class RecipeApiModel : BaseApiModel
 
     public decimal? Cholesterol { get; set; }
 
+    public bool IsFavorite { get; set; }
+
     public IReadOnlyCollection<MeatApiModel> Meats { get; set; } = Array.Empty<MeatApiModel>();
 
     public IReadOnlyCollection<CategoryApiModel> Categories { get; set; } = Array.Empty<CategoryApiModel>();
@@ -90,6 +92,7 @@ public class RecipeApiModel : BaseApiModel
         Steps = recipe.Steps.Select(rs => StepApiModel.FromDomainModel(rs)).ToList(),
         UserAccount = UserAccountApiModel.FromDomainModel(recipe.UserAccount),
         UserAccountId = recipe.UserAccountId,
+        IsFavorite = recipe.IsFavorite,
     };
 
     public override bool Equals(object? obj)
