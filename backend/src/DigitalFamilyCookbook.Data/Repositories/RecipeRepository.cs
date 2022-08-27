@@ -309,6 +309,28 @@ public class RecipeRepository : IRecipeRepository
         return (recipes, recipeCount);
     }
 
+    public (IEnumerable<Recipe> recipes, int totalRecipes) GetAllRecipesPaginated(int currentPage = 1, int recipesPerPage = 10)
+    {
+        var data = _db.Recipes
+            .OrderBy(r => r.Name)
+            .Skip(currentPage == 1 ? 0 : (currentPage - 1) * recipesPerPage)
+            .Take(recipesPerPage);
+
+        var recipes = new List<Recipe>();
+
+        foreach (var recipeDto in data)
+        {
+            var recipe = AddCategoriesAndMeatsToRecipe(recipeDto);
+            recipes.Add(recipe);
+        }
+
+        var recipeCount = _db.Recipes
+            .Include(r => r.RecipeMeats)
+            .Count();
+
+        return (recipes, recipeCount);
+    }
+
     private Recipe AddCategoriesAndMeatsToRecipe(RecipeDto dto)
     {
         var recipe = Recipe.FromDto(dto);

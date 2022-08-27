@@ -25,4 +25,6 @@ public interface IRecipeRepository
     IEnumerable<Recipe> GetRecipesForMeat(int meatId);
 
     (IEnumerable<Recipe> recipes, int totalRecipes) GetRecipesForMeatPaginated(int meatId, int currentPage = 1, int recipesPerPage = 10);
+
+    (IEnumerable<Recipe> recipes, int totalRecipes) GetAllRecipesPaginated(int currentPage = 1, int recipesPerPage = 10);
 }
