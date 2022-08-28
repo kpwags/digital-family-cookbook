@@ -33,4 +33,6 @@ public interface IRecipeRepository
     Task RemoveRecipeAsFavorite(string userAccountId, int recipeId);
 
     bool IsRecipeFavoriteForUser(string userAccountId, int recipeId);
+
+    (IEnumerable<Recipe> recipes, int totalRecipes) GetFavoriteRecipesForUserPaginated(string userAccountId, int currentPage = 1, int recipesPerPage = 10);
 }

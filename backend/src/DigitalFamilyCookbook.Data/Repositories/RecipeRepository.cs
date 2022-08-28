@@ -238,7 +238,6 @@ public class RecipeRepository : IRecipeRepository
         }
 
         var recipeCount = _db.Recipes
-            .Include(r => r.RecipeCategories)
             .Count(r => r.UserAccountId == userAccountId);
 
         return (recipes, recipeCount);
@@ -324,9 +323,7 @@ public class RecipeRepository : IRecipeRepository
             recipes.Add(recipe);
         }
 
-        var recipeCount = _db.Recipes
-            .Include(r => r.RecipeMeats)
-            .Count();
+        var recipeCount = _db.Recipes.Count();
 
         return (recipes, recipeCount);
     }
@@ -365,6 +362,32 @@ public class RecipeRepository : IRecipeRepository
     public bool IsRecipeFavoriteForUser(string userAccountId, int recipeId)
     {
         return _db.RecipeFavorites.Any(rf => rf.UserAccountId == userAccountId && rf.RecipeId == recipeId);
+    }
+
+    public (IEnumerable<Recipe> recipes, int totalRecipes) GetFavoriteRecipesForUserPaginated(string userAccountId, int currentPage = 1, int recipesPerPage = 10)
+    {
+        var data = _db.Recipes
+            .OrderBy(r => r.Name)
+            .Skip(currentPage == 1 ? 0 : (currentPage - 1) * recipesPerPage)
+            .Include(r => r.UserAccount)
+            .Include(r => r.RecipeFavorites)
+            .Where(r => r.RecipeFavorites.Any(rf => rf.UserAccountId == userAccountId && rf.RecipeId == r.RecipeId))
+            .Take(recipesPerPage);
+
+        var recipes = new List<Recipe>();
+
+        foreach (var recipeDto in data)
+        {
+            var recipe = AddCategoriesAndMeatsToRecipe(recipeDto);
+            recipes.Add(recipe);
+        }
+
+        var recipeCount = _db.Recipes
+            .Include(r => r.RecipeFavorites)
+            .Where(r => r.RecipeFavorites.Any(rf => rf.UserAccountId == userAccountId && rf.RecipeId == r.RecipeId))
+            .Count(r => r.UserAccountId == userAccountId);
+
+        return (recipes, recipeCount);
     }
 
     private Recipe AddCategoriesAndMeatsToRecipe(RecipeDto dto)

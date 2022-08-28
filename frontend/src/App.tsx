@@ -114,6 +114,23 @@ const App = (): JSX.Element => (
                         <Route path="/recipes/list" element={(<RecipeListing mode="all" />)}>
                             <Route path=":page" element={(<RecipeListing mode="all" />)} />
                         </Route>
+                        <Route
+                            path="/recipes/favorites"
+                            element={(
+                                <ProtectedRoute requiredRoles={['ADMINISTRATOR', 'USER']}>
+                                    <RecipeListing mode="favorites" />
+                                </ProtectedRoute>
+                            )}
+                        >
+                            <Route
+                                path=":page"
+                                element={(
+                                    <ProtectedRoute requiredRoles={['ADMINISTRATOR', 'USER']}>
+                                        <RecipeListing mode="favorites" />
+                                    </ProtectedRoute>
+                                )}
+                            />
+                        </Route>
                         <Route path="/" element={<Landing />} />
                     </Routes>
                 </BaseLayout>
