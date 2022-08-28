@@ -209,4 +209,17 @@ public class RecipesController : Controller
 
         return Ok(result.Value);
     }
+
+    [HttpGet("getfavoriterecipes")]
+    public async Task<ActionResult<RecipeListPageResults>> GetFavoriteRecipes([FromQuery] GetRecipeFavorites.Query query, CancellationToken cancellationToken)
+    {
+        var result = await _mediatr.Send(query, cancellationToken);
+
+        if (!result.IsSuccessful)
+        {
+            return BadRequest(result.ErrorMessage);
+        }
+
+        return Ok(result.Value);
+    }
 }

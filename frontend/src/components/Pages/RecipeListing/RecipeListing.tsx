@@ -34,7 +34,7 @@ enum ViewMode {
 }
 
 type RecipeListingProps = {
-    mode: 'category' | 'meat' | 'user' | 'all'
+    mode: 'category' | 'meat' | 'user' | 'favorites' | 'all'
 }
 
 const RecipeListing = ({
@@ -90,8 +90,17 @@ const RecipeListing = ({
         },
     });
 
+    // eslint-disable-next-line max-len
+    const fetchFavoriteRecipes = async (pageNum = 1): Promise<[RecipeListPageResults | null, string | null]> => Api.Get<RecipeListPageResults>('recipes/getfavoriterecipes', {
+        params: {
+            includeImages: true,
+            pageNumber: pageNum,
+            recipesPerPage,
+        },
+    });
+
     const fetchRecipes = async (pageNum = 1) => {
-        if (mode !== 'all' && !id) {
+        if (!['all', 'favorites'].includes(mode) && !id) {
             message.error('Error retrieving recipes');
             return;
         }
@@ -110,6 +119,10 @@ const RecipeListing = ({
 
             case 'user':
                 [data, error] = await fetchRecipesByUser(id || '0', pageNum);
+                break;
+
+            case 'favorites':
+                [data, error] = await fetchFavoriteRecipes(pageNum);
                 break;
 
             case 'all':
@@ -142,6 +155,11 @@ const RecipeListing = ({
                 setNoRecipesMessage(`No recipes were found created by ${data.pageTitle}`);
                 break;
 
+            case 'favorites':
+                setPageTitle('Your Favorite Recipes');
+                setNoRecipesMessage('No recipes were found');
+                break;
+
             case 'all':
             default:
                 setPageTitle('All Recipes');
@@ -158,7 +176,7 @@ const RecipeListing = ({
         LocalStorageUtils.setValue('default_recipe_view', view.toString());
     };
 
-    const getDocumentTitle = (mode: 'category' | 'meat' | 'user' | 'all'): string => {
+    const getDocumentTitle = (mode: 'category' | 'meat' | 'user' | 'favorites' | 'all'): string => {
         switch (mode) {
             case 'category':
                 return 'Recipes by Category';
@@ -168,6 +186,9 @@ const RecipeListing = ({
 
             case 'user':
                 return 'Recipes by User';
+
+            case 'favorites':
+                return 'Favorite Recipes';
 
             case 'all':
             default:

@@ -41,6 +41,13 @@ const NavBar = ({
             label: <Link to="/recipes/list">All Recipes</Link>,
         });
 
+        if (user && user.id !== '') {
+            menuItems.push({
+                key: 'favorite-recipes',
+                label: <Link to="/recipes/favorites">Favorites</Link>,
+            });
+        }
+
         menuItems.push({
             key: 'categories',
             label: 'Categories',
