@@ -74,7 +74,7 @@ public class ApplicationDbContext : IdentityDbContext<UserAccountDto, RoleTypeDt
         modelBuilder.Entity<NoteDto>()
             .Property(n => n.DateUpdated)
             .HasDefaultValueSql("GETDATE()")
-            .ValueGeneratedOnAddOrUpdate();
+            .ValueGeneratedOnAdd();
 
         #endregion
 
@@ -277,7 +277,7 @@ public class ApplicationDbContext : IdentityDbContext<UserAccountDto, RoleTypeDt
         modelBuilder.Entity<RecipeDto>()
             .Property(r => r.DateUpdated)
             .HasDefaultValueSql("GETDATE()")
-            .ValueGeneratedOnAddOrUpdate();
+            .ValueGeneratedOnAdd();
 
         #endregion
 
@@ -307,7 +307,7 @@ public class ApplicationDbContext : IdentityDbContext<UserAccountDto, RoleTypeDt
         modelBuilder.Entity<IngredientDto>()
             .Property(i => i.DateUpdated)
             .HasDefaultValueSql("GETDATE()")
-            .ValueGeneratedOnAddOrUpdate();
+            .ValueGeneratedOnAdd();
 
         #endregion
 
@@ -337,7 +337,7 @@ public class ApplicationDbContext : IdentityDbContext<UserAccountDto, RoleTypeDt
         modelBuilder.Entity<StepDto>()
             .Property(s => s.DateUpdated)
             .HasDefaultValueSql("GETDATE()")
-            .ValueGeneratedOnAddOrUpdate();
+            .ValueGeneratedOnAdd();
 
         #endregion
 
@@ -372,7 +372,7 @@ public class ApplicationDbContext : IdentityDbContext<UserAccountDto, RoleTypeDt
         modelBuilder.Entity<CategoryDto>()
             .Property(c => c.DateUpdated)
             .HasDefaultValueSql("GETDATE()")
-            .ValueGeneratedOnAddOrUpdate();
+            .ValueGeneratedOnAdd();
 
         #endregion
 
@@ -410,7 +410,7 @@ public class ApplicationDbContext : IdentityDbContext<UserAccountDto, RoleTypeDt
         modelBuilder.Entity<RecipeCategoryDto>()
             .Property(rc => rc.DateUpdated)
             .HasDefaultValueSql("GETDATE()")
-            .ValueGeneratedOnAddOrUpdate();
+            .ValueGeneratedOnAdd();
 
         #endregion
 
@@ -440,7 +440,7 @@ public class ApplicationDbContext : IdentityDbContext<UserAccountDto, RoleTypeDt
         modelBuilder.Entity<MeatDto>()
             .Property(m => m.DateUpdated)
             .HasDefaultValueSql("GETDATE()")
-            .ValueGeneratedOnAddOrUpdate();
+            .ValueGeneratedOnAdd();
 
         #endregion
 
@@ -478,7 +478,7 @@ public class ApplicationDbContext : IdentityDbContext<UserAccountDto, RoleTypeDt
         modelBuilder.Entity<RecipeMeatDto>()
             .Property(rm => rm.DateUpdated)
             .HasDefaultValueSql("GETDATE()")
-            .ValueGeneratedOnAddOrUpdate();
+            .ValueGeneratedOnAdd();
 
         #endregion
 
@@ -516,7 +516,7 @@ public class ApplicationDbContext : IdentityDbContext<UserAccountDto, RoleTypeDt
         modelBuilder.Entity<RecipeNoteDto>()
             .Property(rn => rn.DateUpdated)
             .HasDefaultValueSql("GETDATE()")
-            .ValueGeneratedOnAddOrUpdate();
+            .ValueGeneratedOnAdd();
 
         #endregion
 
@@ -542,7 +542,7 @@ public class ApplicationDbContext : IdentityDbContext<UserAccountDto, RoleTypeDt
         modelBuilder.Entity<RecipeFavoriteDto>()
             .Property(rf => rf.DateUpdated)
             .HasDefaultValueSql("GETDATE()")
-            .ValueGeneratedOnAddOrUpdate();
+            .ValueGeneratedOnAdd();
 
         modelBuilder.Entity<RecipeFavoriteDto>()
             .HasOne(rf => rf.Recipe)

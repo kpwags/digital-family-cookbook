@@ -4,6 +4,7 @@ using DigitalFamilyCookbook.Data.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DigitalFamilyCookbook.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220831001418_CorrectMeatDateUpdated")]
+    partial class CorrectMeatDateUpdated
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -36,7 +38,7 @@ namespace DigitalFamilyCookbook.Migrations
                         .HasDefaultValueSql("GETDATE()");
 
                     b.Property<DateTime>("DateUpdated")
-                        .ValueGeneratedOnAdd()
+                        .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("GETDATE()");
 
@@ -73,7 +75,7 @@ namespace DigitalFamilyCookbook.Migrations
                         .HasDefaultValueSql("GETDATE()");
 
                     b.Property<DateTime>("DateUpdated")
-                        .ValueGeneratedOnAdd()
+                        .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("GETDATE()");
 
@@ -147,7 +149,7 @@ namespace DigitalFamilyCookbook.Migrations
                         .HasDefaultValueSql("GETDATE()");
 
                     b.Property<DateTime>("DateUpdated")
-                        .ValueGeneratedOnAdd()
+                        .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("GETDATE()");
 
@@ -183,7 +185,7 @@ namespace DigitalFamilyCookbook.Migrations
                         .HasDefaultValueSql("GETDATE()");
 
                     b.Property<DateTime>("DateUpdated")
-                        .ValueGeneratedOnAdd()
+                        .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("GETDATE()");
 
@@ -235,7 +237,7 @@ namespace DigitalFamilyCookbook.Migrations
                         .HasDefaultValueSql("GETDATE()");
 
                     b.Property<DateTime>("DateUpdated")
-                        .ValueGeneratedOnAdd()
+                        .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("GETDATE()");
 
@@ -331,7 +333,7 @@ namespace DigitalFamilyCookbook.Migrations
                         .HasDefaultValueSql("GETDATE()");
 
                     b.Property<DateTime>("DateUpdated")
-                        .ValueGeneratedOnAdd()
+                        .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("GETDATE()");
 
@@ -372,7 +374,7 @@ namespace DigitalFamilyCookbook.Migrations
                         .HasDefaultValueSql("GETDATE()");
 
                     b.Property<DateTime>("DateUpdated")
-                        .ValueGeneratedOnAdd()
+                        .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("GETDATE()");
 
@@ -412,7 +414,7 @@ namespace DigitalFamilyCookbook.Migrations
                         .HasDefaultValueSql("GETDATE()");
 
                     b.Property<DateTime>("DateUpdated")
-                        .ValueGeneratedOnAdd()
+                        .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("GETDATE()");
 
@@ -572,7 +574,7 @@ namespace DigitalFamilyCookbook.Migrations
                         .IsRequired()
                         .ValueGeneratedOnAdd()
                         .HasColumnType("nvarchar(max)")
-                        .HasDefaultValue("80bd1c38-433e-4649-b09e-1b29d8dac8d2");
+                        .HasDefaultValue("2c7d2c79-b256-4805-83ba-95d55f58ca32");
 
                     b.Property<bool>("IsPublic")
                         .ValueGeneratedOnAdd()
@@ -610,7 +612,7 @@ namespace DigitalFamilyCookbook.Migrations
                         .HasDefaultValueSql("GETDATE()");
 
                     b.Property<DateTime>("DateUpdated")
-                        .ValueGeneratedOnAdd()
+                        .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("GETDATE()");
 
