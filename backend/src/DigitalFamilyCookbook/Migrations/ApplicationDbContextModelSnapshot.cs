@@ -41,10 +41,8 @@ namespace DigitalFamilyCookbook.Migrations
                         .HasDefaultValueSql("GETDATE()");
 
                     b.Property<string>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasMaxLength(36)
-                        .HasColumnType("nvarchar(36)")
-                        .HasDefaultValue("83b22cf0-fde9-4ea4-95c2-8c74701d0396");
+                        .HasColumnType("nvarchar(36)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -80,10 +78,8 @@ namespace DigitalFamilyCookbook.Migrations
                         .HasDefaultValueSql("GETDATE()");
 
                     b.Property<string>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasMaxLength(36)
-                        .HasColumnType("nvarchar(36)")
-                        .HasDefaultValue("8e105d6d-e616-4283-8072-51fb78f4901a");
+                        .HasColumnType("nvarchar(36)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -123,10 +119,8 @@ namespace DigitalFamilyCookbook.Migrations
                         .HasDefaultValueSql("GETDATE()");
 
                     b.Property<string>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasMaxLength(36)
-                        .HasColumnType("nvarchar(36)")
-                        .HasDefaultValue("7690a0e7-fe30-4d6a-b646-0a60ab170480");
+                        .HasColumnType("nvarchar(36)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -158,10 +152,8 @@ namespace DigitalFamilyCookbook.Migrations
                         .HasDefaultValueSql("GETDATE()");
 
                     b.Property<string>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasMaxLength(36)
-                        .HasColumnType("nvarchar(36)")
-                        .HasDefaultValue("83d3eb3e-f138-4afc-93a5-921d792a569d");
+                        .HasColumnType("nvarchar(36)");
 
                     b.Property<string>("NoteText")
                         .IsRequired()
@@ -196,10 +188,8 @@ namespace DigitalFamilyCookbook.Migrations
                         .HasDefaultValueSql("GETDATE()");
 
                     b.Property<string>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasMaxLength(36)
-                        .HasColumnType("nvarchar(36)")
-                        .HasDefaultValue("9c2f2967-3b23-4622-bc62-db16966f7f4b");
+                        .HasColumnType("nvarchar(36)");
 
                     b.Property<int>("RecipeId")
                         .HasColumnType("int");
@@ -262,10 +252,8 @@ namespace DigitalFamilyCookbook.Migrations
                         .HasColumnType("decimal(10,2)");
 
                     b.Property<string>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasMaxLength(36)
-                        .HasColumnType("nvarchar(36)")
-                        .HasDefaultValue("10b42890-1403-426f-89de-2813777732af");
+                        .HasColumnType("nvarchar(36)");
 
                     b.Property<string>("ImageUrl")
                         .IsRequired()
@@ -348,10 +336,8 @@ namespace DigitalFamilyCookbook.Migrations
                         .HasDefaultValueSql("GETDATE()");
 
                     b.Property<string>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasMaxLength(36)
-                        .HasColumnType("nvarchar(36)")
-                        .HasDefaultValue("a2c6f15d-3b10-4e91-af7a-4fa313ef0fee");
+                        .HasColumnType("nvarchar(36)");
 
                     b.Property<int>("RecipeId")
                         .HasColumnType("int");
@@ -391,10 +377,8 @@ namespace DigitalFamilyCookbook.Migrations
                         .HasDefaultValueSql("GETDATE()");
 
                     b.Property<string>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasMaxLength(36)
-                        .HasColumnType("nvarchar(36)")
-                        .HasDefaultValue("27250ee7-e106-43c8-9b6a-960d42c1850e");
+                        .HasColumnType("nvarchar(36)");
 
                     b.Property<int>("MeatId")
                         .HasColumnType("int");
@@ -433,10 +417,8 @@ namespace DigitalFamilyCookbook.Migrations
                         .HasDefaultValueSql("GETDATE()");
 
                     b.Property<string>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasMaxLength(36)
-                        .HasColumnType("nvarchar(36)")
-                        .HasDefaultValue("fa70b9ab-1683-4b98-b963-10f950651e85");
+                        .HasColumnType("nvarchar(36)");
 
                     b.Property<int>("NoteId")
                         .HasColumnType("int");
@@ -458,11 +440,11 @@ namespace DigitalFamilyCookbook.Migrations
 
             modelBuilder.Entity("DigitalFamilyCookbook.Data.Dtos.RefreshTokenDto", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("RefreshTokenId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RefreshTokenId"), 1L, 1);
 
                     b.Property<string>("CreatedByIp")
                         .IsRequired()
@@ -476,6 +458,10 @@ namespace DigitalFamilyCookbook.Migrations
 
                     b.Property<DateTime>("Expires")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("Id")
+                        .HasMaxLength(36)
+                        .HasColumnType("nvarchar(36)");
 
                     b.Property<string>("ReasonRevoked")
                         .HasColumnType("nvarchar(max)");
@@ -498,7 +484,8 @@ namespace DigitalFamilyCookbook.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.HasKey("Id");
+                    b.HasKey("RefreshTokenId")
+                        .HasName("PK_Application_RefreshToken_RefreshTokenId");
 
                     b.HasIndex("UserAccountId");
 
@@ -585,7 +572,7 @@ namespace DigitalFamilyCookbook.Migrations
                         .IsRequired()
                         .ValueGeneratedOnAdd()
                         .HasColumnType("nvarchar(max)")
-                        .HasDefaultValue("4bc85a11-7f1d-4c60-b5cd-0b758032148b");
+                        .HasDefaultValue("9ace85e7-47ab-4a97-bb99-ce657723277f");
 
                     b.Property<bool>("IsPublic")
                         .ValueGeneratedOnAdd()
@@ -632,10 +619,8 @@ namespace DigitalFamilyCookbook.Migrations
                         .HasColumnType("VARCHAR(MAX)");
 
                     b.Property<string>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasMaxLength(36)
-                        .HasColumnType("nvarchar(36)")
-                        .HasDefaultValue("02d59620-abff-4cb0-8eab-18dd2ec40694");
+                        .HasColumnType("nvarchar(36)");
 
                     b.Property<int>("RecipeId")
                         .HasColumnType("int");

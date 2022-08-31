@@ -94,9 +94,17 @@ public class AuthService : IAuthService
 
         if (isCreated.Succeeded)
         {
+            var administrators = await _userManager.GetUsersInRoleAsync("Administrator");
+
             var createdUser = await _userManager.FindByEmailAsync(email);
 
             await _userManager.AddToRoleAsync(createdUser, "User");
+
+            if (!administrators.Any())
+            {
+                // if there are no administrators, assign the admin role
+                await _userManager.AddToRoleAsync(createdUser, "Administrator");
+            }
 
             var claims = await BuildClaimsForUser(createdUser);
 

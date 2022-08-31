@@ -63,6 +63,7 @@ public class MeatRepository : IMeatRepository
         }
 
         m.Name = meat.Name;
+        m.DateUpdated = DateTime.Now;
 
         _db.Meats.Update(m);
 

@@ -49,7 +49,7 @@ public class RefreshTokenRepository : IRefreshTokenRepository
                 .Where(t => !t.IsActive && t.DateCreated.AddDays(ttl) <= DateTime.UtcNow)
                 .Select(t => t.Id);
 
-        var refreshTokens = _db.RefreshTokens.Where(rt => expiredTokenIds.Contains(rt.Id));
+        var refreshTokens = _db.RefreshTokens.Where(rt => expiredTokenIds.Contains(rt.RefreshTokenId));
 
         _db.RefreshTokens.RemoveRange(refreshTokens);
 

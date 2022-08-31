@@ -170,6 +170,7 @@ public class RecipeRepository : IRecipeRepository
             Direction = s.Direction.Trim(),
             SortOrder = s.SortOrder,
         }).ToList();
+        dto.DateUpdated = DateTime.Now;
 
         _db.Recipes.Update(dto);
 

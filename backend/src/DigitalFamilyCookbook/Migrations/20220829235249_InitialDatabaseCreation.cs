@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DigitalFamilyCookbook.Migrations
 {
-    public partial class InitialCreation : Migration
+    public partial class InitialDatabaseCreation : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -14,6 +14,57 @@ namespace DigitalFamilyCookbook.Migrations
 
             migrationBuilder.EnsureSchema(
                 name: "application");
+
+            migrationBuilder.CreateTable(
+                name: "Category",
+                schema: "recipe",
+                columns: table => new
+                {
+                    CategoryId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Id = table.Column<string>(type: "nvarchar(36)", maxLength: 36, nullable: true),
+                    DateCreated = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()"),
+                    DateUpdated = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Recipe_Category_CategoryId", x => x.CategoryId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Meat",
+                schema: "recipe",
+                columns: table => new
+                {
+                    MeatId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Id = table.Column<string>(type: "nvarchar(36)", maxLength: 36, nullable: true),
+                    DateCreated = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()"),
+                    DateUpdated = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Recipe_Meat_MeatyId", x => x.MeatId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Note",
+                schema: "application",
+                columns: table => new
+                {
+                    NoteId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    NoteText = table.Column<string>(type: "nvarchar(4000)", maxLength: 4000, nullable: false),
+                    Id = table.Column<string>(type: "nvarchar(36)", maxLength: 36, nullable: true),
+                    DateCreated = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()"),
+                    DateUpdated = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Application_Note_NoteId", x => x.NoteId);
+                });
 
             migrationBuilder.CreateTable(
                 name: "RoleType",
@@ -40,7 +91,10 @@ namespace DigitalFamilyCookbook.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Id = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Title = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
-                    IsPublic = table.Column<bool>(type: "bit", nullable: false, defaultValue: false)
+                    IsPublic = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
+                    AllowPublicRegistration = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
+                    InvitationCode = table.Column<string>(type: "nvarchar(max)", nullable: false, defaultValue: "9ace85e7-47ab-4a97-bb99-ce657723277f"),
+                    SaveRecipesOnDeleteUser = table.Column<bool>(type: "bit", nullable: false, defaultValue: true)
                 },
                 constraints: table =>
                 {
@@ -106,17 +160,16 @@ namespace DigitalFamilyCookbook.Migrations
                 {
                     RecipeId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Id = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Name = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
                     Description = table.Column<string>(type: "nvarchar(2000)", maxLength: 2000, nullable: true),
                     IsPublic = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
-                    Notes = table.Column<string>(type: "nvarchar(2000)", maxLength: 2000, nullable: true),
-                    Source = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
-                    SourceUrl = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
+                    Servings = table.Column<int>(type: "int", nullable: false, defaultValue: 1),
+                    Source = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
+                    SourceUrl = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
                     Time = table.Column<int>(type: "int", nullable: true),
                     ActiveTime = table.Column<int>(type: "int", nullable: true),
-                    ImageUrl = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
-                    ImageUrlLarge = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
+                    ImageUrl = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
+                    ImageUrlLarge = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
                     Calories = table.Column<decimal>(type: "decimal(10,2)", precision: 10, scale: 2, nullable: true),
                     Carbohydrates = table.Column<decimal>(type: "decimal(10,2)", precision: 10, scale: 2, nullable: true),
                     Sugar = table.Column<decimal>(type: "decimal(10,2)", precision: 10, scale: 2, nullable: true),
@@ -124,7 +177,10 @@ namespace DigitalFamilyCookbook.Migrations
                     Protein = table.Column<decimal>(type: "decimal(10,2)", precision: 10, scale: 2, nullable: true),
                     Fiber = table.Column<decimal>(type: "decimal(10,2)", precision: 10, scale: 2, nullable: true),
                     Cholesterol = table.Column<decimal>(type: "decimal(10,2)", precision: 10, scale: 2, nullable: true),
-                    UserAccountId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    UserAccountId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Id = table.Column<string>(type: "nvarchar(36)", maxLength: 36, nullable: true),
+                    DateCreated = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()"),
+                    DateUpdated = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()")
                 },
                 constraints: table =>
                 {
@@ -145,14 +201,17 @@ namespace DigitalFamilyCookbook.Migrations
                 {
                     RefreshTokenId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Id = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Token = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Expires = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedByIp = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Revoked = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    RevokedByIp = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ReplacedByToken = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ReasonRevoked = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UserAccountId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Token = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
-                    JwtId = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
-                    IsUsed = table.Column<bool>(type: "bit", nullable: false),
-                    IsRevoked = table.Column<bool>(type: "bit", nullable: false),
-                    AddedDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2022, 1, 18, 17, 28, 29, 197, DateTimeKind.Local).AddTicks(7870)),
-                    ExpirationDate = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    Id = table.Column<string>(type: "nvarchar(36)", maxLength: 36, nullable: true),
+                    DateCreated = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DateUpdated = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -265,89 +324,24 @@ namespace DigitalFamilyCookbook.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Category",
-                schema: "recipe",
-                columns: table => new
-                {
-                    CategoryId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Id = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    RecipeId = table.Column<int>(type: "int", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Recipe_Category_CategoryId", x => x.CategoryId);
-                    table.ForeignKey(
-                        name: "FK_Category_Recipe_RecipeId",
-                        column: x => x.RecipeId,
-                        principalSchema: "recipe",
-                        principalTable: "Recipe",
-                        principalColumn: "RecipeId");
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Ingredient",
                 schema: "recipe",
                 columns: table => new
                 {
                     IngredientId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Id = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Name = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
                     SortOrder = table.Column<int>(type: "int", nullable: true),
-                    RecipeId = table.Column<int>(type: "int", nullable: true)
+                    RecipeId = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<string>(type: "nvarchar(36)", maxLength: 36, nullable: true),
+                    DateCreated = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()"),
+                    DateUpdated = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()")
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Recipe_Ingredient_IngredientId", x => x.IngredientId);
                     table.ForeignKey(
                         name: "FK_Ingredient_Recipe_RecipeId",
-                        column: x => x.RecipeId,
-                        principalSchema: "recipe",
-                        principalTable: "Recipe",
-                        principalColumn: "RecipeId");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Meat",
-                schema: "recipe",
-                columns: table => new
-                {
-                    MeatId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Id = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    RecipeId = table.Column<int>(type: "int", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Recipe_Meat_MeatyId", x => x.MeatId);
-                    table.ForeignKey(
-                        name: "FK_Meat_Recipe_RecipeId",
-                        column: x => x.RecipeId,
-                        principalSchema: "recipe",
-                        principalTable: "Recipe",
-                        principalColumn: "RecipeId");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Step",
-                schema: "recipe",
-                columns: table => new
-                {
-                    StepId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Id = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Direction = table.Column<string>(type: "VARCHAR(MAX)", nullable: false),
-                    SortOrder = table.Column<int>(type: "int", nullable: false),
-                    RecipeId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Recipe_Step_StepId", x => x.StepId);
-                    table.ForeignKey(
-                        name: "FK_Step_Recipe_RecipeId",
                         column: x => x.RecipeId,
                         principalSchema: "recipe",
                         principalTable: "Recipe",
@@ -362,9 +356,11 @@ namespace DigitalFamilyCookbook.Migrations
                 {
                     RecipeCategoryId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Id = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     RecipeId = table.Column<int>(type: "int", nullable: false),
-                    CategoryId = table.Column<int>(type: "int", nullable: false)
+                    CategoryId = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<string>(type: "nvarchar(36)", maxLength: 36, nullable: true),
+                    DateCreated = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()"),
+                    DateUpdated = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()")
                 },
                 constraints: table =>
                 {
@@ -386,32 +382,34 @@ namespace DigitalFamilyCookbook.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "RecipeIngredient",
+                name: "RecipeFavorite",
                 schema: "recipe",
                 columns: table => new
                 {
-                    RecipeIngredientId = table.Column<int>(type: "int", nullable: false)
+                    RecipeFavoriteId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Id = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     RecipeId = table.Column<int>(type: "int", nullable: false),
-                    IngredientId = table.Column<int>(type: "int", nullable: false)
+                    UserAccountId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Id = table.Column<string>(type: "nvarchar(36)", maxLength: 36, nullable: true),
+                    DateCreated = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()"),
+                    DateUpdated = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()")
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Recipe_RecipeIngredient_RecipeIngredientId", x => x.RecipeIngredientId);
+                    table.PrimaryKey("PK_Recipe_RecipeFavorite", x => x.RecipeFavoriteId);
                     table.ForeignKey(
-                        name: "FK_RecipeIngredient_Ingredient_IngredientId",
-                        column: x => x.IngredientId,
-                        principalSchema: "recipe",
-                        principalTable: "Ingredient",
-                        principalColumn: "IngredientId",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_RecipeIngredient_Recipe_RecipeId",
+                        name: "FK_RecipeFavorite_Recipe_RecipeId",
                         column: x => x.RecipeId,
                         principalSchema: "recipe",
                         principalTable: "Recipe",
                         principalColumn: "RecipeId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_RecipeFavorite_UserAccount_UserAccountId",
+                        column: x => x.UserAccountId,
+                        principalSchema: "application",
+                        principalTable: "UserAccount",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
@@ -422,9 +420,11 @@ namespace DigitalFamilyCookbook.Migrations
                 {
                     RecipeMeatId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Id = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     RecipeId = table.Column<int>(type: "int", nullable: false),
-                    MeatId = table.Column<int>(type: "int", nullable: false)
+                    MeatId = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<string>(type: "nvarchar(36)", maxLength: 36, nullable: true),
+                    DateCreated = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()"),
+                    DateUpdated = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()")
                 },
                 constraints: table =>
                 {
@@ -446,40 +446,69 @@ namespace DigitalFamilyCookbook.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "RecipeStep",
+                name: "RecipeNote",
                 schema: "recipe",
                 columns: table => new
                 {
-                    RecipeStepId = table.Column<int>(type: "int", nullable: false)
+                    RecipeNoteId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Id = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     RecipeId = table.Column<int>(type: "int", nullable: false),
-                    StepId = table.Column<int>(type: "int", nullable: false)
+                    NoteId = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<string>(type: "nvarchar(36)", maxLength: 36, nullable: true),
+                    DateCreated = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()"),
+                    DateUpdated = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()")
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Recipe_RecipeStep_RecipeStepId", x => x.RecipeStepId);
+                    table.PrimaryKey("PK_Recipe_RecipeNote_RecipeNoteId", x => x.RecipeNoteId);
                     table.ForeignKey(
-                        name: "FK_RecipeStep_Recipe_RecipeId",
+                        name: "FK_RecipeNote_Note_NoteId",
+                        column: x => x.NoteId,
+                        principalSchema: "application",
+                        principalTable: "Note",
+                        principalColumn: "NoteId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_RecipeNote_Recipe_RecipeId",
                         column: x => x.RecipeId,
                         principalSchema: "recipe",
                         principalTable: "Recipe",
                         principalColumn: "RecipeId",
                         onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Step",
+                schema: "recipe",
+                columns: table => new
+                {
+                    StepId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Direction = table.Column<string>(type: "VARCHAR(MAX)", nullable: false),
+                    SortOrder = table.Column<int>(type: "int", nullable: false),
+                    RecipeId = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<string>(type: "nvarchar(36)", maxLength: 36, nullable: true),
+                    DateCreated = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()"),
+                    DateUpdated = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Recipe_Step_StepId", x => x.StepId);
                     table.ForeignKey(
-                        name: "FK_RecipeStep_Step_StepId",
-                        column: x => x.StepId,
+                        name: "FK_Step_Recipe_RecipeId",
+                        column: x => x.RecipeId,
                         principalSchema: "recipe",
-                        principalTable: "Step",
-                        principalColumn: "StepId",
-                        onDelete: ReferentialAction.Restrict);
+                        principalTable: "Recipe",
+                        principalColumn: "RecipeId",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Category_RecipeId",
+                name: "UQ_Recipe_Category_Name",
                 schema: "recipe",
                 table: "Category",
-                column: "RecipeId");
+                column: "Name",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Ingredient_RecipeId",
@@ -488,16 +517,17 @@ namespace DigitalFamilyCookbook.Migrations
                 column: "RecipeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Meat_RecipeId",
-                schema: "recipe",
-                table: "Meat",
-                column: "RecipeId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Recipe_UserAccountId",
                 schema: "recipe",
                 table: "Recipe",
                 column: "UserAccountId");
+
+            migrationBuilder.CreateIndex(
+                name: "UQ_Recipe_Recipe_Name",
+                schema: "recipe",
+                table: "Recipe",
+                column: "Name",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_RecipeCategory_CategoryId",
@@ -513,16 +543,16 @@ namespace DigitalFamilyCookbook.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_RecipeIngredient_IngredientId",
+                name: "IX_RecipeFavorite_UserAccountId",
                 schema: "recipe",
-                table: "RecipeIngredient",
-                column: "IngredientId");
+                table: "RecipeFavorite",
+                column: "UserAccountId");
 
             migrationBuilder.CreateIndex(
-                name: "UQ_Recipe_RecipeIngredient_RecipeId_IngredientId",
+                name: "UQ_Recipe_RecipeFavorite_RecipeId_UserAccountId",
                 schema: "recipe",
-                table: "RecipeIngredient",
-                columns: new[] { "RecipeId", "IngredientId" },
+                table: "RecipeFavorite",
+                columns: new[] { "RecipeId", "UserAccountId" },
                 unique: true);
 
             migrationBuilder.CreateIndex(
@@ -539,16 +569,16 @@ namespace DigitalFamilyCookbook.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_RecipeStep_StepId",
+                name: "IX_RecipeNote_NoteId",
                 schema: "recipe",
-                table: "RecipeStep",
-                column: "StepId");
+                table: "RecipeNote",
+                column: "NoteId");
 
             migrationBuilder.CreateIndex(
-                name: "UQ_Recipe_RecipeStep_RecipeId_StepId",
+                name: "UQ_Recipe_RecipeNote_RecipeId_NoteId",
                 schema: "recipe",
-                table: "RecipeStep",
-                columns: new[] { "RecipeId", "StepId" },
+                table: "RecipeNote",
+                columns: new[] { "RecipeId", "NoteId" },
                 unique: true);
 
             migrationBuilder.CreateIndex(
@@ -613,11 +643,15 @@ namespace DigitalFamilyCookbook.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "Ingredient",
+                schema: "recipe");
+
+            migrationBuilder.DropTable(
                 name: "RecipeCategory",
                 schema: "recipe");
 
             migrationBuilder.DropTable(
-                name: "RecipeIngredient",
+                name: "RecipeFavorite",
                 schema: "recipe");
 
             migrationBuilder.DropTable(
@@ -625,7 +659,7 @@ namespace DigitalFamilyCookbook.Migrations
                 schema: "recipe");
 
             migrationBuilder.DropTable(
-                name: "RecipeStep",
+                name: "RecipeNote",
                 schema: "recipe");
 
             migrationBuilder.DropTable(
@@ -639,6 +673,10 @@ namespace DigitalFamilyCookbook.Migrations
             migrationBuilder.DropTable(
                 name: "SiteSettings",
                 schema: "application");
+
+            migrationBuilder.DropTable(
+                name: "Step",
+                schema: "recipe");
 
             migrationBuilder.DropTable(
                 name: "UserAccountClaim",
@@ -661,24 +699,20 @@ namespace DigitalFamilyCookbook.Migrations
                 schema: "recipe");
 
             migrationBuilder.DropTable(
-                name: "Ingredient",
-                schema: "recipe");
-
-            migrationBuilder.DropTable(
                 name: "Meat",
                 schema: "recipe");
 
             migrationBuilder.DropTable(
-                name: "Step",
-                schema: "recipe");
-
-            migrationBuilder.DropTable(
-                name: "RoleType",
+                name: "Note",
                 schema: "application");
 
             migrationBuilder.DropTable(
                 name: "Recipe",
                 schema: "recipe");
+
+            migrationBuilder.DropTable(
+                name: "RoleType",
+                schema: "application");
 
             migrationBuilder.DropTable(
                 name: "UserAccount",

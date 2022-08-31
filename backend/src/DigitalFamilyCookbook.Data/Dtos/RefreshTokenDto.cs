@@ -5,7 +5,7 @@ namespace DigitalFamilyCookbook.Data.Dtos;
 public class RefreshTokenDto : BaseDto
 {
     [JsonIgnore]
-    public int Id { get; set; }
+    public int RefreshTokenId { get; set; }
 
     public string Token { get; set; } = string.Empty;
 
