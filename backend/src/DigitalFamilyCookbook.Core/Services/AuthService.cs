@@ -100,7 +100,7 @@ public class AuthService : IAuthService
 
             await _userManager.AddToRoleAsync(createdUser, "User");
 
-            if (!administrators.Any())
+            if (administrators is null || !administrators.Any())
             {
                 // if there are no administrators, assign the admin role
                 await _userManager.AddToRoleAsync(createdUser, "Administrator");
