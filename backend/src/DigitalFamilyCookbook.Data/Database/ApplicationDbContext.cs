@@ -62,12 +62,6 @@ public class ApplicationDbContext : IdentityDbContext<UserAccountDto, RoleTypeDt
             .HasName("PK_Application_Note_NoteId");
 
         modelBuilder.Entity<NoteDto>()
-            .Property(n => n.Id)
-            .HasMaxLength(36)
-            .HasDefaultValue(Guid.NewGuid().ToString())
-            .ValueGeneratedOnAdd();
-
-        modelBuilder.Entity<NoteDto>()
             .Property(n => n.NoteText)
             .HasMaxLength(4000)
             .IsRequired();
@@ -80,17 +74,23 @@ public class ApplicationDbContext : IdentityDbContext<UserAccountDto, RoleTypeDt
         modelBuilder.Entity<NoteDto>()
             .Property(n => n.DateUpdated)
             .HasDefaultValueSql("GETDATE()")
-            .ValueGeneratedOnAddOrUpdate();
+            .ValueGeneratedOnAdd();
 
         #endregion
 
         #region "application.RefreshToken"
+
         modelBuilder.Entity<RefreshTokenDto>()
             .ToTable("RefreshToken", schema: "application");
 
         modelBuilder.Entity<RefreshTokenDto>()
+            .HasKey(rt => rt.RefreshTokenId)
+            .HasName("PK_Application_RefreshToken_RefreshTokenId");
+
+        modelBuilder.Entity<RefreshTokenDto>()
             .HasOne(r => r.UserAccount)
             .WithMany(u => u.RefreshTokens);
+
         #endregion
 
         #region "application.RoleType"
@@ -262,12 +262,6 @@ public class ApplicationDbContext : IdentityDbContext<UserAccountDto, RoleTypeDt
             .WithMany(u => u.Recipes);
 
         modelBuilder.Entity<RecipeDto>()
-            .Property(r => r.Id)
-            .HasMaxLength(36)
-            .HasDefaultValue(Guid.NewGuid().ToString())
-            .ValueGeneratedOnAdd();
-
-        modelBuilder.Entity<RecipeDto>()
             .HasMany(r => r.Ingredients)
             .WithOne(i => i.Recipe);
 
@@ -283,7 +277,7 @@ public class ApplicationDbContext : IdentityDbContext<UserAccountDto, RoleTypeDt
         modelBuilder.Entity<RecipeDto>()
             .Property(r => r.DateUpdated)
             .HasDefaultValueSql("GETDATE()")
-            .ValueGeneratedOnAddOrUpdate();
+            .ValueGeneratedOnAdd();
 
         #endregion
 
@@ -302,12 +296,6 @@ public class ApplicationDbContext : IdentityDbContext<UserAccountDto, RoleTypeDt
             .IsRequired();
 
         modelBuilder.Entity<IngredientDto>()
-            .Property(i => i.Id)
-            .HasMaxLength(36)
-            .HasDefaultValue(Guid.NewGuid().ToString())
-            .ValueGeneratedOnAdd();
-
-        modelBuilder.Entity<IngredientDto>()
             .HasOne(i => i.Recipe)
             .WithMany(r => r.Ingredients);
 
@@ -319,7 +307,7 @@ public class ApplicationDbContext : IdentityDbContext<UserAccountDto, RoleTypeDt
         modelBuilder.Entity<IngredientDto>()
             .Property(i => i.DateUpdated)
             .HasDefaultValueSql("GETDATE()")
-            .ValueGeneratedOnAddOrUpdate();
+            .ValueGeneratedOnAdd();
 
         #endregion
 
@@ -338,12 +326,6 @@ public class ApplicationDbContext : IdentityDbContext<UserAccountDto, RoleTypeDt
             .IsRequired();
 
         modelBuilder.Entity<StepDto>()
-            .Property(s => s.Id)
-            .HasMaxLength(36)
-            .HasDefaultValue(Guid.NewGuid().ToString())
-            .ValueGeneratedOnAdd();
-
-        modelBuilder.Entity<StepDto>()
             .HasOne(s => s.Recipe)
             .WithMany(r => r.Steps);
 
@@ -355,7 +337,7 @@ public class ApplicationDbContext : IdentityDbContext<UserAccountDto, RoleTypeDt
         modelBuilder.Entity<StepDto>()
             .Property(s => s.DateUpdated)
             .HasDefaultValueSql("GETDATE()")
-            .ValueGeneratedOnAddOrUpdate();
+            .ValueGeneratedOnAdd();
 
         #endregion
 
@@ -383,12 +365,6 @@ public class ApplicationDbContext : IdentityDbContext<UserAccountDto, RoleTypeDt
             .WithOne(rc => rc.Category);
 
         modelBuilder.Entity<CategoryDto>()
-            .Property(c => c.Id)
-            .HasMaxLength(36)
-            .HasDefaultValue(Guid.NewGuid().ToString())
-            .ValueGeneratedOnAdd();
-
-        modelBuilder.Entity<CategoryDto>()
             .Property(c => c.DateCreated)
             .HasDefaultValueSql("GETDATE()")
             .ValueGeneratedOnAdd();
@@ -396,7 +372,7 @@ public class ApplicationDbContext : IdentityDbContext<UserAccountDto, RoleTypeDt
         modelBuilder.Entity<CategoryDto>()
             .Property(c => c.DateUpdated)
             .HasDefaultValueSql("GETDATE()")
-            .ValueGeneratedOnAddOrUpdate();
+            .ValueGeneratedOnAdd();
 
         #endregion
 
@@ -427,12 +403,6 @@ public class ApplicationDbContext : IdentityDbContext<UserAccountDto, RoleTypeDt
             .OnDelete(DeleteBehavior.Restrict);
 
         modelBuilder.Entity<RecipeCategoryDto>()
-            .Property(rc => rc.Id)
-            .HasMaxLength(36)
-            .HasDefaultValue(Guid.NewGuid().ToString())
-            .ValueGeneratedOnAdd();
-
-        modelBuilder.Entity<RecipeCategoryDto>()
             .Property(rc => rc.DateCreated)
             .HasDefaultValueSql("GETDATE()")
             .ValueGeneratedOnAdd();
@@ -440,7 +410,7 @@ public class ApplicationDbContext : IdentityDbContext<UserAccountDto, RoleTypeDt
         modelBuilder.Entity<RecipeCategoryDto>()
             .Property(rc => rc.DateUpdated)
             .HasDefaultValueSql("GETDATE()")
-            .ValueGeneratedOnAddOrUpdate();
+            .ValueGeneratedOnAdd();
 
         #endregion
 
@@ -459,12 +429,6 @@ public class ApplicationDbContext : IdentityDbContext<UserAccountDto, RoleTypeDt
             .IsRequired();
 
         modelBuilder.Entity<MeatDto>()
-            .Property(m => m.Id)
-            .HasMaxLength(36)
-            .HasDefaultValue(Guid.NewGuid().ToString())
-            .ValueGeneratedOnAdd();
-
-        modelBuilder.Entity<MeatDto>()
             .HasMany(m => m.RecipeMeats)
             .WithOne(rm => rm.Meat);
 
@@ -476,7 +440,7 @@ public class ApplicationDbContext : IdentityDbContext<UserAccountDto, RoleTypeDt
         modelBuilder.Entity<MeatDto>()
             .Property(m => m.DateUpdated)
             .HasDefaultValueSql("GETDATE()")
-            .ValueGeneratedOnAddOrUpdate();
+            .ValueGeneratedOnAdd();
 
         #endregion
 
@@ -507,12 +471,6 @@ public class ApplicationDbContext : IdentityDbContext<UserAccountDto, RoleTypeDt
             .OnDelete(DeleteBehavior.Restrict);
 
         modelBuilder.Entity<RecipeMeatDto>()
-            .Property(rm => rm.Id)
-            .HasMaxLength(36)
-            .HasDefaultValue(Guid.NewGuid().ToString())
-            .ValueGeneratedOnAdd();
-
-        modelBuilder.Entity<RecipeMeatDto>()
             .Property(rm => rm.DateCreated)
             .HasDefaultValueSql("GETDATE()")
             .ValueGeneratedOnAdd();
@@ -520,7 +478,7 @@ public class ApplicationDbContext : IdentityDbContext<UserAccountDto, RoleTypeDt
         modelBuilder.Entity<RecipeMeatDto>()
             .Property(rm => rm.DateUpdated)
             .HasDefaultValueSql("GETDATE()")
-            .ValueGeneratedOnAddOrUpdate();
+            .ValueGeneratedOnAdd();
 
         #endregion
 
@@ -551,12 +509,6 @@ public class ApplicationDbContext : IdentityDbContext<UserAccountDto, RoleTypeDt
             .OnDelete(DeleteBehavior.Restrict);
 
         modelBuilder.Entity<RecipeNoteDto>()
-            .Property(rn => rn.Id)
-            .HasMaxLength(36)
-            .HasDefaultValue(Guid.NewGuid().ToString())
-            .ValueGeneratedOnAdd();
-
-        modelBuilder.Entity<RecipeNoteDto>()
             .Property(rn => rn.DateCreated)
             .HasDefaultValueSql("GETDATE()")
             .ValueGeneratedOnAdd();
@@ -564,7 +516,7 @@ public class ApplicationDbContext : IdentityDbContext<UserAccountDto, RoleTypeDt
         modelBuilder.Entity<RecipeNoteDto>()
             .Property(rn => rn.DateUpdated)
             .HasDefaultValueSql("GETDATE()")
-            .ValueGeneratedOnAddOrUpdate();
+            .ValueGeneratedOnAdd();
 
         #endregion
 
@@ -583,12 +535,6 @@ public class ApplicationDbContext : IdentityDbContext<UserAccountDto, RoleTypeDt
             .IsUnique();
 
         modelBuilder.Entity<RecipeFavoriteDto>()
-            .Property(rf => rf.Id)
-            .HasMaxLength(36)
-            .HasDefaultValue(Guid.NewGuid().ToString())
-            .ValueGeneratedOnAdd();
-
-        modelBuilder.Entity<RecipeFavoriteDto>()
             .Property(rf => rf.DateCreated)
             .HasDefaultValueSql("GETDATE()")
             .ValueGeneratedOnAdd();
@@ -596,7 +542,7 @@ public class ApplicationDbContext : IdentityDbContext<UserAccountDto, RoleTypeDt
         modelBuilder.Entity<RecipeFavoriteDto>()
             .Property(rf => rf.DateUpdated)
             .HasDefaultValueSql("GETDATE()")
-            .ValueGeneratedOnAddOrUpdate();
+            .ValueGeneratedOnAdd();
 
         modelBuilder.Entity<RecipeFavoriteDto>()
             .HasOne(rf => rf.Recipe)

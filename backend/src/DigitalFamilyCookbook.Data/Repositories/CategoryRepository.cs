@@ -63,6 +63,7 @@ public class CategoryRepository : ICategoryRepository
         }
 
         c.Name = category.Name;
+        c.DateUpdated = DateTime.Now;
 
         _db.Categories.Update(c);
 

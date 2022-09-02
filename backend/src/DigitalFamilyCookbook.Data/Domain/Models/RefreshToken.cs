@@ -31,7 +31,7 @@ public class RefreshToken : BaseDomainModel
 
     public static RefreshToken FromDto(RefreshTokenDto dto) => new RefreshToken
     {
-        Id = dto.Id,
+        Id = dto.RefreshTokenId,
         Token = dto.Token,
         Expires = dto.Expires,
         CreatedByIp = dto.CreatedByIp,
