@@ -23,7 +23,7 @@ public class GetAllRecipes
             try
             {
                 var (data, totalRecipes) = await Task.FromResult(_recipeRepository.GetAllRecipesPaginated(request.PageNumber, request.RecipesPerPage));
-
+                
                 var recipes = data
                     .Select(r => RecipeApiModel.FromDomainModel(r))
                     .OrderBy(r => r.Name)
