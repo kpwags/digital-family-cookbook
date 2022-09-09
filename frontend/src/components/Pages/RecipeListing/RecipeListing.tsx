@@ -269,7 +269,13 @@ const RecipeListing = ({
                                 setCurrentPageNumber(pageNumber);
                                 fetchRecipes(pageNumber);
 
-                                setPageUrl(`/recipes/${mode}/${id}/${pageNumber}`);
+                                if (mode === 'all') {
+                                    setPageUrl(`/recipes/list/${pageNumber}`);
+                                } else if (mode === 'favorites') {
+                                    setPageUrl(`/recipes/favorites/${pageNumber}`);
+                                } else {
+                                    setPageUrl(`/recipes/${mode}/${id}/${pageNumber}`);
+                                }
                             }}
                         />
                     </div>
@@ -284,7 +290,13 @@ const RecipeListing = ({
                                 setCurrentPageNumber(pageNumber);
                                 fetchRecipes(pageNumber);
 
-                                setPageUrl(`/recipes/${mode}/${id}/${pageNumber}`);
+                                if (mode === 'all') {
+                                    setPageUrl(`/recipes/list/${pageNumber}`);
+                                } else if (mode === 'favorites') {
+                                    setPageUrl(`/recipes/favorites/${pageNumber}`);
+                                } else {
+                                    setPageUrl(`/recipes/${mode}/${id}/${pageNumber}`);
+                                }
                             }}
                         />
                     </div>
@@ -299,7 +311,13 @@ const RecipeListing = ({
                                 setCurrentPageNumber(pageNumber);
                                 fetchRecipes(pageNumber);
 
-                                setPageUrl(`/recipes/${mode}/${id}/${pageNumber}`);
+                                if (mode === 'all') {
+                                    setPageUrl(`/recipes/list/${pageNumber}`);
+                                } else if (mode === 'favorites') {
+                                    setPageUrl(`/recipes/favorites/${pageNumber}`);
+                                } else {
+                                    setPageUrl(`/recipes/${mode}/${id}/${pageNumber}`);
+                                }
                             }}
                         />
                     </div>

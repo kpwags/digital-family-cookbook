@@ -391,8 +391,7 @@ public class RecipeRepository : IRecipeRepository
 
         var recipeCount = _db.Recipes
             .Include(r => r.RecipeFavorites)
-            .Where(r => r.RecipeFavorites.Any(rf => rf.UserAccountId == userAccountId && rf.RecipeId == r.RecipeId))
-            .Count(r => r.UserAccountId == userAccountId);
+            .Count(r => r.RecipeFavorites.Any(rf => rf.UserAccountId == userAccountId && rf.RecipeId == r.RecipeId));
 
         return (recipes, recipeCount);
     }
