@@ -224,10 +224,11 @@ public class RecipeRepository : IRecipeRepository
     public (IEnumerable<Recipe> recipes, int totalRecipes) GetRecipesForUserPaginated(string userAccountId, int currentPage = 1, int recipesPerPage = 10)
     {
         var data = _db.Recipes
+            .Where(r => r.UserAccountId == userAccountId)
             .OrderBy(r => r.Name)
             .Skip(currentPage == 1 ? 0 : (currentPage - 1) * recipesPerPage)
-            .Where(r => r.UserAccountId == userAccountId)
             .Include(r => r.UserAccount)
+            .AsSplitQuery()
             .Take(recipesPerPage);
 
         var recipes = new List<Recipe>();
@@ -255,11 +256,12 @@ public class RecipeRepository : IRecipeRepository
     public (IEnumerable<Recipe> recipes, int totalRecipes) GetRecipesForCategoryPaginated(int categoryId, int currentPage = 1, int recipesPerPage = 10)
     {
         var data = _db.Recipes
+            .Where(r => r.RecipeCategories.Select(rc => rc.CategoryId).Contains(categoryId))
             .OrderBy(r => r.Name)
             .Skip(currentPage == 1 ? 0 : (currentPage - 1) * recipesPerPage)
             .Include(r => r.RecipeCategories)
             .Include(r => r.RecipeMeats)
-            .Where(r => r.RecipeCategories.Select(rc => rc.CategoryId).Contains(categoryId))
+            .AsSplitQuery()
             .Take(recipesPerPage);
 
         var recipes = new List<Recipe>();
@@ -288,11 +290,12 @@ public class RecipeRepository : IRecipeRepository
     public (IEnumerable<Recipe> recipes, int totalRecipes) GetRecipesForMeatPaginated(int meatId, int currentPage = 1, int recipesPerPage = 10)
     {
         var data = _db.Recipes
+            .Where(r => r.RecipeMeats.Select(rc => rc.MeatId).Contains(meatId))
             .OrderBy(r => r.Name)
             .Skip(currentPage == 1 ? 0 : (currentPage - 1) * recipesPerPage)
             .Include(r => r.RecipeMeats)
             .Include(r => r.RecipeCategories)
-            .Where(r => r.RecipeMeats.Select(rc => rc.MeatId).Contains(meatId))
+            .AsSplitQuery()
             .Take(recipesPerPage);
 
         var recipes = new List<Recipe>();
@@ -315,11 +318,12 @@ public class RecipeRepository : IRecipeRepository
         var allRecipes = _db.Recipes.Include(r => r.UserAccount);
 
         var data = allRecipes
+            .OrderBy(r => r.Name)
+            .Skip(currentPage == 1 ? 0 : (currentPage - 1) * recipesPerPage)
             .Include(r => r.UserAccount)
             .Include(r => r.RecipeCategories)
             .Include(r => r.RecipeMeats)
-            .OrderBy(r => r.Name)
-            .Skip(currentPage == 1 ? 0 : (currentPage - 1) * recipesPerPage)
+            .AsSplitQuery()
             .Take(recipesPerPage);
 
         var recipes = new List<Recipe>();
@@ -372,13 +376,14 @@ public class RecipeRepository : IRecipeRepository
     public (IEnumerable<Recipe> recipes, int totalRecipes) GetFavoriteRecipesForUserPaginated(string userAccountId, int currentPage = 1, int recipesPerPage = 10)
     {
         var data = _db.Recipes
+            .Where(r => r.RecipeFavorites.Any(rf => rf.UserAccountId == userAccountId && rf.RecipeId == r.RecipeId))
             .OrderBy(r => r.Name)
             .Skip(currentPage == 1 ? 0 : (currentPage - 1) * recipesPerPage)
             .Include(r => r.UserAccount)
             .Include(r => r.RecipeFavorites)
             .Include(r => r.RecipeMeats)
             .Include(r => r.RecipeCategories)
-            .Where(r => r.RecipeFavorites.Any(rf => rf.UserAccountId == userAccountId && rf.RecipeId == r.RecipeId))
+            .AsSplitQuery()
             .Take(recipesPerPage);
 
         var recipes = new List<Recipe>();
