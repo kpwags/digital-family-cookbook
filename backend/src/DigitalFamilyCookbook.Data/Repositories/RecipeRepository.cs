@@ -291,6 +291,7 @@ public class RecipeRepository : IRecipeRepository
             .OrderBy(r => r.Name)
             .Skip(currentPage == 1 ? 0 : (currentPage - 1) * recipesPerPage)
             .Include(r => r.RecipeMeats)
+            .Include(r => r.RecipeCategories)
             .Where(r => r.RecipeMeats.Select(rc => rc.MeatId).Contains(meatId))
             .Take(recipesPerPage);
 
@@ -311,7 +312,12 @@ public class RecipeRepository : IRecipeRepository
 
     public (IEnumerable<Recipe> recipes, int totalRecipes) GetAllRecipesPaginated(int currentPage = 1, int recipesPerPage = 10)
     {
-        var data = _db.Recipes
+        var allRecipes = _db.Recipes.Include(r => r.UserAccount);
+
+        var data = allRecipes
+            .Include(r => r.UserAccount)
+            .Include(r => r.RecipeCategories)
+            .Include(r => r.RecipeMeats)
             .OrderBy(r => r.Name)
             .Skip(currentPage == 1 ? 0 : (currentPage - 1) * recipesPerPage)
             .Take(recipesPerPage);
@@ -324,9 +330,7 @@ public class RecipeRepository : IRecipeRepository
             recipes.Add(recipe);
         }
 
-        var recipeCount = _db.Recipes.Count();
-
-        return (recipes, recipeCount);
+        return (recipes, allRecipes.Count());
     }
 
     public async Task MarkRecipeAsFavorite(string userAccountId, int recipeId)
@@ -372,6 +376,8 @@ public class RecipeRepository : IRecipeRepository
             .Skip(currentPage == 1 ? 0 : (currentPage - 1) * recipesPerPage)
             .Include(r => r.UserAccount)
             .Include(r => r.RecipeFavorites)
+            .Include(r => r.RecipeMeats)
+            .Include(r => r.RecipeCategories)
             .Where(r => r.RecipeFavorites.Any(rf => rf.UserAccountId == userAccountId && rf.RecipeId == r.RecipeId))
             .Take(recipesPerPage);
 
