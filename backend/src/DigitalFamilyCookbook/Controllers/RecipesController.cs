@@ -222,4 +222,22 @@ public class RecipesController : Controller
 
         return Ok(result.Value);
     }
+    
+    [HttpGet("getrecentrecipes")]
+    [AllowAnonymous]
+    public async Task<ActionResult<IReadOnlyCollection<RecipeApiModel>>> GetRecentRecipes([FromQuery] GetRecentRecipes.Query query, CancellationToken cancellationToken)
+    {
+        var result = await _mediatr.Send(query, cancellationToken);
+
+        return Ok(result);
+    }
+    
+    [HttpGet("getmostfavoritedrecipes")]
+    [AllowAnonymous]
+    public async Task<ActionResult<IReadOnlyCollection<RecipeApiModel>>> GetMostFavoritedRecipes([FromQuery] GetMostFavoritedRecipes.Query query, CancellationToken cancellationToken)
+    {
+        var result = await _mediatr.Send(query, cancellationToken);
+
+        return Ok(result);
+    }
 }

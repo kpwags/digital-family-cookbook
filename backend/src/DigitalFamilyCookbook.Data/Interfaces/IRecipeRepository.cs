@@ -35,4 +35,8 @@ public interface IRecipeRepository
     bool IsRecipeFavoriteForUser(string userAccountId, int recipeId);
 
     (IEnumerable<Recipe> recipes, int totalRecipes) GetFavoriteRecipesForUserPaginated(string userAccountId, int currentPage = 1, int recipesPerPage = 10);
+
+    IEnumerable<Recipe> GetRecentRecipes(int count);
+    
+    IEnumerable<Recipe> GetMostFavoritedRecipes(int count);
 }
