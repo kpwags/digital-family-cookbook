@@ -48,7 +48,16 @@ export const MockRecipeList = (length = 10): Recipe[] => {
     const recipes: Recipe[] = [];
 
     for (let i = 0; i < length; i += 1) {
-        recipes.push(MockRecipe());
+        let isUniqueId = false;
+
+        while (!isUniqueId && recipes.length < length) {
+            const newRecipe = MockRecipe();
+
+            if (!recipes.find((r) => r.recipeId === newRecipe.recipeId)) {
+                recipes.push(newRecipe);
+                isUniqueId = true;
+            }
+        }
     }
 
     return recipes;

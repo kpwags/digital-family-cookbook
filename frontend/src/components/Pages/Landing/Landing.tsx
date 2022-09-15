@@ -1,12 +1,22 @@
+import PublicLanding from '@components/PublicLanding';
+import AppContext from '@contexts/AppContext';
 import useDocumentTitle from '@hooks/useDocumentTitle';
+import { useContext } from 'react';
 
 const Landing = (): JSX.Element => {
+    const { siteSettings } = useContext(AppContext);
+
     useDocumentTitle(undefined);
 
     return (
         <>
-            <h1>Home</h1>
-            <p>This is the home page</p>
+            {siteSettings.isPublic ? (
+                <>
+                    <PublicLanding />
+                </>
+            ) : (
+                <p>Site is not public!</p>
+            )}
         </>
     );
 };

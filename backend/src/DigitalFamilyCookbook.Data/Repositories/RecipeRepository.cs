@@ -1,3 +1,5 @@
+using System.Text.Json;
+using DigitalFamilyCookbook.Data.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace DigitalFamilyCookbook.Data.Repositories;
@@ -399,6 +401,71 @@ public class RecipeRepository : IRecipeRepository
             .Count(r => r.RecipeFavorites.Any(rf => rf.UserAccountId == userAccountId && rf.RecipeId == r.RecipeId));
 
         return (recipes, recipeCount);
+    }
+
+    public IEnumerable<Recipe> GetRecentRecipes(int count)
+    {
+        var data = _db.Recipes
+            .OrderByDescending(r => r.DateCreated)
+            .Include(r => r.UserAccount)
+            .Include(r => r.RecipeFavorites)
+            .Include(r => r.RecipeMeats)
+            .Include(r => r.RecipeCategories)
+            .AsSplitQuery()
+            .Take(count);
+
+        var recipes = new List<Recipe>();
+
+        foreach (var recipeDto in data)
+        {
+            var recipe = AddCategoriesAndMeatsToRecipe(recipeDto);
+            recipes.Add(recipe);
+        }
+
+        return recipes;
+    }
+
+    public IEnumerable<Recipe> GetMostFavoritedRecipes(int count)
+    {
+        var favoriteRecipes = _db.RecipeFavorites
+            .ToList()
+            .GroupBy(rf => rf.RecipeId)
+            .Select(r => new RecipeGrouping() { RecipeId = r.Key, RecipeCount = r.Count() })
+            .OrderByDescending(r => r.RecipeCount)
+            .Take(count);
+
+        var recipeIds = favoriteRecipes
+            .Take(count)
+            .Select(rf => rf.RecipeId);
+
+        var data = _db.Recipes
+            .Where(r => recipeIds.Contains(r.RecipeId))
+            .Include(r => r.UserAccount)
+            .Include(r => r.RecipeFavorites)
+            .Include(r => r.RecipeMeats)
+            .Include(r => r.RecipeCategories)
+            .AsSplitQuery();
+
+        var recipes = new List<Recipe>();
+
+        foreach (var recipeDto in data)
+        {
+            var recipe = AddCategoriesAndMeatsToRecipe(recipeDto);
+            recipes.Add(recipe);
+        }
+
+        var recipesOutput = new List<Recipe>();
+
+        foreach (var recipe in favoriteRecipes)
+        {
+            var rec = recipes.FirstOrDefault(r => r.RecipeId == recipe.RecipeId);
+            if (rec is not null)
+            {
+                recipesOutput.Add(rec);
+            }
+        }
+
+        return recipesOutput;
     }
 
     private Recipe AddCategoriesAndMeatsToRecipe(RecipeDto dto)

@@ -23,6 +23,14 @@ const { warn, error } = console;
 beforeAll(() => {
     mockServer.listen();
 
+    // start up the server
+    mockServer.listen({
+        onUnhandledRequest(req) {
+            // eslint-disable-next-line no-console
+            console.error('Found an unhandled %s request to %s', req.method, req.url.href);
+        },
+    });
+
     const ignoredWarnings: string[] = [
         'async-validator:',
     ];
