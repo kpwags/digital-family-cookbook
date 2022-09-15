@@ -7,10 +7,7 @@ public class GetRecentRecipes
         private readonly IRecipeRepository _recipeRepository;
         private readonly IFileService _fileService;
 
-        public Handler(
-            IRecipeRepository recipeRepository,
-            IFileService fileService
-        )
+        public Handler(IRecipeRepository recipeRepository, IFileService fileService)    
         {
             _recipeRepository = recipeRepository;
             _fileService = fileService;

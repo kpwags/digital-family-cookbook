@@ -16,4 +16,5 @@
         "statusBar.border": "#006400",
         "statusBar.foreground": "#ffffff"
     },
+    "jest.jestCommandLine": "yarn test",
 }

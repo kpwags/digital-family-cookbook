@@ -368,6 +368,16 @@ const mockApiHandlers = [
                 );
         }
     }),
+
+    rest.get('*/recipes/getrecentrecipes', (_, res, ctx) => res(
+        ctx.status(200),
+        ctx.json(MockRecipeList(8)),
+    )),
+
+    rest.get('*/recipes/getmostfavoritedrecipes', (_, res, ctx) => res(
+        ctx.status(200),
+        ctx.json(MockRecipeList(8)),
+    )),
 ];
 
 export { mockApiHandlers };

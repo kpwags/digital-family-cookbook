@@ -1,4 +1,3 @@
-import MostFavoritedRecipes from '@components/MostFavoritedRecipes';
 import PublicLanding from '@components/PublicLanding';
 import AppContext from '@contexts/AppContext';
 import useDocumentTitle from '@hooks/useDocumentTitle';
@@ -14,7 +13,6 @@ const Landing = (): JSX.Element => {
             {siteSettings.isPublic ? (
                 <>
                     <PublicLanding />
-                    <MostFavoritedRecipes />
                 </>
             ) : (
                 <p>Site is not public!</p>

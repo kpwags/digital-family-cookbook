@@ -456,7 +456,7 @@ public class RecipeRepository : IRecipeRepository
 
         var recipesOutput = new List<Recipe>();
 
-        foreach (var recipe in favoriteRecipes.Reverse())
+        foreach (var recipe in favoriteRecipes)
         {
             var rec = recipes.FirstOrDefault(r => r.RecipeId == recipe.RecipeId);
             if (rec is not null)
