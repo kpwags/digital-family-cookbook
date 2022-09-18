@@ -11,14 +11,14 @@ import {
 } from 'antd';
 import AppContext from '@contexts/AppContext';
 import { Api } from '@utils/api';
-
-import './SiteSettingsForm.less';
 import { SiteSettings } from '@models/SiteSettings';
+import HtmlEditor from '@components/FormControls/HtmlEditor';
 
 const { Title } = Typography;
 
 type FormValues = {
     title: string
+    landingPageText: string
     isPublic: boolean
     allowPublicRegistration: boolean
 }
@@ -31,7 +31,12 @@ const SiteSettingsForm = (): JSX.Element => {
 
     const { siteSettings, updateSiteSettings } = useContext(AppContext);
 
-    const submitForm = async ({ title, isPublic, allowPublicRegistration }: FormValues) => {
+    const submitForm = async ({
+        title,
+        landingPageText,
+        isPublic,
+        allowPublicRegistration,
+    }: FormValues) => {
         setLoadingMessage('Saving...');
         setErrorMessage('');
 
@@ -39,6 +44,7 @@ const SiteSettingsForm = (): JSX.Element => {
             data: {
                 title,
                 isPublic,
+                landingPageText,
                 allowPublicRegistration,
             },
         });
@@ -53,6 +59,7 @@ const SiteSettingsForm = (): JSX.Element => {
             id: siteSettings.id,
             siteSettingsId: siteSettings.siteSettingsId,
             title,
+            landingPageText,
             isPublic,
             allowPublicRegistration,
             invitationCode: siteSettings.invitationCode,
@@ -104,6 +111,7 @@ const SiteSettingsForm = (): JSX.Element => {
                     title: siteSettings.title,
                     isPublic: siteSettings.isPublic,
                     allowPublicRegistration: siteSettings.allowPublicRegistration,
+                    landingPageText: siteSettings.landingPageText,
                 }}
                 onFinish={(values: FormValues) => {
                     submitForm(values);
@@ -128,6 +136,11 @@ const SiteSettingsForm = (): JSX.Element => {
                 >
                     <Checkbox>Is Public</Checkbox>
                 </Form.Item>
+
+                <HtmlEditor
+                    name="landingPageText"
+                    label="Landing Page Text"
+                />
 
                 <Form.Item
                     name="allowPublicRegistration"

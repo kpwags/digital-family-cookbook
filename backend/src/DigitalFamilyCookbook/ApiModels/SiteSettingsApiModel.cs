@@ -7,6 +7,8 @@ public class SiteSettingsApiModel : BaseApiModel
     public string Id { get; set; } = string.Empty;
 
     public string Title { get; set; } = string.Empty;
+    
+    public string LandingPageText { get; set; } = string.Empty;
 
     public bool IsPublic { get; set; }
 
@@ -25,6 +27,7 @@ public class SiteSettingsApiModel : BaseApiModel
             SiteSettingsId = settings.SiteSettingsId,
             Id = settings.Id,
             Title = settings.Title,
+            LandingPageText = settings .LandingPageText,
             IsPublic = settings.IsPublic,
             AllowPublicRegistration = settings.AllowPublicRegistration,
             InvitationCode = settings.InvitationCode,

@@ -120,6 +120,12 @@ public class ApplicationDbContext : IdentityDbContext<UserAccountDto, RoleTypeDt
             .Property(s => s.Title)
             .HasMaxLength(255)
             .IsRequired();
+        
+        modelBuilder.Entity<SiteSettingsDto>()
+            .Property(s => s.LandingPageText)
+            .HasMaxLength(5000)
+            .HasDefaultValue(string.Empty)
+            .IsRequired();
 
         modelBuilder.Entity<SiteSettingsDto>()
             .Property(s => s.IsPublic)

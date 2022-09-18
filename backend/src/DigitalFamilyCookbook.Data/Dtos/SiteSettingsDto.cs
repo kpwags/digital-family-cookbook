@@ -8,6 +8,8 @@ public class SiteSettingsDto
 
     public string Title { get; set; } = string.Empty;
 
+    public string LandingPageText { get; set; } = string.Empty;
+
     public bool IsPublic { get; set; }
 
     public bool AllowPublicRegistration { get; set; }

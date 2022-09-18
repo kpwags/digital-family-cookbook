@@ -59,8 +59,10 @@ const QuillEditor = ({
     );
 };
 
+export const EMPTY_TEXT_VALUE = '<p><br></p>';
+
 export const validateEmptyMarkup = (_: string, value: string): Promise<void> => {
-    if (value === '<p><br></p>') {
+    if (value === EMPTY_TEXT_VALUE) {
         return Promise.reject(new Error('This field is required.'));
     }
 
