@@ -7,6 +7,8 @@ public class SiteSettings
     public string Id { get; set; } = string.Empty;
 
     public string Title { get; set; } = string.Empty;
+    
+    public string LandingPageText { get; set; } = string.Empty;
 
     public bool IsPublic { get; set; }
 
@@ -25,6 +27,7 @@ public class SiteSettings
             SiteSettingsId = dto.SiteSettingsId,
             Id = dto.Id,
             Title = dto.Title,
+            LandingPageText = dto.LandingPageText,
             IsPublic = dto.IsPublic,
             AllowPublicRegistration = dto.AllowPublicRegistration,
             InvitationCode = dto.InvitationCode,

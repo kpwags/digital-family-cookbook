@@ -33,6 +33,7 @@ public class SystemRepository : ISystemRepository
         siteSettings.AllowPublicRegistration = settings.AllowPublicRegistration;
         siteSettings.IsPublic = settings.IsPublic;
         siteSettings.Title = settings.Title;
+        siteSettings.LandingPageText = settings.LandingPageText;
 
         _db.Update(siteSettings);
 

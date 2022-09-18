@@ -7,6 +7,7 @@ public class SaveSiteSettings
 {
     public class Handler : IRequestHandler<Command, OperationResult<string>>
     {
+        private const string EmptyTextValue = "<p><br></p>";
         private readonly ISystemRepository _systemRepository;
 
         public Handler(ISystemRepository systemRepository)
@@ -18,10 +19,12 @@ public class SaveSiteSettings
         {
             try
             {
+                Console.WriteLine(JsonSerializer.Serialize(command));
                 await _systemRepository.SaveSiteSettings(new SiteSettings
                 {
                     Title = command.Title,
                     IsPublic = command.IsPublic,
+                    LandingPageText = command.LandingPageText == EmptyTextValue ? string.Empty : command.LandingPageText,
                     AllowPublicRegistration = command.AllowPublicRegistration,
                 });
 
@@ -37,6 +40,8 @@ public class SaveSiteSettings
     public class Command : IRequest<OperationResult<string>>
     {
         public string Title { get; set; } = string.Empty;
+
+        public string LandingPageText { get; set; } = string.Empty;
 
         public bool IsPublic { get; set; }
 

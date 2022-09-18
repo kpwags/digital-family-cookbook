@@ -1,11 +1,11 @@
 import { useContext, useEffect } from 'react';
 import {
-    Row,
-    Col,
     Typography,
 } from 'antd';
 import AppContext from '@contexts/AppContext';
 import SiteSettingsForm from './SiteSettingsForm';
+
+import './SiteSettings.less';
 
 const { Title } = Typography;
 
@@ -17,12 +17,10 @@ const SiteSettings = (): JSX.Element => {
     }, []);
 
     return (
-        <Row>
-            <Col xs={12} offset={1}>
-                <Title level={1}>Site Settings</Title>
-                <SiteSettingsForm />
-            </Col>
-        </Row>
+        <div className="site-settings">
+            <Title level={1}>Site Settings</Title>
+            <SiteSettingsForm />
+        </div>
     );
 };
 
