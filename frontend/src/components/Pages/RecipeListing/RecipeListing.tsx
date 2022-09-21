@@ -24,14 +24,9 @@ import setPageUrl from '@utils/setPageUrl';
 import RecipeListPageResults from '@models/RecipeListPageResults';
 import Recipe from '@models/Recipe';
 import LocalStorageUtils from '@utils/LocalStorageUtils';
+import ViewMode from '@models/ViewMode';
 
 const { Title } = Typography;
-
-enum ViewMode {
-    Grid = 'grid',
-    List = 'list',
-    BasicList = 'basiclist',
-}
 
 type RecipeListingProps = {
     mode: 'category' | 'meat' | 'user' | 'favorites' | 'all'

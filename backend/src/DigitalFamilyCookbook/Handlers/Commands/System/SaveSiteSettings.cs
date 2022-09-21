@@ -19,7 +19,6 @@ public class SaveSiteSettings
         {
             try
             {
-                Console.WriteLine(JsonSerializer.Serialize(command));
                 await _systemRepository.SaveSiteSettings(new SiteSettings
                 {
                     Title = command.Title,

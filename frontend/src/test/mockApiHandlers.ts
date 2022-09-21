@@ -378,6 +378,40 @@ const mockApiHandlers = [
         ctx.status(200),
         ctx.json(MockRecipeList(8)),
     )),
+
+    rest.get('*/recipes/search', (req, res, ctx) => {
+        const keywords = req.url.searchParams.get('keywords');
+
+        if (!keywords) {
+            return res(
+                ctx.status(400),
+                ctx.text('Keywords not specified'),
+            );
+        }
+
+        switch (keywords) {
+            case 'noresults':
+                return res(
+                    ctx.status(200),
+                    ctx.json({
+                        pageCount: 1,
+                        totalRecipeCount: 0,
+                        pageTitle: "Search Results for 'noresults'",
+                        recipes: [],
+                    }),
+                );
+            default:
+                return res(
+                    ctx.status(200),
+                    ctx.json({
+                        pageCount: 1,
+                        totalRecipeCount: 8,
+                        pageTitle: `Search Results for '${keywords}'`,
+                        recipes: MockRecipeList(8),
+                    }),
+                );
+        }
+    }),
 ];
 
 export { mockApiHandlers };

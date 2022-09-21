@@ -23,6 +23,7 @@ import ManageRecipes from '@components/Pages/ManageRecipes';
 import RecipeListing from '@components/Pages/RecipeListing';
 
 import './styles/App.less';
+import Search from '@components/Pages/Search';
 
 const App = (): JSX.Element => (
     <CookiesProvider>
@@ -131,6 +132,7 @@ const App = (): JSX.Element => (
                                 )}
                             />
                         </Route>
+                        <Route path="/search" element={(<Search />)} />
                         <Route path="/" element={<Landing />} />
                     </Routes>
                 </BaseLayout>

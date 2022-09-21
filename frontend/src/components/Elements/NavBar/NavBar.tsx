@@ -1,7 +1,12 @@
 import { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { Layout, Menu } from 'antd';
-import { PlusOutlined, MenuOutlined, UserOutlined } from '@ant-design/icons';
+import {
+    PlusOutlined,
+    MenuOutlined,
+    UserOutlined,
+    SearchOutlined,
+} from '@ant-design/icons';
 import AppContext from '@contexts/AppContext';
 import { hasRole } from '@utils/UserFunctions';
 import { ItemType } from 'antd/lib/menu/hooks/useItems';
@@ -27,6 +32,14 @@ const NavBar = ({
 
     const buildMenu = (): ItemType[] => {
         const menuItems: ItemType[] = [];
+
+        if (siteSettings.isPublic || (user && user.id !== '')) {
+            menuItems.push({
+                key: 'search-recipes',
+                icon: <SearchOutlined />,
+                label: <Link to="/search">Search</Link>,
+            });
+        }
 
         if (user && user.id !== '') {
             menuItems.push({

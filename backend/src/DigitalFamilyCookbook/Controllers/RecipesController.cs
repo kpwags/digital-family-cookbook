@@ -240,4 +240,13 @@ public class RecipesController : Controller
 
         return Ok(result);
     }
+    
+    [HttpGet("search")]
+    [AllowAnonymous]
+    public async Task<ActionResult<IReadOnlyCollection<RecipeApiModel>>> Search([FromQuery] GetRecipesBySearchKeywords.Query query, CancellationToken cancellationToken)
+    {
+        var result = await _mediatr.Send(query, cancellationToken);
+
+        return Ok(result.Value);
+    }
 }
