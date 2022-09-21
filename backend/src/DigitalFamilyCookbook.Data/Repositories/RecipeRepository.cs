@@ -468,6 +468,32 @@ public class RecipeRepository : IRecipeRepository
         return recipesOutput;
     }
 
+    public (IEnumerable<Recipe> recipes, int totalRecipes) SearchRecipesPaginated(string keywords, int currentPage = 1, int recipesPerPage = 10)
+    {
+        var data = _db.Recipes
+            .Where(r => r.Name.ToLower().Contains(keywords.ToLower()) || (r.Description ?? "").ToLower().Contains(keywords.ToLower()))
+            .OrderBy(r => r.Name)
+            .Skip(currentPage == 1 ? 0 : (currentPage - 1) * recipesPerPage)
+            .Include(r => r.UserAccount)
+            .Include(r => r.RecipeCategories)
+            .Include(r => r.RecipeMeats)
+            .AsSplitQuery()
+            .Take(recipesPerPage);
+
+        var recipes = new List<Recipe>();
+
+        foreach (var recipeDto in data)
+        {
+            var recipe = AddCategoriesAndMeatsToRecipe(recipeDto);
+            recipes.Add(recipe);
+        }
+
+        var recipeCount = _db.Recipes
+            .Count(r => r.Name.ToLower().Contains(keywords.ToLower()) || (r.Description ?? "").ToLower().Contains(keywords.ToLower()));
+
+        return (recipes, recipeCount);
+    }
+
     private Recipe AddCategoriesAndMeatsToRecipe(RecipeDto dto)
     {
         var recipe = Recipe.FromDto(dto);
