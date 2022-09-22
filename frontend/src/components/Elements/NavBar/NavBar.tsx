@@ -12,6 +12,7 @@ import { hasRole } from '@utils/UserFunctions';
 import { ItemType } from 'antd/lib/menu/hooks/useItems';
 
 import './NavBar.less';
+import QuickSearchForm from '@components/Forms/QuickSearchForm';
 
 const { Header } = Layout;
 
@@ -35,7 +36,14 @@ const NavBar = ({
 
         if (siteSettings.isPublic || (user && user.id !== '')) {
             menuItems.push({
+                key: 'search-form',
+                className: 'quicksearch-form',
+                label: <QuickSearchForm />,
+            });
+
+            menuItems.push({
                 key: 'search-recipes',
+                className: 'search-link',
                 icon: <SearchOutlined />,
                 label: <Link to="/search">Search</Link>,
             });
