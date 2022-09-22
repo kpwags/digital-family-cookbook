@@ -249,4 +249,13 @@ public class RecipesController : Controller
 
         return Ok(result.Value);
     }
+    
+    [HttpGet("quicksearch")]
+    [AllowAnonymous]
+    public async Task<ActionResult<IReadOnlyCollection<RecipeApiModel>>> QuickSearch([FromQuery] QuickSearchRecipes.Query query, CancellationToken cancellationToken)
+    {
+        var result = await _mediatr.Send(query, cancellationToken);
+
+        return Ok(result);
+    }
 }

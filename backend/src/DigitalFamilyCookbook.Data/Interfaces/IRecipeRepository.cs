@@ -41,4 +41,6 @@ public interface IRecipeRepository
     IEnumerable<Recipe> GetMostFavoritedRecipes(int count);
     
     (IEnumerable<Recipe> recipes, int totalRecipes) SearchRecipesPaginated(string keywords, int currentPage = 1, int recipesPerPage = 10);
+    
+    IEnumerable<Recipe> QuickSearchRecipes(string keywords, int count = 10);
 }

@@ -494,6 +494,16 @@ public class RecipeRepository : IRecipeRepository
         return (recipes, recipeCount);
     }
 
+    public IEnumerable<Recipe> QuickSearchRecipes(string keywords, int count = 10)
+    {
+        var recipes = _db.Recipes
+            .Where(r => r.Name.ToLower().Contains(keywords.ToLower()) || (r.Description ?? "").ToLower().Contains(keywords.ToLower()))
+            .OrderBy(r => r.Name)
+            .Take(count);
+
+        return recipes.Select(r => Recipe.FromDto(r));
+    }
+
     private Recipe AddCategoriesAndMeatsToRecipe(RecipeDto dto)
     {
         var recipe = Recipe.FromDto(dto);
