@@ -1,7 +1,7 @@
 @import (reference) '../../../styles/Theme.less';
 
 .view-recipe {
-    margin-top: 25px;
+    margin-top: 1rem;
 
     .recipe-title {
         margin-bottom: 1rem;
@@ -11,22 +11,29 @@
         }
     }
 
-    .favorite-indicator {
-        text-align: right;
+    .recipe-actions {
+        width: 100%;
 
-        svg {
-            fill: hsl(0, 88%, 59%);
+        button.ant-btn {
+            width: 100%;
         }
 
-        button:hover svg {
-            animation: pulse-animation 2s infinite;
+        button.ant-btn.favorite {
+            &:hover {
+                color: @color-red-03;
+                border-color: @color-red-03;
+            }
+
+            svg {
+                fill: @color-red-03;
+            }
         }
     }
 
     .ingredients {
         ul {
-            margin: 0 0 0 40px;
-            padding: 0 0 16px;
+            margin: 0 0 0 2rem;
+            padding: 0 0 1.5rem;
 
             @media (max-width: @breakpoint-mobile) {
                 margin-left: 20px;
@@ -40,15 +47,15 @@
 
     .directions {
         ol {
-            margin: 0 0 0 40px;
-            padding: 0 0 16px;
+            margin: 0 0 0 2rem;
+            padding: 0 0 1.5rem;
 
             @media (max-width: @breakpoint-mobile) {
-                margin-left: 20px;
+                margin-left: 1rem;
             }
 
             li {
-                padding: 8px 0;
+                padding: 0.6rem 0;
                 line-height: 1.5;
             }
         }
@@ -56,8 +63,19 @@
 
     .nutrition,
     .basic-info {
+        width: 100%;
+
         strong {
             font-weight: 800;
+        }
+
+        .ant-row {
+            border: 1px solid @color-grey;
+            padding: 0.33rem;
+
+            &.highlighted {
+                background-color: @color-grey-01;
+            }
         }
     }
 
@@ -66,7 +84,7 @@
     }
 
     span.ant-tag {
-        padding: 6px 12px;
+        padding: 0.4rem 0.8rem;
         font-size: 1rem;
     }
 }

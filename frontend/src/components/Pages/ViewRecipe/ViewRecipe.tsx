@@ -8,12 +8,10 @@ import {
     Spin,
     Space,
     Typography,
-    Button,
     message,
 } from 'antd';
-import { HeartFilled, HeartOutlined } from '@ant-design/icons';
 import useDocumentTitle from '@hooks/useDocumentTitle';
-import { useParams } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 import { useEffect, useState, useContext } from 'react';
 import AppContext from '@contexts/AppContext';
 import HtmlViewer from '@components/HtmlViewer';
@@ -24,6 +22,7 @@ import Categories from './Categories';
 import Meats from './Meats';
 
 import './ViewRecipe.less';
+import RecipeActions from './RecipeActions';
 
 const { Title } = Typography;
 
@@ -35,6 +34,8 @@ const ViewRecipe = (): JSX.Element => {
     const { user } = useContext(AppContext);
 
     const { id } = useParams();
+
+    const navigate = useNavigate();
 
     const fetchRecipe = async () => {
         if (!id) {
@@ -58,6 +59,18 @@ const ViewRecipe = (): JSX.Element => {
     useEffect(() => {
         fetchRecipe();
     }, []);
+
+    const canEditRecipe = (): boolean => {
+        if (user?.roles.map((r) => r.normalizedName).includes('ADMINISTRATOR')) {
+            return true;
+        }
+
+        if (user?.id === recipe?.userAccountId) {
+            return true;
+        }
+
+        return false;
+    };
 
     const toggleFavorite = async () => {
         let error: string | null = null;
@@ -107,16 +120,7 @@ const ViewRecipe = (): JSX.Element => {
             <Row justify="center">
                 <Col lg={18} md={22}>
                     <Row align="middle" className="recipe-title">
-                        <Col xs={22}>
-                            <Title level={1}>{recipe.name}</Title>
-                        </Col>
-                        <Col xs={2} className="favorite-indicator">
-                            <Button
-                                type="link"
-                                icon={recipe.isFavorite ? <HeartFilled /> : <HeartOutlined />}
-                                onClick={() => toggleFavorite()}
-                            />
-                        </Col>
+                        <Title level={1}>{recipe.name}</Title>
                     </Row>
                     <Row gutter={[24, 0]}>
                         <Col sm={16}>
@@ -154,6 +158,17 @@ const ViewRecipe = (): JSX.Element => {
                         </Col>
                         <Col sm={8} className="sidebar">
                             <Space direction="vertical" size={50}>
+                                <RecipeActions
+                                    isFavorite={recipe.isFavorite}
+                                    onToggle={toggleFavorite}
+                                    onEdit={canEditRecipe() ? () => {
+                                        navigate(`/recipes/edit/${recipe.recipeId}`);
+                                    } : null}
+                                // TODO: Enable when print is built
+                                // onPrint={canEditRecipe() ? () => {
+                                //     navigate(`/recipes/print/${recipe.recipeId}`);
+                                // } : null}
+                                />
                                 <BasicInfo recipe={recipe} />
                                 <NutritionInfo recipe={recipe} />
                                 <Categories categories={recipe.categories} />
