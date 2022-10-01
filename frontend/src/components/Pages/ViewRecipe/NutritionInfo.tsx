@@ -1,5 +1,5 @@
 import Recipe from '@models/Recipe';
-import { Space, Typography } from 'antd';
+import { Space, Typography, Row } from 'antd';
 
 const { Title, Text } = Typography;
 
@@ -31,19 +31,55 @@ const NutritionInfo = ({
     return (
         <Space direction="vertical" className="nutrition">
             <Title level={3}>Nutrition Info</Title>
-            {recipe.calories ? <Text><Text strong>Calories:</Text> {recipe.calories}</Text> : null}
 
-            {recipe.protein ? <Text><Text strong>Protein:</Text> {recipe.protein}g</Text> : null}
+            {recipe.calories ? (
+                <Row justify="space-between">
+                    <Text strong>Calories:</Text>
+                    <Text>{recipe.calories}</Text>
+                </Row>
+            ) : null}
 
-            {recipe.carbohydrates ? <Text><Text strong>Carbohydrates:</Text> {recipe.carbohydrates}g</Text> : null}
+            {recipe.protein ? (
+                <Row justify="space-between" className="highlighted">
+                    <Text strong>Protein:</Text>
+                    <Text>{recipe.protein}g</Text>
+                </Row>
+            ) : null}
 
-            {recipe.fat ? <Text><Text strong>Fat:</Text> {recipe.fat}g</Text> : null}
+            {recipe.carbohydrates ? (
+                <Row justify="space-between">
+                    <Text strong>Carbohydrates:</Text>
+                    <Text>{recipe.carbohydrates}g</Text>
+                </Row>
+            ) : null}
 
-            {recipe.cholesterol ? <Text><Text strong>Cholesterol:</Text> {recipe.cholesterol}mg</Text> : null}
+            {recipe.fat ? (
+                <Row justify="space-between" className="highlighted">
+                    <Text strong>Fat:</Text>
+                    <Text>{recipe.fat}g</Text>
+                </Row>
+            ) : null}
 
-            {recipe.fiber ? <Text><Text strong>Fiber:</Text> {recipe.fiber}g</Text> : null}
+            {recipe.cholesterol ? (
+                <Row justify="space-between">
+                    <Text strong>Cholesterol:</Text>
+                    <Text>{recipe.cholesterol}mg</Text>
+                </Row>
+            ) : null}
 
-            {recipe.sugar ? <Text><Text strong>Sugar:</Text> {recipe.sugar}g</Text> : null}
+            {recipe.fiber ? (
+                <Row justify="space-between" className="highlighted">
+                    <Text strong>Fiber:</Text>
+                    <Text>{recipe.fiber}g</Text>
+                </Row>
+            ) : null}
+
+            {recipe.sugar ? (
+                <Row justify="space-between">
+                    <Text strong>Sugar:</Text>
+                    <Text>{recipe.sugar}g</Text>
+                </Row>
+            ) : null}
         </Space>
     );
 };

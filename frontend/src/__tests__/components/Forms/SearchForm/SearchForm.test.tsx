@@ -43,7 +43,7 @@ describe('<SearchForm />', () => {
 
         const keywordsInput = screen.getByTestId(/search-keywords/) as HTMLInputElement;
 
-        userEvent.type(keywordsInput, '');
+        userEvent.clear(keywordsInput);
 
         userEvent.click(screen.getByRole('button', { name: 'Search' }));
 
