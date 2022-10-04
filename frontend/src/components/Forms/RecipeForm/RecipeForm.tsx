@@ -111,6 +111,8 @@ const RecipeForm = ({
             servings: values.servings,
             source: values.source || '',
             sourceUrl: values.sourceUrl || '',
+            categories: values.categories || [],
+            meats: values.meats || [],
         };
 
         if (values.activeTime) {
