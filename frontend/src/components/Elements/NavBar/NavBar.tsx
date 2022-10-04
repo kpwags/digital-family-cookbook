@@ -7,12 +7,12 @@ import {
     UserOutlined,
     SearchOutlined,
 } from '@ant-design/icons';
+import QuickSearchForm from '@components/Forms/QuickSearchForm';
 import AppContext from '@contexts/AppContext';
 import { hasRole } from '@utils/UserFunctions';
 import { ItemType } from 'antd/lib/menu/hooks/useItems';
 
 import './NavBar.less';
-import QuickSearchForm from '@components/Forms/QuickSearchForm';
 
 const { Header } = Layout;
 

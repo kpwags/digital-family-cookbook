@@ -27,7 +27,7 @@ public class QuickSearchRecipes
                     .OrderBy(r => r.Name)
                     .ToList();
             }
-            catch (Exception ex)
+            catch
             {
                 return new List<RecipeApiModel>();
             }
