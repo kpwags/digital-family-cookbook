@@ -15,7 +15,7 @@ const MostFavoritedRecipes = ({
     const [processingMessage, setProcessingMessage] = useState<string>('Loading...');
 
     const fetchRecipes = async () => {
-        const [data, error] = await Api.Get<Recipe[]>('recipes/getmostfavoritedrecipes', { params: { count } });
+        const [data, error] = await Api.Get<Recipe[]>('recipes/getmostfavoritedrecipes', { params: { count, includeImages: true } });
 
         if (error) {
             setProcessingMessage('');

@@ -19,7 +19,7 @@ const MostRecentRecipes = ({
     const [processingMessage, setProcessingMessage] = useState<string>('Loading...');
 
     const fetchRecipes = async () => {
-        const [data, error] = await Api.Get<Recipe[]>('recipes/getrecentrecipes', { params: { count } });
+        const [data, error] = await Api.Get<Recipe[]>('recipes/getrecentrecipes', { params: { count, includeImages: true } });
 
         if (error) {
             setProcessingMessage('');
