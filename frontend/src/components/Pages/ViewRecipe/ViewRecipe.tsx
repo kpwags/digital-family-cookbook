@@ -17,12 +17,12 @@ import AppContext from '@contexts/AppContext';
 import HtmlViewer from '@components/HtmlViewer';
 import BasicInfo from './BasicInfo';
 import NutritionInfo from './NutritionInfo';
+import RecipeActions from './RecipeActions';
 import RecipeImage from './RecipeImage';
 import Categories from './Categories';
 import Meats from './Meats';
 
 import './ViewRecipe.less';
-import RecipeActions from './RecipeActions';
 
 const { Title } = Typography;
 
@@ -164,10 +164,9 @@ const ViewRecipe = (): JSX.Element => {
                                     onEdit={canEditRecipe() ? () => {
                                         navigate(`/recipes/edit/${recipe.recipeId}`);
                                     } : null}
-                                // TODO: Enable when print is built
-                                // onPrint={canEditRecipe() ? () => {
-                                //     navigate(`/recipes/print/${recipe.recipeId}`);
-                                // } : null}
+                                    onPrint={canEditRecipe() ? () => {
+                                        navigate(`/recipes/print/${recipe.recipeId}`);
+                                    } : null}
                                 />
                                 <BasicInfo recipe={recipe} />
                                 <NutritionInfo recipe={recipe} />

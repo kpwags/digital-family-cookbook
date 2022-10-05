@@ -18,6 +18,7 @@ import ManageCategories from '@components/Pages/ManageCategories';
 import AddRecipe from '@components/Pages/AddRecipe';
 import EditRecipe from '@components/Pages/EditRecipe';
 import ViewRecipe from '@components/Pages/ViewRecipe';
+import PrintRecipe from '@components/Pages/PrintRecipe';
 import ManageMeats from '@components/Pages/ManageMeats';
 import ManageRecipes from '@components/Pages/ManageRecipes';
 import RecipeListing from '@components/Pages/RecipeListing';
@@ -101,6 +102,12 @@ const App = (): JSX.Element => (
                             path="/recipes/view/:id"
                             element={(
                                 <ViewRecipe />
+                            )}
+                        />
+                        <Route
+                            path="/recipes/print/:id"
+                            element={(
+                                <PrintRecipe />
                             )}
                         />
                         <Route path="/recipes/category/:id" element={(<RecipeListing mode="category" />)}>
