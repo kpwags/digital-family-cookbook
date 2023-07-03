@@ -22,9 +22,10 @@ import PrintRecipe from '@components/Pages/PrintRecipe';
 import ManageMeats from '@components/Pages/ManageMeats';
 import ManageRecipes from '@components/Pages/ManageRecipes';
 import RecipeListing from '@components/Pages/RecipeListing';
+import Search from '@components/Pages/Search';
+import PrivateFilter from '@components/PrivateFilter/PrivateFilter';
 
 import './styles/App.less';
-import Search from '@components/Pages/Search';
 
 const App = (): JSX.Element => (
     <CookiesProvider>
@@ -101,26 +102,26 @@ const App = (): JSX.Element => (
                         <Route
                             path="/recipes/view/:id"
                             element={(
-                                <ViewRecipe />
+                                <PrivateFilter><ViewRecipe /></PrivateFilter>
                             )}
                         />
                         <Route
                             path="/recipes/print/:id"
                             element={(
-                                <PrintRecipe />
+                                <PrivateFilter><PrintRecipe /></PrivateFilter>
                             )}
                         />
                         <Route path="/recipes/category/:id" element={(<RecipeListing mode="category" />)}>
-                            <Route path=":page" element={(<RecipeListing mode="category" />)} />
+                            <Route path=":page" element={(<PrivateFilter><RecipeListing mode="category" /></PrivateFilter>)} />
                         </Route>
                         <Route path="/recipes/meat/:id" element={(<RecipeListing mode="meat" />)}>
-                            <Route path=":page" element={(<RecipeListing mode="meat" />)} />
+                            <Route path=":page" element={(<PrivateFilter><RecipeListing mode="meat" /></PrivateFilter>)} />
                         </Route>
                         <Route path="/recipes/user/:id" element={(<RecipeListing mode="user" />)}>
-                            <Route path=":page" element={(<RecipeListing mode="user" />)} />
+                            <Route path=":page" element={(<PrivateFilter><RecipeListing mode="user" /></PrivateFilter>)} />
                         </Route>
                         <Route path="/recipes/list" element={(<RecipeListing mode="all" />)}>
-                            <Route path=":page" element={(<RecipeListing mode="all" />)} />
+                            <Route path=":page" element={(<PrivateFilter><RecipeListing mode="all" /></PrivateFilter>)} />
                         </Route>
                         <Route
                             path="/recipes/favorites"
@@ -139,7 +140,7 @@ const App = (): JSX.Element => (
                                 )}
                             />
                         </Route>
-                        <Route path="/search" element={(<Search />)} />
+                        <Route path="/search" element={(<PrivateFilter><Search /></PrivateFilter>)} />
                         <Route path="/" element={<Landing />} />
                     </Routes>
                 </BaseLayout>

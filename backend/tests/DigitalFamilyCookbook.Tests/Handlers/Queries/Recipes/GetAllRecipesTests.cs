@@ -1,4 +1,5 @@
 using DigitalFamilyCookbook.Handlers.Queries.Recipes;
+using Microsoft.AspNetCore.Http;
 
 namespace DigitalFamilyCookbook.Tests.Handlers.Queries.Recipes;
 
@@ -6,11 +7,13 @@ public class GetAllRecipesTests
 {
     private Mock<IRecipeRepository> _recipeRepository;
     private Mock<IFileService> _fileService;
+    private Mock<IHttpContextAccessor> _httpContextAccessor;
 
     public GetAllRecipesTests()
     {
-        _recipeRepository = new Mock<IRecipeRepository>();
-        _fileService = new Mock<IFileService>();
+        _recipeRepository = new();
+        _fileService = new();
+        _httpContextAccessor = new();
     }
 
     [Fact]
@@ -19,7 +22,7 @@ public class GetAllRecipesTests
         var recipes = MockRecipe.GenerateDomainModelList(10);
 
         _recipeRepository
-            .Setup(r => r.GetAllRecipesPaginated(It.IsAny<int>(), It.IsAny<int>()))
+            .Setup(r => r.GetAllRecipesPaginated(It.IsAny<bool>(), It.IsAny<int>(), It.IsAny<int>()))
             .Returns((recipes, 10));
 
         var query = new GetAllRecipes.Query
@@ -28,7 +31,7 @@ public class GetAllRecipesTests
             IncludeImages = false,
         };
 
-        var handler = new GetAllRecipes.Handler(_recipeRepository.Object, _fileService.Object);
+        var handler = new GetAllRecipes.Handler(_recipeRepository.Object, _fileService.Object, _httpContextAccessor.Object);
 
         var result = await handler.Handle(query, new CancellationToken());
 
@@ -45,7 +48,7 @@ public class GetAllRecipesTests
         var recipes = MockRecipe.GenerateDomainModelList(10);
 
         _recipeRepository
-            .Setup(r => r.GetAllRecipesPaginated(It.IsAny<int>(), It.IsAny<int>()))
+            .Setup(r => r.GetAllRecipesPaginated(It.IsAny<bool>(), It.IsAny<int>(), It.IsAny<int>()))
             .Returns((recipes, 10));
 
         _fileService
@@ -58,7 +61,7 @@ public class GetAllRecipesTests
             IncludeImages = true,
         };
 
-        var handler = new GetAllRecipes.Handler(_recipeRepository.Object, _fileService.Object);
+        var handler = new GetAllRecipes.Handler(_recipeRepository.Object, _fileService.Object, _httpContextAccessor.Object);
 
         var result = await handler.Handle(query, new CancellationToken());
 

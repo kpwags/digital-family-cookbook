@@ -53,7 +53,7 @@ public class GetRecipeById
                 recipe.Categories = _categoryRepostory.GetForRecipe(recipe.RecipeId);
                 recipe.Meats = _meatRepository.GetForRecipe(recipe.RecipeId);
 
-                var user = _httpContextAccessor.HttpContext?.CurrentUser();
+                var user = _httpContextAccessor.HttpContext?.CurrentUser(false);
 
                 if (user is not null)
                 {

@@ -34,6 +34,20 @@ public static class HttpContextExtensions
         return UserAccountApiModel.None();
     }
 
+    public static bool IsUserLoggedIn(this HttpContext context)
+    {
+        if (context.Items.ContainsKey("User"))
+        {
+            if (context.Items["User"] is not null)
+            {
+                var user = context.Items["User"] as UserAccountApiModel;
+
+                return user is not null;
+            }
+        }
+
+        return false;
+    }
 
     public static string? GetAccessToken(this HttpContext context)
     {

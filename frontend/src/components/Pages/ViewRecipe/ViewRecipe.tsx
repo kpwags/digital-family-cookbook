@@ -15,6 +15,7 @@ import { useNavigate, useParams } from 'react-router';
 import { useEffect, useState, useContext } from 'react';
 import AppContext from '@contexts/AppContext';
 import HtmlViewer from '@components/HtmlViewer';
+import PrivateRecipe from '@components/PrivateRecipe';
 import BasicInfo from './BasicInfo';
 import NutritionInfo from './NutritionInfo';
 import RecipeActions from './RecipeActions';
@@ -115,6 +116,10 @@ const ViewRecipe = (): JSX.Element => {
         return <Alert message="Error loading recipe" type="error" />;
     }
 
+    if (recipe && (!user || user.userId === '') && !recipe.isPublic) {
+        return <PrivateRecipe id={recipe.recipeId} />;
+    }
+
     return (
         <article className="view-recipe">
             <Row justify="center">
@@ -160,13 +165,13 @@ const ViewRecipe = (): JSX.Element => {
                             <Space direction="vertical" size={50}>
                                 <RecipeActions
                                     isFavorite={recipe.isFavorite}
-                                    onToggle={toggleFavorite}
+                                    onToggleFavorite={toggleFavorite}
                                     onEdit={canEditRecipe() ? () => {
                                         navigate(`/recipes/edit/${recipe.recipeId}`);
                                     } : null}
-                                    onPrint={canEditRecipe() ? () => {
+                                    onPrint={() => {
                                         navigate(`/recipes/print/${recipe.recipeId}`);
-                                    } : null}
+                                    }}
                                 />
                                 <BasicInfo recipe={recipe} />
                                 <NutritionInfo recipe={recipe} />

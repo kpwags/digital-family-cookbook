@@ -17,6 +17,7 @@ public class GetUserRecipes
         {
             try
             {
+                var includePrivateRecipes = _httpContextAccessor.HttpContext?.IsUserLoggedIn() ?? false;
                 var userAccountId = request.UserAccountId;
 
                 if (userAccountId == string.Empty)
@@ -31,7 +32,7 @@ public class GetUserRecipes
                     userAccountId = user.Id;
                 }
 
-                var data = await Task.FromResult(_recipeRepository.GetRecipesForUser(userAccountId));
+                var data = await Task.FromResult(_recipeRepository.GetRecipesForUser(userAccountId, includePrivateRecipes));
 
                 var recipes = data
                     .Select(r => RecipeApiModel.FromDomainModel(r))

@@ -1,4 +1,5 @@
 using DigitalFamilyCookbook.Handlers.Queries.Recipes;
+using Microsoft.AspNetCore.Http;
 
 namespace DigitalFamilyCookbook.Tests.Handlers.Queries.Recipes;
 
@@ -7,12 +8,14 @@ public class GetRecipesByCategoryTests
     private Mock<IRecipeRepository> _recipeRepository;
     private Mock<ICategoryRepository> _categoryRepository;
     private Mock<IFileService> _fileService;
+    private Mock<IHttpContextAccessor> _httpContextAccessor;
 
     public GetRecipesByCategoryTests()
     {
-        _recipeRepository = new Mock<IRecipeRepository>();
-        _categoryRepository = new Mock<ICategoryRepository>();
-        _fileService = new Mock<IFileService>();
+        _recipeRepository = new();
+        _categoryRepository = new();
+        _fileService = new();
+        _httpContextAccessor = new();
     }
 
     [Fact]
@@ -21,7 +24,7 @@ public class GetRecipesByCategoryTests
         var recipes = MockRecipe.GenerateDomainModelList(10);
 
         _recipeRepository
-            .Setup(r => r.GetRecipesForCategoryPaginated(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>()))
+            .Setup(r => r.GetRecipesForCategoryPaginated(It.IsAny<int>(), It.IsAny<bool>(), It.IsAny<int>(), It.IsAny<int>()))
             .Returns((recipes, 10));
 
         _categoryRepository
@@ -34,7 +37,7 @@ public class GetRecipesByCategoryTests
             IncludeImages = false,
         };
 
-        var handler = new GetRecipesByCategory.Handler(_recipeRepository.Object, _categoryRepository.Object, _fileService.Object);
+        var handler = new GetRecipesByCategory.Handler(_recipeRepository.Object, _categoryRepository.Object, _fileService.Object, _httpContextAccessor.Object);
 
         var result = await handler.Handle(query, new CancellationToken());
 
@@ -51,7 +54,7 @@ public class GetRecipesByCategoryTests
         var recipes = MockRecipe.GenerateDomainModelList(10);
 
         _recipeRepository
-            .Setup(r => r.GetRecipesForCategoryPaginated(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>()))
+            .Setup(r => r.GetRecipesForCategoryPaginated(It.IsAny<int>(), It.IsAny<bool>(), It.IsAny<int>(), It.IsAny<int>()))
             .Returns((recipes, 10));
 
         _categoryRepository
@@ -68,7 +71,7 @@ public class GetRecipesByCategoryTests
             IncludeImages = true,
         };
 
-        var handler = new GetRecipesByCategory.Handler(_recipeRepository.Object, _categoryRepository.Object, _fileService.Object);
+        var handler = new GetRecipesByCategory.Handler(_recipeRepository.Object, _categoryRepository.Object, _fileService.Object, _httpContextAccessor.Object);
 
         var result = await handler.Handle(query, new CancellationToken());
 

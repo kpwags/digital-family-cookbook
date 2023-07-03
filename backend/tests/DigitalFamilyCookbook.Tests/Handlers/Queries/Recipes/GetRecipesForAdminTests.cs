@@ -17,7 +17,7 @@ public class GetRecipesForAdminTests
         var recipes = MockRecipe.GenerateDomainModelList(10);
 
         _recipeRepository
-            .Setup(r => r.GetAll())
+            .Setup(r => r.GetAll(It.IsAny<bool>()))
             .Returns(recipes);
 
         var query = new GetRecipesForAdmin.Query();
