@@ -23,6 +23,7 @@ import ManageMeats from '@components/Pages/ManageMeats';
 import ManageRecipes from '@components/Pages/ManageRecipes';
 import RecipeListing from '@components/Pages/RecipeListing';
 import Search from '@components/Pages/Search';
+import ReportAnIssue from '@components/Pages/ReportAnIssue';
 import PrivateFilter from '@components/PrivateFilter/PrivateFilter';
 
 import './styles/App.less';
@@ -141,6 +142,7 @@ const App = (): JSX.Element => (
                             />
                         </Route>
                         <Route path="/search" element={(<PrivateFilter><Search /></PrivateFilter>)} />
+                        <Route path="/report-an-issue" element={(<ReportAnIssue />)} />
                         <Route path="/" element={<Landing />} />
                     </Routes>
                 </BaseLayout>
