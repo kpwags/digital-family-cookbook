@@ -31,10 +31,12 @@ const NavBar = ({
         logout,
     } = useContext(AppContext);
 
+    const showForAnonymousUser = siteSettings.isPublic || (user && user.id !== '');
+
     const buildMenu = (): ItemType[] => {
         const menuItems: ItemType[] = [];
 
-        if (siteSettings.isPublic || (user && user.id !== '')) {
+        if (showForAnonymousUser) {
             menuItems.push({
                 key: 'search-form',
                 className: 'quicksearch-form',
@@ -57,10 +59,12 @@ const NavBar = ({
             });
         }
 
-        menuItems.push({
-            key: 'all-recipes',
-            label: <Link to="/recipes/list">All Recipes</Link>,
-        });
+        if (showForAnonymousUser) {
+            menuItems.push({
+                key: 'all-recipes',
+                label: <Link to="/recipes/list">All Recipes</Link>,
+            });
+        }
 
         if (user && user.id !== '') {
             menuItems.push({
@@ -69,33 +73,35 @@ const NavBar = ({
             });
         }
 
-        menuItems.push({
-            key: 'categories',
-            label: 'Categories',
-            children: categories.length === 0
-                ? [{
-                    key: 'no-categories',
-                    label: <>No Categories</>,
-                }]
-                : categories.map((c) => ({
-                    key: `category-${c.categoryId}`,
-                    label: <Link to={`/recipes/category/${c.categoryId}`}>{c.name}</Link>,
-                })),
-        });
+        if (showForAnonymousUser) {
+            menuItems.push({
+                key: 'categories',
+                label: 'Categories',
+                children: categories.length === 0
+                    ? [{
+                        key: 'no-categories',
+                        label: <>No Categories</>,
+                    }]
+                    : categories.map((c) => ({
+                        key: `category-${c.categoryId}`,
+                        label: <Link to={`/recipes/category/${c.categoryId}`}>{c.name}</Link>,
+                    })),
+            });
 
-        menuItems.push({
-            key: 'meats',
-            label: 'Meats',
-            children: meats.length === 0
-                ? [{
-                    key: 'no-meats',
-                    label: <>No Meats</>,
-                }]
-                : meats.map((m) => ({
-                    key: `meat-${m.meatId}`,
-                    label: <Link to={`/recipes/meat/${m.meatId}`}>{m.name}</Link>,
-                })),
-        });
+            menuItems.push({
+                key: 'meats',
+                label: 'Meats',
+                children: meats.length === 0
+                    ? [{
+                        key: 'no-meats',
+                        label: <>No Meats</>,
+                    }]
+                    : meats.map((m) => ({
+                        key: `meat-${m.meatId}`,
+                        label: <Link to={`/recipes/meat/${m.meatId}`}>{m.name}</Link>,
+                    })),
+            });
+        }
 
         if (user && user.id !== '') {
             const userMenuItems: ItemType[] = [];

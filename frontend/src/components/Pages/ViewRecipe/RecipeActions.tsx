@@ -5,46 +5,54 @@ import {
     EditOutlined,
     PrinterOutlined,
 } from '@ant-design/icons';
+import { useContext } from 'react';
+import AppContext from '@contexts/AppContext';
 
 type RecipeActionsProps = {
     isFavorite: boolean;
-    onToggle: () => void;
+    onToggleFavorite: () => void;
     onEdit?: (() => void) | null;
     onPrint?: (() => void) | null;
 }
 
 const RecipeActions = ({
     isFavorite,
-    onToggle,
+    onToggleFavorite,
     onEdit = null,
     onPrint = null,
-}: RecipeActionsProps): JSX.Element => (
-    <Space direction="vertical" className="recipe-actions">
-        <Button
-            className="favorite"
-            icon={isFavorite ? <HeartFilled /> : <HeartOutlined />}
-            onClick={onToggle}
-        >
-            {isFavorite ? 'Remove Favorite' : 'Favorite'}
-        </Button>
-        {onEdit ? (
-            <Button
-                icon={<EditOutlined />}
-                onClick={onEdit}
-            >
-                Edit
-            </Button>
-        ) : null}
+}: RecipeActionsProps): JSX.Element => {
+    const { user } = useContext(AppContext);
 
-        {onPrint ? (
-            <Button
-                icon={<PrinterOutlined />}
-                onClick={onPrint}
-            >
-                Print
-            </Button>
-        ) : null}
-    </Space>
-);
+    return (
+        <Space direction="vertical" className="recipe-actions">
+            {user ? (
+                <Button
+                    className="favorite"
+                    icon={isFavorite ? <HeartFilled /> : <HeartOutlined />}
+                    onClick={onToggleFavorite}
+                >
+                    {isFavorite ? 'Remove Favorite' : 'Favorite'}
+                </Button>
+            ) : null}
+            {onEdit ? (
+                <Button
+                    icon={<EditOutlined />}
+                    onClick={onEdit}
+                >
+                    Edit
+                </Button>
+            ) : null}
+
+            {onPrint ? (
+                <Button
+                    icon={<PrinterOutlined />}
+                    onClick={onPrint}
+                >
+                    Print
+                </Button>
+            ) : null}
+        </Space>
+    );
+};
 
 export default RecipeActions;

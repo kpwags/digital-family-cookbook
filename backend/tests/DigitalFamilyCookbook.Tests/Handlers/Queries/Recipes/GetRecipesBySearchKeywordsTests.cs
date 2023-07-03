@@ -1,4 +1,5 @@
 using DigitalFamilyCookbook.Handlers.Queries.Recipes;
+using Microsoft.AspNetCore.Http;
 
 namespace DigitalFamilyCookbook.Tests.Handlers.Queries.Recipes;
 
@@ -6,11 +7,13 @@ public class GetRecipesBySearchKeywordsTests
 {
     private Mock<IRecipeRepository> _recipeRepository;
     private Mock<IFileService> _fileService;
+    private Mock<IHttpContextAccessor> _httpContextAccessor;
 
     public GetRecipesBySearchKeywordsTests()
     {
-        _recipeRepository = new Mock<IRecipeRepository>();
-        _fileService = new Mock<IFileService>();
+        _recipeRepository = new();
+        _fileService = new();
+        _httpContextAccessor = new();
     }
 
     [Fact]
@@ -19,7 +22,7 @@ public class GetRecipesBySearchKeywordsTests
         var recipes = MockRecipe.GenerateDomainModelList(10);
 
         _recipeRepository
-            .Setup(r => r.SearchRecipesPaginated(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>()))
+            .Setup(r => r.SearchRecipesPaginated(It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<int>(), It.IsAny<int>()))
             .Returns((recipes, 10));
 
         var query = new GetRecipesBySearchKeywords.Query
@@ -28,7 +31,7 @@ public class GetRecipesBySearchKeywordsTests
             IncludeImages = false,
         };
 
-        var handler = new GetRecipesBySearchKeywords.Handler(_recipeRepository.Object, _fileService.Object);
+        var handler = new GetRecipesBySearchKeywords.Handler(_recipeRepository.Object, _fileService.Object, _httpContextAccessor.Object);
 
         var result = await handler.Handle(query, new CancellationToken());
 
@@ -45,7 +48,7 @@ public class GetRecipesBySearchKeywordsTests
         var recipes = MockRecipe.GenerateDomainModelList(10);
 
         _recipeRepository
-            .Setup(r => r.SearchRecipesPaginated(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>()))
+            .Setup(r => r.SearchRecipesPaginated(It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<int>(), It.IsAny<int>()))
             .Returns((recipes, 10));
         
         _fileService
@@ -58,7 +61,7 @@ public class GetRecipesBySearchKeywordsTests
             IncludeImages = true,
         };
 
-        var handler = new GetRecipesBySearchKeywords.Handler(_recipeRepository.Object, _fileService.Object);
+        var handler = new GetRecipesBySearchKeywords.Handler(_recipeRepository.Object, _fileService.Object, _httpContextAccessor.Object);
 
         var result = await handler.Handle(query, new CancellationToken());
 

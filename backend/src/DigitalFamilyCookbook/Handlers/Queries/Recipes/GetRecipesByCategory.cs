@@ -9,28 +9,32 @@ public class GetRecipesByCategory
         private readonly IRecipeRepository _recipeRepository;
         private readonly ICategoryRepository _categoryRepository;
         private readonly IFileService _fileService;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
         public Handler(
             IRecipeRepository recipeRepository,
             ICategoryRepository categoryRepository,
-            IFileService fileService
+            IFileService fileService,
+            IHttpContextAccessor httpContextAccessor
         )
         {
             _recipeRepository = recipeRepository;
             _categoryRepository = categoryRepository;
             _fileService = fileService;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public async Task<OperationResult<RecipeListPageResults>> Handle(Query request, CancellationToken cancellationToken)
         {
             try
             {
+                var includePrivateRecipes = _httpContextAccessor.HttpContext?.IsUserLoggedIn() ?? false;
                 var category = _categoryRepository.Get(request.CategoryId);
 
-                var (data, totalRecipes) = await Task.FromResult(_recipeRepository.GetRecipesForCategoryPaginated(request.CategoryId, request.PageNumber, request.RecipesPerPage));
+                var (data, totalRecipes) = await Task.FromResult(_recipeRepository.GetRecipesForCategoryPaginated(request.CategoryId, includePrivateRecipes, request.PageNumber, request.RecipesPerPage));
 
                 var recipes = data
-                    .Select(r => RecipeApiModel.FromDomainModel(r))
+                    .Select(RecipeApiModel.FromDomainModel)
                     .OrderBy(r => r.Name)
                     .ToList();
 

@@ -6,22 +6,27 @@ public class GetMostFavoritedRecipes
     {
         private readonly IRecipeRepository _recipeRepository;
         private readonly IFileService _fileService;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
         public Handler(
             IRecipeRepository recipeRepository,
-            IFileService fileService
+            IFileService fileService,
+            IHttpContextAccessor httpContextAccessor
         )
         {
             _recipeRepository = recipeRepository;
             _fileService = fileService;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public async Task<IReadOnlyCollection<RecipeApiModel>> Handle(Query request, CancellationToken cancellationToken)
         {
-            var data = await Task.FromResult(_recipeRepository.GetMostFavoritedRecipes(request.Count));
+            var includePrivateRecipes = _httpContextAccessor.HttpContext?.IsUserLoggedIn() ?? false;
+            
+            var data = await Task.FromResult(_recipeRepository.GetMostFavoritedRecipes(request.Count, includePrivateRecipes));
 
             var recipes = data
-                .Select(r => RecipeApiModel.FromDomainModel(r))
+                .Select(RecipeApiModel.FromDomainModel)
                 .ToList();
 
             if (!request.IncludeImages)

@@ -4,9 +4,9 @@ import Login from '@components/Pages/Login';
 import NoAccess from '@components/Pages/NoAccess';
 
 type ProtectedRouteProps = {
-    children: ReactElement
-    redirectTo?: string
-    requiredRoles?: string[]
+    children: ReactElement;
+    redirectTo?: string;
+    requiredRoles?: string[];
 }
 
 const ProtectedRoute = ({

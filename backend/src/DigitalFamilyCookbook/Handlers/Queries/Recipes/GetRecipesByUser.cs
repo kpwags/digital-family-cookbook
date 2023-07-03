@@ -9,27 +9,31 @@ public class GetRecipesByUser
         private readonly IRecipeRepository _recipeRepository;
         private readonly IUserAccountRepository _userAccountRepository;
         private readonly IFileService _fileService;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
         public Handler(
             IRecipeRepository recipeRepository,
             IUserAccountRepository userAccountRepository,
-            IFileService fileService)
+            IFileService fileService,
+            IHttpContextAccessor httpContextAccessor)
         {
             _recipeRepository = recipeRepository;
             _userAccountRepository = userAccountRepository;
             _fileService = fileService;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public async Task<OperationResult<RecipeListPageResults>> Handle(Query request, CancellationToken cancellationToken)
         {
             try
             {
+                var includePrivateRecipes = _httpContextAccessor.HttpContext?.IsUserLoggedIn() ?? false;
                 var userAccount = await _userAccountRepository.GetUserAccountById(request.UserAccountId);
 
-                var (data, totalRecipes) = await Task.FromResult(_recipeRepository.GetRecipesForUserPaginated(request.UserAccountId, request.PageNumber, request.RecipesPerPage));
+                var (data, totalRecipes) = await Task.FromResult(_recipeRepository.GetRecipesForUserPaginated(request.UserAccountId, includePrivateRecipes, request.PageNumber, request.RecipesPerPage));
 
                 var recipes = data
-                    .Select(r => RecipeApiModel.FromDomainModel(r))
+                    .Select(RecipeApiModel.FromDomainModel)
                     .OrderBy(r => r.Name)
                     .ToList();
 

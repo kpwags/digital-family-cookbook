@@ -6,12 +6,15 @@ public class GetRecipesBySearchKeywords
     {
         private readonly IRecipeRepository _recipeRepository;
         private readonly IFileService _fileService;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
         public Handler(IRecipeRepository recipeRepository,
-            IFileService fileService)
+            IFileService fileService,
+            IHttpContextAccessor httpContextAccessor)
         {
             _recipeRepository = recipeRepository;
             _fileService = fileService;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public async Task<OperationResult<RecipeListPageResults>> Handle(Query request, CancellationToken cancellationToken)
@@ -23,10 +26,12 @@ public class GetRecipesBySearchKeywords
                     throw new Exception("No search keywords provided");
                 }
 
-                var (data, totalRecipes) = await Task.FromResult(_recipeRepository.SearchRecipesPaginated(request.Keywords, request.PageNumber, request.RecipesPerPage));
+                var includePrivateRecipes = _httpContextAccessor.HttpContext?.IsUserLoggedIn() ?? false;
+                
+                var (data, totalRecipes) = await Task.FromResult(_recipeRepository.SearchRecipesPaginated(request.Keywords, includePrivateRecipes, request.PageNumber, request.RecipesPerPage));
 
                 var recipes = data
-                    .Select(r => RecipeApiModel.FromDomainModel(r))
+                    .Select(RecipeApiModel.FromDomainModel)
                     .OrderBy(r => r.Name)
                     .ToList();
 

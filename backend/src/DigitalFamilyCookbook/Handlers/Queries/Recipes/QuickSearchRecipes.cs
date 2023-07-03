@@ -5,10 +5,12 @@ public class QuickSearchRecipes
     public class Handler : IRequestHandler<Query, IReadOnlyCollection<RecipeApiModel>>
     {
         private readonly IRecipeRepository _recipeRepository;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public Handler(IRecipeRepository recipeRepository)
+        public Handler(IRecipeRepository recipeRepository, IHttpContextAccessor httpContextAccessor)
         {
             _recipeRepository = recipeRepository;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public async Task<IReadOnlyCollection<RecipeApiModel>> Handle(Query request, CancellationToken cancellationToken)
@@ -20,10 +22,12 @@ public class QuickSearchRecipes
                     throw new Exception("No search keywords provided");
                 }
 
-                var recipes = await Task.FromResult(_recipeRepository.QuickSearchRecipes(request.Keywords, request.MaxRecipes));
+                var includePrivateRecipes = _httpContextAccessor.HttpContext?.IsUserLoggedIn() ?? false;
+                
+                var recipes = await Task.FromResult(_recipeRepository.QuickSearchRecipes(request.Keywords, includePrivateRecipes, request.MaxRecipes));
 
                 return recipes
-                    .Select(r => RecipeApiModel.FromDomainModel(r))
+                    .Select(RecipeApiModel.FromDomainModel)
                     .OrderBy(r => r.Name)
                     .ToList();
             }

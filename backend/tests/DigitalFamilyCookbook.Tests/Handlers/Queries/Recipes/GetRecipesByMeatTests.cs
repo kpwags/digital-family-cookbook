@@ -1,4 +1,5 @@
 using DigitalFamilyCookbook.Handlers.Queries.Recipes;
+using Microsoft.AspNetCore.Http;
 
 namespace DigitalFamilyCookbook.Tests.Handlers.Queries.Recipes;
 
@@ -7,12 +8,14 @@ public class GetRecipesByMeatTests
     private Mock<IRecipeRepository> _recipeRepository;
     private Mock<IMeatRepository> _meatRepository;
     private Mock<IFileService> _fileService;
+    private Mock<IHttpContextAccessor> _httpContextAccessor;
 
     public GetRecipesByMeatTests()
     {
-        _recipeRepository = new Mock<IRecipeRepository>();
-        _meatRepository = new Mock<IMeatRepository>();
-        _fileService = new Mock<IFileService>();
+        _recipeRepository = new();
+        _meatRepository = new();
+        _fileService = new();
+        _httpContextAccessor = new();
     }
 
     [Fact]
@@ -21,7 +24,7 @@ public class GetRecipesByMeatTests
         var recipes = MockRecipe.GenerateDomainModelList(10);
 
         _recipeRepository
-            .Setup(r => r.GetRecipesForMeatPaginated(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>()))
+            .Setup(r => r.GetRecipesForMeatPaginated(It.IsAny<int>(), It.IsAny<bool>(), It.IsAny<int>(), It.IsAny<int>()))
             .Returns((recipes, 10));
 
         _meatRepository
@@ -34,7 +37,7 @@ public class GetRecipesByMeatTests
             IncludeImages = false,
         };
 
-        var handler = new GetRecipesByMeat.Handler(_recipeRepository.Object, _meatRepository.Object, _fileService.Object);
+        var handler = new GetRecipesByMeat.Handler(_recipeRepository.Object, _meatRepository.Object, _fileService.Object, _httpContextAccessor.Object);
 
         var result = await handler.Handle(query, new CancellationToken());
 
@@ -51,7 +54,7 @@ public class GetRecipesByMeatTests
         var recipes = MockRecipe.GenerateDomainModelList(10);
 
         _recipeRepository
-            .Setup(r => r.GetRecipesForMeatPaginated(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>()))
+            .Setup(r => r.GetRecipesForMeatPaginated(It.IsAny<int>(), It.IsAny<bool>(), It.IsAny<int>(), It.IsAny<int>()))
             .Returns((recipes, 10));
 
         _meatRepository
@@ -68,7 +71,7 @@ public class GetRecipesByMeatTests
             IncludeImages = true,
         };
 
-        var handler = new GetRecipesByMeat.Handler(_recipeRepository.Object, _meatRepository.Object, _fileService.Object);
+        var handler = new GetRecipesByMeat.Handler(_recipeRepository.Object, _meatRepository.Object, _fileService.Object, _httpContextAccessor.Object);
 
         var result = await handler.Handle(query, new CancellationToken());
 

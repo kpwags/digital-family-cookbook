@@ -25,9 +25,10 @@ public class RecipeRepository : IRecipeRepository
         _stepRepository = stepRepository;
     }
 
-    public IEnumerable<Recipe> GetAll()
+    public IEnumerable<Recipe> GetAll(bool includePrivate = true)
     {
         return _db.Recipes
+            .Where(r => r.IsPublic || includePrivate)
             .Include(r => r.UserAccount)
             .Select(r => Recipe.FromDto(r));
     }
@@ -215,18 +216,18 @@ public class RecipeRepository : IRecipeRepository
         await _db.SaveChangesAsync();
     }
 
-    public IEnumerable<Recipe> GetRecipesForUser(string userAccountId)
+    public IEnumerable<Recipe> GetRecipesForUser(string userAccountId, bool includePrivate)
     {
         return _db.Recipes
-            .Where(r => r.UserAccountId == userAccountId)
+            .Where(r => r.UserAccountId == userAccountId && (includePrivate || r.IsPublic))
             .Include(r => r.UserAccount)
             .Select(r => Recipe.FromDto(r));
     }
 
-    public (IEnumerable<Recipe> recipes, int totalRecipes) GetRecipesForUserPaginated(string userAccountId, int currentPage = 1, int recipesPerPage = 10)
+    public (IEnumerable<Recipe> recipes, int totalRecipes) GetRecipesForUserPaginated(string userAccountId, bool includePrivate, int currentPage = 1, int recipesPerPage = 10)
     {
         var data = _db.Recipes
-            .Where(r => r.UserAccountId == userAccountId)
+            .Where(r => r.UserAccountId == userAccountId && (includePrivate || r.IsPublic))
             .OrderBy(r => r.Name)
             .Skip(currentPage == 1 ? 0 : (currentPage - 1) * recipesPerPage)
             .Include(r => r.UserAccount)
@@ -247,18 +248,18 @@ public class RecipeRepository : IRecipeRepository
         return (recipes, recipeCount);
     }
 
-    public IEnumerable<Recipe> GetRecipesForCategory(int categoryId)
+    public IEnumerable<Recipe> GetRecipesForCategory(int categoryId, bool includePrivate)
     {
         return _db.Recipes
                 .Include(r => r.RecipeCategories)
-                .Where(r => r.RecipeCategories.Select(rc => rc.CategoryId).Contains(categoryId))
+                .Where(r => r.RecipeCategories.Select(rc => rc.CategoryId).Contains(categoryId) && (includePrivate || r.IsPublic))
                 .Select(r => Recipe.FromDto(r));
     }
 
-    public (IEnumerable<Recipe> recipes, int totalRecipes) GetRecipesForCategoryPaginated(int categoryId, int currentPage = 1, int recipesPerPage = 10)
+    public (IEnumerable<Recipe> recipes, int totalRecipes) GetRecipesForCategoryPaginated(int categoryId, bool includePrivate, int currentPage = 1, int recipesPerPage = 10)
     {
         var data = _db.Recipes
-            .Where(r => r.RecipeCategories.Select(rc => rc.CategoryId).Contains(categoryId))
+            .Where(r => r.RecipeCategories.Select(rc => rc.CategoryId).Contains(categoryId) && (includePrivate || r.IsPublic))
             .OrderBy(r => r.Name)
             .Skip(currentPage == 1 ? 0 : (currentPage - 1) * recipesPerPage)
             .Include(r => r.RecipeCategories)
@@ -281,18 +282,18 @@ public class RecipeRepository : IRecipeRepository
         return (recipes, recipeCount);
     }
 
-    public IEnumerable<Recipe> GetRecipesForMeat(int meatId)
+    public IEnumerable<Recipe> GetRecipesForMeat(int meatId, bool includePrivate)
     {
         return _db.Recipes
             .Include(r => r.RecipeMeats)
-            .Where(r => r.RecipeMeats.Select(rm => rm.MeatId).Contains(meatId))
+            .Where(r => r.RecipeMeats.Select(rm => rm.MeatId).Contains(meatId) && (includePrivate || r.IsPublic))
             .Select(r => Recipe.FromDto(r));
     }
 
-    public (IEnumerable<Recipe> recipes, int totalRecipes) GetRecipesForMeatPaginated(int meatId, int currentPage = 1, int recipesPerPage = 10)
+    public (IEnumerable<Recipe> recipes, int totalRecipes) GetRecipesForMeatPaginated(int meatId, bool includePrivate, int currentPage = 1, int recipesPerPage = 10)
     {
         var data = _db.Recipes
-            .Where(r => r.RecipeMeats.Select(rc => rc.MeatId).Contains(meatId))
+            .Where(r => r.RecipeMeats.Select(rc => rc.MeatId).Contains(meatId) && (includePrivate || r.IsPublic))
             .OrderBy(r => r.Name)
             .Skip(currentPage == 1 ? 0 : (currentPage - 1) * recipesPerPage)
             .Include(r => r.RecipeMeats)
@@ -315,11 +316,12 @@ public class RecipeRepository : IRecipeRepository
         return (recipes, recipeCount);
     }
 
-    public (IEnumerable<Recipe> recipes, int totalRecipes) GetAllRecipesPaginated(int currentPage = 1, int recipesPerPage = 10)
+    public (IEnumerable<Recipe> recipes, int totalRecipes) GetAllRecipesPaginated(bool includePrivate, int currentPage = 1, int recipesPerPage = 10)
     {
         var allRecipes = _db.Recipes.Include(r => r.UserAccount);
 
         var data = allRecipes
+            .Where(r =>  includePrivate || r.IsPublic)
             .OrderBy(r => r.Name)
             .Skip(currentPage == 1 ? 0 : (currentPage - 1) * recipesPerPage)
             .Include(r => r.UserAccount)
@@ -403,9 +405,10 @@ public class RecipeRepository : IRecipeRepository
         return (recipes, recipeCount);
     }
 
-    public IEnumerable<Recipe> GetRecentRecipes(int count)
+    public IEnumerable<Recipe> GetRecentRecipes(int count, bool includePrivate)
     {
         var data = _db.Recipes
+            .Where(r => includePrivate || r.IsPublic)
             .OrderByDescending(r => r.DateCreated)
             .Include(r => r.UserAccount)
             .Include(r => r.RecipeFavorites)
@@ -425,9 +428,11 @@ public class RecipeRepository : IRecipeRepository
         return recipes;
     }
 
-    public IEnumerable<Recipe> GetMostFavoritedRecipes(int count)
+    public IEnumerable<Recipe> GetMostFavoritedRecipes(int count, bool includePrivate)
     {
         var favoriteRecipes = _db.RecipeFavorites
+            .Include(rf => rf.Recipe)
+            .Where(rf => rf.Recipe.IsPublic || includePrivate)
             .ToList()
             .GroupBy(rf => rf.RecipeId)
             .Select(r => new RecipeGrouping() { RecipeId = r.Key, RecipeCount = r.Count() })
@@ -468,10 +473,10 @@ public class RecipeRepository : IRecipeRepository
         return recipesOutput;
     }
 
-    public (IEnumerable<Recipe> recipes, int totalRecipes) SearchRecipesPaginated(string keywords, int currentPage = 1, int recipesPerPage = 10)
+    public (IEnumerable<Recipe> recipes, int totalRecipes) SearchRecipesPaginated(string keywords, bool includePrivate, int currentPage = 1, int recipesPerPage = 10)
     {
         var data = _db.Recipes
-            .Where(r => r.Name.ToLower().Contains(keywords.ToLower()) || (r.Description ?? "").ToLower().Contains(keywords.ToLower()))
+            .Where(r => (includePrivate || r.IsPublic) && (r.Name.ToLower().Contains(keywords.ToLower()) || (r.Description ?? "").ToLower().Contains(keywords.ToLower())))
             .OrderBy(r => r.Name)
             .Skip(currentPage == 1 ? 0 : (currentPage - 1) * recipesPerPage)
             .Include(r => r.UserAccount)
@@ -494,10 +499,10 @@ public class RecipeRepository : IRecipeRepository
         return (recipes, recipeCount);
     }
 
-    public IEnumerable<Recipe> QuickSearchRecipes(string keywords, int count = 10)
+    public IEnumerable<Recipe> QuickSearchRecipes(string keywords, bool includePrivate, int count = 10)
     {
         var recipes = _db.Recipes
-            .Where(r => r.Name.ToLower().Contains(keywords.ToLower()) || (r.Description ?? "").ToLower().Contains(keywords.ToLower()))
+            .Where(r => (includePrivate || r.IsPublic) && (r.Name.ToLower().Contains(keywords.ToLower()) || (r.Description ?? "").ToLower().Contains(keywords.ToLower())))
             .OrderBy(r => r.Name)
             .Take(count);
 

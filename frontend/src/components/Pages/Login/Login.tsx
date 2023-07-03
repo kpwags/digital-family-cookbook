@@ -1,5 +1,6 @@
 import { Row, Col, Typography } from 'antd';
 import { useNavigate } from 'react-router-dom';
+import useQueryParameters from '@hooks/useQueryParameters';
 import LoginForm from '@components/Forms/LoginForm';
 import { useContext, useEffect } from 'react';
 import AppContext from '@contexts/AppContext';
@@ -18,14 +19,18 @@ const Login = ({
 
     const { user, loginUser, siteSettings } = useContext(AppContext);
 
+    const query = useQueryParameters();
+    const urlRedirect = query.get('redirect');
+
     const completeLoginProcess = (authResult: AuthResult) => {
+        console.log({ redirectTo, urlRedirect });
         loginUser(authResult.accessToken);
-        navigate(redirectTo);
+        navigate(urlRedirect || redirectTo);
     };
 
     useEffect(() => {
         if (user !== null) {
-            navigate('/');
+            navigate(urlRedirect || redirectTo);
         }
     }, [user]);
 
