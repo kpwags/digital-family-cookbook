@@ -23,7 +23,6 @@ const Login = ({
     const urlRedirect = query.get('redirect');
 
     const completeLoginProcess = (authResult: AuthResult) => {
-        console.log({ redirectTo, urlRedirect });
         loginUser(authResult.accessToken);
         navigate(urlRedirect || redirectTo);
     };

@@ -14,6 +14,7 @@ const Footer = (): JSX.Element => {
                 <li><Link to="/">Home</Link></li>
                 {siteSettings.isPublic || user !== null ? (<li><Link to="/search">Search</Link></li>) : null}
                 {user !== null ? (<li><Link to="/recipes/add">Add Recipe</Link></li>) : null}
+                <li><Link to="/report-an-issue">Report an Issue</Link></li>
             </ul>
             <div className="copyright">&copy; {(new Date()).getFullYear()} {siteSettings.title}</div>
         </Layout.Footer>
